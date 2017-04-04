@@ -16,6 +16,7 @@ module.exports.loop = function () {
     turret.run(debug);
     turret2.run(debug);
     console.log(msg + ' {' + Game.cpu.getUsed().toFixed(3) + '}');
+    console.log('Testing');
 }
 
 function countCreeps() {
