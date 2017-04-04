@@ -45,7 +45,7 @@ module.exports.run = function(creep) {
                     });
                     creep.say('🚓');
                 } else {
-                    creep.memory.delivering = true;
+                    creep.memory.upgrading = true;
                 }
             } else {
                 creep.say('⤴️');
