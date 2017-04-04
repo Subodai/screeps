@@ -1,5 +1,5 @@
 /**
- * Big Upgrader Role
+ * Big Upgrader Role with fixes chars
  */
 module.exports.run = function(creep) {
     if (creep.fatigue > 0) {

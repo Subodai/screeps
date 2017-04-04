@@ -1,5 +1,5 @@
 /**
- * Small Upgrader Role
+ * Small Upgrader Role With fixed chars
  */
 module.exports.run = function(creep) {
     if (creep.fatigue > 0) {
