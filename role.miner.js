@@ -15,7 +15,7 @@ module.exports.run = function (creep, debug = false) {
     // Fatigue Check
     if (creep.fatigue > 0) {
         if (debug) { console.log('Creep[' + creep.name + '] Fatgiued ' + creep.fatigue); }
-        creep.say('💤');
+        creep.say('Zzz');
         return;
     }
 
@@ -32,11 +32,11 @@ module.exports.run = function (creep, debug = false) {
     // Alright if it's dying, output the timer
     if (creep.memory.dying) {
         if (debug) { console.log('Creep[' + creep.name + '] Miner Dying, ticking down'); }
-        creep.say('🕛 ' + ticks);
+        creep.say(ticks);
         // If it's less than 10 ticks, drop what we have
         if (ticks < 10) {
             if (debug) { console.log('Creep[' + creep.name + '] Miner about to die'); }
-            creep.say('☠️ ' + ticks);
+            creep.say('!!' + ticks + '!!');
         }
     }
 
@@ -77,7 +77,7 @@ module.exports.run = function (creep, debug = false) {
         // This may need to change, depends if the drop costs fatigue or if dropping goes into a container
         console.log(creep.drop(RESOURCE_ENERGY));
         creep.memory.dropping = false;
-        creep.say('⛹️');
+        creep.say('\/');
 
         // DANGER we just drop resources here... This could leave a pile of resources if our transfer dudes aren't keeping up
 
@@ -117,11 +117,11 @@ module.exports.run = function (creep, debug = false) {
                     reusePath:5
                 });
                 // Moving make a say
-                creep.say('▶️')
+                creep.say('d(^-^)b')
             } else {
                 // Mining say we're mining
                 if (!creep.memory.dying) {
-                    creep.say('⛏️');
+                    creep.say('(q_q)');
                 }
             }
         } else {

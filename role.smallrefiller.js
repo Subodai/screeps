@@ -8,14 +8,14 @@ module.exports.run = function(creep, debug = false) {
     // If Fatigued, just return, no point in wasting time
     if (creep.fatigue > 0) {
         if (debug) { console.log('Small Refiller Creep fatigued ignoring'); }
-        creep.say('💤');
+        creep.say('Zzz');
         return;
     }
 
     // If it doesn't have long to live we should dump it into harvest mode (we'll handle dying creeps there)
     if (creep.ticksToLive < 100) {
         if (debug) { console.log('Creep soon to die, switching to harvester role'); }
-        creep.say('♻️');
+        creep.say('!!');
         creep.memory.role = 'smallharvester';
     }
     var towers = creep.room.find(FIND_STRUCTURES, {
@@ -32,13 +32,13 @@ module.exports.run = function(creep, debug = false) {
     // Is the creep dropping off and empty?
     if (creep.memory.delivering && creep.carry.energy == 0) {
         creep.memory.delivering = false;
-        creep.say('⛏️ harvest');
+        creep.say('GET');
     }
 
     // Is the creep not delivering and full?
     if (!creep.memory.delivering && creep.carry.energy == creep.carryCapacity) {
         creep.memory.delivering = true;
-        creep.say('🚚 deliver');
+        creep.say('PUT');
     }
 
     var settings = require('settings.desired');
@@ -62,7 +62,7 @@ module.exports.run = function(creep, debug = false) {
                 if(creep.withdraw(containersWithEnergy[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(containersWithEnergy[0], {visualizePathStyle: {stroke: '#00ff00'}});
                 } else {
-                    creep.say('⛏');
+                    creep.say('^^');
                 }
             }
         } else {
@@ -78,12 +78,12 @@ module.exports.run = function(creep, debug = false) {
                             },
                             reusePath:3
                         });
-                        creep.say('🚓');
+                        creep.say('>>');
                     } else {
                         creep.memory.delivering = true;
                     }
                 } else {
-                    creep.say('⤴️');
+                    creep.say('^^');
                 }
                 return;
             }
@@ -97,10 +97,10 @@ module.exports.run = function(creep, debug = false) {
                     creep.moveTo(sources[1], {visualizePathStyle: {stroke: '#ffffff'}});
                 } else {
                     creep.memory.delivering = true;
-                    creep.say('🚚 deliver');
+                    creep.say('PUT');
                 }
             } else {
-                creep.say('⛏️');
+                creep.say('^^');
             }
         }
     }
@@ -120,10 +120,10 @@ module.exports.run = function(creep, debug = false) {
                 if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target, {visualizePathStyle: {stroke: '#00ff00'}});
                 } else {
-                    creep.say('🚚');
+                    creep.say('\/');
                 }
             } else {
-                creep.say('🙁');
+                creep.say('(-_-)');
             }
             return;
         }
@@ -136,7 +136,7 @@ module.exports.run = function(creep, debug = false) {
             if(creep.transfer(towers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(towers[0], {visualizePathStyle: {stroke: '#00ff00'}});
             } else {
-                creep.say('🚚');
+                creep.say('\/');
             }
             return;
         }
@@ -150,12 +150,12 @@ module.exports.run = function(creep, debug = false) {
             if(creep.transfer(containers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(containers[0], {visualizePathStyle: {stroke: '#00ff00'}});
             } else {
-                creep.say('🚚');
+                creep.say('\/');
             }
             return;
         }
         // If we got here then we didn't find anything to fill
-        creep.say('🙁');
+        creep.say('(-_-)');
     }
 }
 
