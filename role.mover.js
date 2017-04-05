@@ -1,35 +1,44 @@
 /* Specialist Mover Drone */
-module.exports.role = 'miner';
+module.exports.role = 'mover';
 
 /* SType */
 module.exports.sType = 'specialist';
+
 
 /* XL Cost */
 module.exports.costXL = 700;
 /* XL Body (Large Tougher Dude) */
 module.exports.bodyXL = [
-    TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,          // 5 Toughs = 50
-    MOVE,MOVE,MOVE,MOVE,MOVE,               // 5 Moves = 250
-    ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,     // 5 Attacks = 400 = 150h/t
+    MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,         // 7 Moves = 350
+    CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,  // 7 Carry = 350
+];
+
+
+/* H Cost */
+module.exports.costH = 600;
+/* H Body (Creep with toughs!) */
+module.exports.bodyH = [
+    TOUGH,TOUGH,TOUGH,TOUGH,     // 4 Tough = 200
+    MOVE,MOVE,MOVE,MOVE,         // 4 Moves = 200
+    CARRY,CARRY,CARRY,CARRY,     // 4 Carry = 200
 ];
 
 
 /* M Cost */
-module.exports.costM = 380;
-/* M Body (tougher, still 1 move per turn)*/
+module.exports.costM = 500;
+/* M Body*/
 module.exports.bodyM = [
-    TOUGH,TOUGH,            // 2 Toughs = 20
-    MOVE,MOVE,MOVE,MOVE,    // 4 Moves = 200
-    ATTACK,ATTACK,          // 2 Attacks = 160 = 60h/t
+    MOVE,MOVE,MOVE,MOVE,MOVE        // 5 Moves = 250
+    CARRY,CARRY,CARRY,CARRY,CARRY   // 5 Carry = 250
 ];
 
 
 /* S Cost */
-module.exports.costS = 260;
-/* S Body (fast attack dog)*/
+module.exports.costS = 300;
+/* S Body*/
 module.exports.bodyS = [
-    MOVE,MOVE,              // 1 Moves = 100
-    ATTACK,ATTACK,          // 2 Attacks = 160 = 60h/t
+    MOVE,MOVE,MOVE,     // 3 Moves = 100
+    CARRY,CARRY,CARRY,  // 3 Carry = 100
 ];
 
 /* What we want to spawn */
@@ -101,7 +110,44 @@ module.exports.run = function (creep, debug = false) {
 
     // First lets try whatever action we're trying to perform
     if (creep.memory.delivering) {
-        // Try dropping off
+        // Do we have a target?
+        if (!creep.memory.targetId) {
+            // No lets try and find one
+            var target = creep.pos.findClosestyRange(FIND_STRUCTURES, {
+                filter: (i) => {
+                    return (
+                        i.structureType == STRUCTURE_EXTENSION ||
+                        i.structureType == STRUCTURE_SPAWN
+                    ) && i.energy < i.energyCapacity;
+                }
+            });
+
+            // We found a target lets put it into memory
+            if (target) {
+                creep.memory.targetId = target.id;
+                creep.memory.targetType = 'dropoff';
+            } else {
+                // Next we should look for turrets?
+                var target = creep.pos.findClosestyRange(FIND_STRUCTURES, {
+                    filter: (i) => {
+                        return i.structureType == STRUCTURE_TOWER && i.energy < i.energyCapacity;
+                    }
+                });
+
+                // We found a turret
+                if (target) {
+                    creep.memory.targetId = target.id;
+                    creep.memery.targetType = 'dropoff';
+                } else {
+                    // Okay at this point lets just put it into storage
+                    var target = creep.room.storage;
+                    if (target) {
+                        creep.memory.targetId = target.id;
+                        creep.memory.targetType = 'dropoff';
+                    }
+                }
+            }
+        }
     } else {
         // Do we have a target?
         if (!creep.memory.targetId) {
@@ -128,29 +174,56 @@ module.exports.run = function (creep, debug = false) {
                 }
             }
         }
+    }
 
-        var target = Game.getObjectById(creep.memory.targetId);
+    var target = Game.getObjectById(creep.memory.targetId);
 
-        // Resource Type
-        if (creep.memory.targetType == 'resource') {
-            // Let's try to pick it up
-            if (creep.pickup(target) == ERR_NOT_IN_RANGE) {
-                // We need to go get it
-                creep.memory.moving = true;
-            } else {
-                // Pickup successful
-            }
+    // Resource Type
+    if (creep.memory.targetType == 'resource') {
+        // Let's try to pick it up
+        if (creep.pickup(target) == ERR_NOT_IN_RANGE) {
+            // We need to go get it
+            creep.memory.moving = true;
+        } else {
+            // Pickup successful
+        }
+    }
+
+    // Storage or Container Type
+    if (creep.memory.targetType == 'storage' || creep.memory.targetType == 'container') {
+        // Try to withdraw
+        if (creep.withdraw(box, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            // We need to go to it
+            creep.memory.moving = true;
+        } else {
+            // Pickup successful
+        }
+    }
+
+    // If it's a drop off
+    if (creep.memory.targetType == 'dropoff') {
+        // Try to transfer our energy to it
+        if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            // We need to go to it
+            creep.memory.moving = true;
+        } else {
+            // Dropoff successful
+        }
+    }
+
+    // Okay at this point we probably want to move to the target
+    if (creep.memory.moving) {
+        // Okay lets check for a path
+        if (!creep.memory.pathInUse) {
+            // We need to find a path to our target
+            var path = creep.room.findPath(creep.pos, target.pos, {
+                maxOps: 2000, // 2000 is the default, perhaps we can lower this?
+                serialize: true
+            });
+            creep.memory.pathInUse = Room.serializePath(path);
         }
 
-        // Storage or Container Type
-        if (creep.memory.targetType == 'storage' || creep.memory.targetType == 'container') {
-            // Try to withdraw
-            if (creep.withdraw(box, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                // We need to go to it
-                creep.memory.moving = true;
-            } else {
-                // Pickup successful
-            }
-        }
+        var movePath = Room.deserializePath(creep.memory.pathInUse);
+        creep.moveByPath(movePath);
     }
 };
