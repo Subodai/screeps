@@ -13,7 +13,7 @@
 module.exports.run = function(creep) {
     // If it's fatigued we should just return there's no need to carry on
     if (creep.fatigue > 0) {
-        creep.say('💤');
+        creep.say('Zzz');
         return;
     }
 
@@ -24,7 +24,7 @@ module.exports.run = function(creep) {
 
     // If it's dying force it into delivery mode
     if (creep.memory.dying) {
-        creep.say(ticks + ' 🕛');
+        creep.say(ticks);
         if (creep.carry.energy > (creep.carryCapacity/2) || ticks < 50) {
             creep.memory.delivering = true;
         } else {
@@ -35,13 +35,13 @@ module.exports.run = function(creep) {
     // Is the creep dropping off and empty?
     if (creep.memory.delivering && creep.carry.energy == 0) {
         creep.memory.delivering = false;
-        creep.say('⛏️ harvest');
+        creep.say('GET');
     }
 
     // Is the creep not delivering and full?
     if (!creep.memory.delivering && creep.carry.energy == creep.carryCapacity) {
         creep.memory.delivering = true;
-        creep.say('🚚 deliver');
+        creep.say('PUT');
     }
 
     // If we're not delivering, check if we can harvest, if not and we have half energy, go and deliver
@@ -65,10 +65,10 @@ module.exports.run = function(creep) {
                     });
                 } else {
                     creep.memory.delivering = true;
-                    creep.say('🚚 recover');
+                    creep.say('RECOVER');
                 }
             } else {
-                creep.say('⛏️');
+                creep.say('^^');
             }
             return;
         }
@@ -87,12 +87,12 @@ module.exports.run = function(creep) {
                         },
                         reusePath:3
                     });
-                    creep.say('🚓');
+                    creep.say('>>');
                 } else {
                     creep.memory.delivering = true;
                 }
             } else {
-                creep.say('⤴️');
+                creep.say('^^');
             }
             return;
         }
@@ -132,10 +132,10 @@ module.exports.run = function(creep) {
                 creep.moveTo(container, {visualizePathStyle: {stroke: '#ffffff'}});
             } else {
                 creep.memory.delivering = true;
-                creep.say('🚚 deliver');
+                creep.say('PUT');
             }
         } else {
-            creep.say('⛏️');
+            creep.say('^^');
         }
     }
 
@@ -154,7 +154,7 @@ module.exports.run = function(creep) {
             if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(target, {visualizePathStyle: {stroke: '#00ff00'}});
             } else {
-                creep.say('🚚');
+                creep.say('\/');
             }
         } else {
             var towers = creep.room.find(FIND_STRUCTURES, {
@@ -166,7 +166,7 @@ module.exports.run = function(creep) {
                 if(creep.transfer(towers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(towers[0], {visualizePathStyle: {stroke: '#00ffff'}});
                 } else {
-                    creep.say('🚚');
+                    creep.say('\/');
                 }
                 return;
             }
@@ -177,7 +177,7 @@ module.exports.run = function(creep) {
                 if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target, {visualizePathStyle: {stroke: '#00ff00'}});
                 } else {
-                    creep.say('🚚');
+                    creep.say('\/');
                 }
             } else {
                 creep.memory.idle++;
