@@ -117,11 +117,11 @@ module.exports.run = function (creep, debug = false) {
                     reusePath:5
                 });
                 // Moving make a say
-                creep.say('d(^-^)b')
+                creep.say('>>')
             } else {
                 // Mining say we're mining
                 if (!creep.memory.dying) {
-                    creep.say('(q_q)');
+                    creep.say('d(^-^)b');
                 }
             }
         } else {

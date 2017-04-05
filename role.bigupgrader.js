@@ -3,7 +3,7 @@
  */
 module.exports.run = function(creep) {
     if (creep.fatigue > 0) {
-        creep.say('💤');
+        creep.say('Zzz');
         return;
     }
 
@@ -11,24 +11,24 @@ module.exports.run = function(creep) {
     var ticks = creep.ticksToLive;
     if (ticks < 100) {
         console.log('Creep soon to die, switching to harvester role');
-        creep.say('♻️');
+        creep.say('!!');
         creep.memory.role = 'bigharvester';
     }
 
     if(creep.memory.upgrading && creep.carry.energy == 0) {
         creep.memory.upgrading = false;
-        creep.say('⛏️ harvest');
+        creep.say('GET');
     }
     if(!creep.memory.upgrading && creep.carry.energy == creep.carryCapacity) {
         creep.memory.upgrading = true;
-        creep.say('⛺ upgrade');
+        creep.say('PUT');
     }
 
     if(creep.memory.upgrading) {
         if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
             creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#0000ff'}});
         } else {
-            creep.say('⛺');
+            creep.say('(>.<)');
         }
     } else {
         var resource = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES);
@@ -43,12 +43,12 @@ module.exports.run = function(creep) {
                         },
                         reusePath:3
                     });
-                    creep.say('🚓');
+                    creep.say('>>');
                 } else {
                     creep.memory.upgrading = true;
                 }
             } else {
-                creep.say('⤴️');
+                creep.say('^^');
             }
             return;
         }
@@ -69,8 +69,9 @@ module.exports.run = function(creep) {
                 },
                 reusePath:0
             });
+            creep.say('>>');
         } else {
-            creep.say('⛏️');
+            creep.say('^^');
         }
     }
 }

@@ -45,7 +45,7 @@ module.exports.run = function (creep, debug = false) {
     // Fatigue Check
     if (creep.fatigue > 0) {
         if (debug) { console.log('Creep[' + creep.name + '] Fatgiued ' + creep.fatigue); }
-        creep.say('💤');
+        creep.say('Zzz');
         return;
     }
     if (creep.memory.idle >= 200) {
@@ -58,15 +58,15 @@ module.exports.run = function (creep, debug = false) {
         creep.memory.idle = 0;
         if (creep.attack(target) == ERR_NOT_IN_RANGE) {
             creep.moveTo(target);
-            creep.say('⛔');
+            creep.say('>>');
             return;
         } else {
-            creep.say('💢');
+            creep.say('FU!');
             return;
         }
     } else {
         creep.memory.idle++;
-        creep.say(creep.memory.idle + '❔');
+        creep.say(creep.memory.idle);
         return;
     }
 }
