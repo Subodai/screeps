@@ -48,7 +48,7 @@ var spawner = {
             }
             // Run the loops
             for (var name in Game.rooms) {
-                if (desired.spawnMovers) {
+                if (desired.SpawnMovers) {
                     var moverSpawn = require('spawn.mover');
                     if (moverSpawn.run(debug)) {
                         console.log('Spawner used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
