@@ -192,7 +192,7 @@ module.exports.run = function (creep, debug = false) {
     // Storage or Container Type
     if (creep.memory.targetType == 'storage' || creep.memory.targetType == 'container') {
         // Try to withdraw
-        if (creep.withdraw(box, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             // We need to go to it
             creep.memory.moving = true;
         } else {
