@@ -28,7 +28,7 @@ module.exports.bodyH = [
 module.exports.costM = 500;
 /* M Body*/
 module.exports.bodyM = [
-    MOVE,MOVE,MOVE,MOVE,MOVE        // 5 Moves = 250
+    MOVE,MOVE,MOVE,MOVE,MOVE,       // 5 Moves = 250
     CARRY,CARRY,CARRY,CARRY,CARRY   // 5 Carry = 250
 ];
 
