@@ -220,7 +220,7 @@ module.exports.run = function (creep, debug = false) {
                 maxOps: 2000, // 2000 is the default, perhaps we can lower this?
                 serialize: true
             });
-            creep.memory.pathInUse = Room.serializePath(path);
+            creep.memory.pathInUse = path;
         }
 
         var movePath = Room.deserializePath(creep.memory.pathInUse);
