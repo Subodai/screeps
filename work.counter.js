@@ -64,7 +64,7 @@ module.exports.run = function(debug = false) {
             var sources = creep.room.find(FIND_SOURCES);
             var miners = _.filter(Game.creeps, (i) => creep.memory.role == 'miner');
             // Loop through the sources
-            for (var i=0, i<=sources.length-1;i++) {
+            for (var i=0; i<=sources.length-1; i++) {
                 // Get the sources
                 var source = sources[i];
                 // Make found false by default
