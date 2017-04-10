@@ -48,6 +48,13 @@ var spawner = {
             }
             // Run the loops
             for (var name in Game.rooms) {
+                if (desired.spawnMovers) {
+                    var moverSpawn = require('spawn.mover');
+                    if (moverSpawn.run(debug)) {
+                        console.log('Spawner used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
+                        return;
+                    }
+                }
                 if (desired.SpawnBig && Game.rooms[name].energyAvailable >= bigCost) {
                     if (debug) { console.log('Enough Energy for Big Spawn'); }
                     var bigSpawner = require('spawn.big');
