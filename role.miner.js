@@ -42,6 +42,8 @@ module.exports.run = function (creep, debug = false) {
 
     // Only do this if we don't have an assigned Source
     if (!creep.memory.assignedSource) {
+        var spawn = require('spawn.miner');
+        spawn.setup();
         if (debug) { console.log('Creep[' + creep.name + '] Miner without assigned Source, assigning'); }
         // Okay lets get the room memory for assigned sources
         var sourceId = false;

@@ -60,38 +60,8 @@ module.exports.run = function(debug = false) {
         if (theRoom.memory.sourceReset) {
             Game.notify('Room ' + name + ' Resetting mining sources');
             console.log('Resetting Room Sources');
-            delete theRoom.memory.assignedSources;
             var miner = require('spawn.miner');
             miner.setup();
-            // First get the sources
-            var sources = theRoom.find(FIND_SOURCES);
-            // Loop through the sources
-            for (var i=0; i<=sources.length-1; i++) {
-                // Get the sources
-                var source = sources[i];
-                // Make found false by default
-                var found = false;
-                var creepId = null;
-                var sourceId = source.id;
-                theRoom.memory.assignedSources[sourceId] = null;
-                // Loop through the miners
-                for (var creepName in Game.creeps) {
-                    // Define the creep
-                    var creep = Game.creeps[creepName];
-                    if (!creep.memory.role == 'miner' || creep.memory.dying) {
-                        continue;
-                    }
-                    // If this creep has the assigned Source, we found it
-                    if (creep.memory.assignedSource == sourceId) {
-                        found = true;
-                        creepId = creep.id;
-                        break;
-                    }
-                }
-                if (found) {
-                    theRoom.memory.assignedSources[sourceId] = creepId;
-                }
-            }
             Game.notify('Room ' + name + ' Sources reset successfully.');
             console.log('Room sources reset successfully');
             delete theRoom.memory.sourceReset;

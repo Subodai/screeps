@@ -13,24 +13,59 @@ module.exports.setup = function () {
     // Loop through the game rooms we have
     for (var name in Game.rooms) {
         console.log('Setting up room ' + name);
+
+        var theRoom = Game.rooms[name];
+
+        delete theRoom.memory.assignedSources;
+        delete theRoom.memory.minersNeeded;
         
-        if (!Game.rooms[name].memory.assignedSources) {
-            var sources = Game.rooms[name].find(FIND_SOURCES);
+        if (!theRoom.memory.assignedSources) {
+            var sources = theRoom.find(FIND_SOURCES);
             var array = {};
             for (var i = 0; i <= sources.length -1; i++) {
                 console.log(sources[i].id);
                 array[sources[i].id] = null;
             }
-            Game.rooms[name].memory.assignedSources = array;
+            theRoom.memory.assignedSources = array;
             // Check for the minersNeeded flag
-            if (!Game.rooms[name].memory.minersNeeded) {
+            if (!theRoom.memory.minersNeeded) {
                 console.log('Setting miners Needed to ' + sources.length);
-                Game.rooms[name].memory.minersNeeded = sources.length;
+                theRoom.memory.minersNeeded = sources.length;
             } else {
-                console.log('Currently set to ' + Game.rooms[name].memory.minersNeeded);
+                console.log('Currently set to ' + theRoom.memory.minersNeeded);
             }
         } else {
             console.log('Assigned Sources already exists. leaving alone!');
+        }
+
+        // First get the sources
+        var sources = theRoom.find(FIND_SOURCES);
+        // Loop through the sources
+        for (var i=0; i<=sources.length-1; i++) {
+            // Get the sources
+            var source = sources[i];
+            // Make found false by default
+            var found = false;
+            var creepId = null;
+            var sourceId = source.id;
+            theRoom.memory.assignedSources[sourceId] = null;
+            // Loop through the miners
+            for (var creepName in Game.creeps) {
+                // Define the creep
+                var creep = Game.creeps[creepName];
+                if (!creep.memory.role == 'miner' || creep.memory.dying) {
+                    continue;
+                }
+                // If this creep has the assigned Source, we found it
+                if (creep.memory.assignedSource == sourceId) {
+                    found = true;
+                    creepId = creep.id;
+                    break;
+                }
+            }
+            if (found) {
+                theRoom.memory.assignedSources[sourceId] = creepId;
+            }
         }
     }
     return '++Miner Setup Complete++';
