@@ -113,7 +113,7 @@ module.exports.run = function (creep, debug = false) {
         // Do we have a target?
         if (!creep.memory.targetId) {
             // No lets try and find one
-            var target = creep.pos.findClosestyRange(FIND_STRUCTURES, {
+            var target = creep.pos.findClosestRange(FIND_STRUCTURES, {
                 filter: (i) => {
                     return (
                         i.structureType == STRUCTURE_EXTENSION ||
@@ -128,7 +128,7 @@ module.exports.run = function (creep, debug = false) {
                 creep.memory.targetType = 'dropoff';
             } else {
                 // Next we should look for turrets?
-                var target = creep.pos.findClosestyRange(FIND_STRUCTURES, {
+                var target = creep.pos.findClosestRange(FIND_STRUCTURES, {
                     filter: (i) => {
                         return i.structureType == STRUCTURE_TOWER && i.energy < i.energyCapacity;
                     }
@@ -153,7 +153,7 @@ module.exports.run = function (creep, debug = false) {
         if (!creep.memory.targetId) {
             // No, lets find one
             // The priority is dropped resources
-            var resource = creep.pos.findClosestyRange(FIND_DROPPED_RESOURCES, {
+            var resource = creep.pos.findClosestRange(FIND_DROPPED_RESOURCES, {
                 filter: (i) => i.amount >= creep.carryCapacity/2
             });
             // Did we find resources?
@@ -162,7 +162,7 @@ module.exports.run = function (creep, debug = false) {
                 creep.memory.targetType = 'resource';
             } else {
                 // okay we didn't find suitable dropped res, next lets try a container
-                var container = creep.pos.findClosestyRange(FIND_STRUCTURES, {
+                var container = creep.pos.findClosestRange(FIND_STRUCTURES, {
                     filter: (i) => i.structureType == STRUCTURE_CONTAINER && structure.store[RESOURCE_ENERGY] >= 100
                 });
                 // Did we find a container?
