@@ -224,6 +224,9 @@ module.exports.run = function (creep, debug = false) {
         }
 
         var movePath = Room.deserializePath(creep.memory.pathInUse);
-        creep.moveByPath(movePath);
+        if(creep.moveByPath(movePath) == ERR_NO_PATH) {
+            delete creep.memory.pathInUse;
+            console.log('Creep Stuck deleting path');
+        }
     }
 };
