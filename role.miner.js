@@ -52,14 +52,18 @@ module.exports.run = function (creep, debug = false) {
             var source = sources[i];
             if (assigned[source.id] == null) {
                 sourceId = source.id;
-                creep.room.memory.assignedSources[sourceId] = creep.name;
+                creep.room.memory.assignedSources[sourceId] = creep.id;
                 creep.memory.assignedSource = sourceId;
+                // Make sure we break out so we don't break the next source too
+                break;
             }
         }
         // Do we have a sourceId?
         if (sourceId == false) {
             if (debug) { console.log('Creep[' + creep.name + '] Miner cannot find source!!'); }
-            creep.say('WTF?');
+            if (!creep.room.memory.sourceReset) {
+                creep.room.memory.sourceReset = true;
+            }
             Game.notify('Miner Creep unable to assign a source');
         }
     }

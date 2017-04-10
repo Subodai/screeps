@@ -56,6 +56,41 @@ module.exports.run = function(debug = false) {
         if (theRoom.memory.emergency) {
             console.log('We have ' + list.length + ' total creeps still in emergency mode');
         }
+        // If the room sources need resetting
+        if (theRoom.memory.sourceReset) {
+            Game.notify('Room ' + name + ' Resetting mining sources');
+            console.log('Resetting Room Sources');
+            // First get the sources
+            var sources = creep.room.find(FIND_SOURCES);
+            var miners = _.filter(Game.creeps, (i) => creep.memory.role == 'miner');
+            // Loop through the sources
+            for (var i=0, i<=sources.length-1;i++) {
+                // Get the sources
+                var source = sources[i];
+                // Make found false by default
+                var found = false;
+                var creepId = null;
+                // Loop through the miners
+                for (var name in miners) {
+                    // Define the creep
+                    var creep = Game.creeps[name];
+                    // If this creep has the assigned Source, we found it
+                    if (creep.memory.assignedSource == source.id) {
+                        found = true;
+                        creepId = creep.id;
+                        break;
+                    }
+                }
+                if (found) {
+                    theRoom.memory.assignedSources[source.id] = creepId;
+                } else {
+                    theRoom.memory.assignedSources[source.id] = null;
+                }
+            }
+            Game.notify('Room ' + name + ' Sources reset successfully.');
+            delete theRoom.memory.sourceReset;
+        }
+
         console.log(name + ':' + Game.rooms[name].energyAvailable);
     }
     console.log('Counter used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
