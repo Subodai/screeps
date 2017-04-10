@@ -58,9 +58,11 @@ module.exports.run = function(debug = false) {
         }
         // If the room sources need resetting
         if (theRoom.memory.sourceReset) {
-            delete theRoom.memory.assignedSources;
             Game.notify('Room ' + name + ' Resetting mining sources');
             console.log('Resetting Room Sources');
+            delete theRoom.memory.assignedSources;
+            var miner = require('spawn.miner');
+            miner.setup();
             // First get the sources
             var sources = theRoom.find(FIND_SOURCES);
             // Loop through the sources
