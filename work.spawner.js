@@ -45,6 +45,14 @@ var spawner = {
                     console.log('Spawner used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
                     return;
                 }
+                var extractorSpawn = require('spawn.extractor');
+                if (desired.SpawnExtractors && Game.rooms[name].energyAvailable >= extractor.energyCost) {
+                    if (debug) { console.log('Enough Energy for Extractor Spawn'); }
+                    if (extractorSpawn.run(debug)) {
+                        console.log('Spawner used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
+                        return;
+                    }
+                }
             }
             // Run the loops
             for (var name in Game.rooms) {
