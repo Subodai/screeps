@@ -1,5 +1,5 @@
 /* Specialist Mover Drone */
-module.exports.role = 'mover';
+module.exports.roleName = 'mover';
 
 /* SType */
 module.exports.sType = 'specialist';
