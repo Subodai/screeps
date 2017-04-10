@@ -61,8 +61,8 @@ module.exports.run = function(debug = false) {
             Game.notify('Room ' + name + ' Resetting mining sources');
             console.log('Resetting Room Sources');
             // First get the sources
-            var sources = creep.room.find(FIND_SOURCES);
-            var miners = _.filter(Game.creeps, (i) => creep.memory.role == 'miner');
+            var sources = theRoom.find(FIND_SOURCES);
+            var miners = _.filter(Game.creeps, (i) => i.memory.role == 'miner');
             // Loop through the sources
             for (var i=0; i<=sources.length-1; i++) {
                 // Get the sources
@@ -71,9 +71,9 @@ module.exports.run = function(debug = false) {
                 var found = false;
                 var creepId = null;
                 // Loop through the miners
-                for (var name in miners) {
+                for (var creepName in miners) {
                     // Define the creep
-                    var creep = Game.creeps[name];
+                    var creep = Game.creeps[creepName];
                     // If this creep has the assigned Source, we found it
                     if (creep.memory.assignedSource == source.id) {
                         found = true;
