@@ -37,4 +37,9 @@ module.exports.run = function(debug = false) {
     var GuardMover = require('movement.guard');
     GuardMover.run(debug);
     console.log('G Move  used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
+    _cpu = Game.cpu.getUsed();
+
+    var Mover = require('movement.mover');
+    Mover.run(debug);
+    console.log('Mo Move  used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
 }
