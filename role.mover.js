@@ -163,7 +163,7 @@ module.exports.run = function (creep, debug = false) {
             } else {
                 // okay we didn't find suitable dropped res, next lets try a container
                 var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (i) => i.structureType == STRUCTURE_CONTAINER && structure.store[RESOURCE_ENERGY] >= 100
+                    filter: (i) => i.structureType == STRUCTURE_CONTAINER && i.store[RESOURCE_ENERGY] >= 100
                 });
                 // Did we find a container?
                 if (container) {
