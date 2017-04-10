@@ -21,7 +21,7 @@ module.exports.setup = function () {
                 console.log(sources[i].id);
                 array[sources[i].id] = null;
             }
-            Game.rooms[name].memory.assignedSources = array();
+            Game.rooms[name].memory.assignedSources = array;
             // Check for the minersNeeded flag
             if (!Game.rooms[name].memory.minersNeeded) {
                 console.log('Setting miners Needed to ' + sources.length);
