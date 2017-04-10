@@ -43,9 +43,9 @@ module.exports.bodyS = [
 
 /* What we want to spawn */
 module.exports.roster = {
-    S : 10, // 10 Small
-    M : 5,  // 5 Mid
-    XL: 5   // 5 XL
+    S : 1, // 10 Small
+    M : 1,  // 5 Mid
+    XL: 1   // 5 XL
 };
 
 /**
