@@ -69,6 +69,7 @@ module.exports.run = function(debug = false) {
                 // Make found false by default
                 var found = false;
                 var creepId = null;
+                var sourceId = source.id;
                 // Loop through the miners
                 for (var creepName in Game.creeps) {
                     // Define the creep
@@ -77,16 +78,16 @@ module.exports.run = function(debug = false) {
                         continue;
                     }
                     // If this creep has the assigned Source, we found it
-                    if (creep.memory.assignedSource == source.id) {
+                    if (creep.memory.assignedSource == sourceId) {
                         found = true;
                         creepId = creep.id;
                         break;
                     }
                 }
                 if (found) {
-                    theRoom.memory.assignedSources[source.id] = creepId;
+                    theRoom.memory.assignedSources[sourceId] = creepId;
                 } else {
-                    theRoom.memory.assignedSources[source.id] = null;
+                    theRoom.memory.assignedSources[sourceId] = null;
                 }
             }
             Game.notify('Room ' + name + ' Sources reset successfully.');

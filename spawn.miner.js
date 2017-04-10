@@ -13,13 +13,7 @@ module.exports.setup = function () {
     // Loop through the game rooms we have
     for (var name in Game.rooms) {
         console.log('Setting up room ' + name);
-        // Check for the minersNeeded flag
-        if (!Game.rooms[name].memory.minersNeeded) {
-            console.log('Setting miners Needed to ' + sources.length);
-            Game.rooms[name].memory.minersNeeded = sources.length;
-        } else {
-            console.log('Currently set to ' + Game.rooms[name].memory.minersNeeded);
-        }
+        
         if (!Game.rooms[name].memory.assignedSources) {
             var sources = Game.rooms[name].find(FIND_SOURCES);
             var array = {};
@@ -28,6 +22,13 @@ module.exports.setup = function () {
                 array[sources[i].id] = null;
             }
             Game.rooms[name].memory.assignedSources = array;
+            // Check for the minersNeeded flag
+            if (!Game.rooms[name].memory.minersNeeded) {
+                console.log('Setting miners Needed to ' + sources.length);
+                Game.rooms[name].memory.minersNeeded = sources.length;
+            } else {
+                console.log('Currently set to ' + Game.rooms[name].memory.minersNeeded);
+            }
         } else {
             console.log('Assigned Sources already exists. leaving alone!');
         }

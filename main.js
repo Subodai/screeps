@@ -3,7 +3,7 @@ var spawner   = require('work.spawner');
 var movement  = require('movement.creeps');
 var cleaner   = require('work.cleaner');
 var turret    = require('work.turret');
-var turret2    = require('work.turret2');
+var turret2   = require('work.turret2');
 
 module.exports.loop = function () {
     var msg = 'CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '}'
