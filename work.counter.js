@@ -58,6 +58,7 @@ module.exports.run = function(debug = false) {
         }
         // If the room sources need resetting
         if (theRoom.memory.sourceReset) {
+            delete theRoom.memory.assignedSources;
             Game.notify('Room ' + name + ' Resetting mining sources');
             console.log('Resetting Room Sources');
             // First get the sources
@@ -70,6 +71,7 @@ module.exports.run = function(debug = false) {
                 var found = false;
                 var creepId = null;
                 var sourceId = source.id;
+                theRoom.memory.assignedSources[sourceId] = null;
                 // Loop through the miners
                 for (var creepName in Game.creeps) {
                     // Define the creep
@@ -86,8 +88,6 @@ module.exports.run = function(debug = false) {
                 }
                 if (found) {
                     theRoom.memory.assignedSources[sourceId] = creepId;
-                } else {
-                    theRoom.memory.assignedSources[sourceId] = null;
                 }
             }
             Game.notify('Room ' + name + ' Sources reset successfully.');
