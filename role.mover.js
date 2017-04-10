@@ -225,6 +225,7 @@ module.exports.run = function (creep, debug = false) {
 
         var movePath = Room.deserializePath(creep.memory.pathInUse);
         if(creep.moveByPath(movePath) == ERR_NO_PATH) {
+            creep.moveTo(target);
             delete creep.memory.pathInUse;
             console.log('Creep Stuck deleting path');
         }
