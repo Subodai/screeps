@@ -28,7 +28,7 @@ module.exports.loop = function () {
     turret2.run(debug);
     msg += ' {' + Game.cpu.getUsed().toFixed(3) + '}';
     console.log(msg);
-    if (Game.cpu.getUser() > 50) {
+    if (Game.cpu.getUsed() > 50) {
         Game.notify(msg);
     }
 }
