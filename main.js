@@ -13,9 +13,13 @@ var counter   = require('work.counter');
 module.exports.loop = function () {
     var msg = 'CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '}'
     var debug = false;
-    despawner.run(debug);
-    cleaner.run(debug);
-    if (Game.time % 5 == 0) { // Every 5 ticks
+    // Only need these once every 10 ticks
+    if (Game.time % 10 == 0) {
+        despawner.run(debug);
+        cleaner.run(debug);
+    }
+    // Only need these once every 5 ticks
+    if (Game.time % 5 == 0) {
         counter.run(debug);
         spawner.run(debug);
     }
