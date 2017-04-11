@@ -10,7 +10,7 @@ module.exports.run = function (debug = false) {
             var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
             if(closestHostile) {
                 console.log('running attack');
-                Game.notify('Turret Attacking Hostiles');
+                Game.notify(Game.time + ' Turret Attacking Hostiles');
                 tower.attack(closestHostile);
                 return;
             }

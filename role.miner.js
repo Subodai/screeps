@@ -66,7 +66,7 @@ module.exports.run = function (creep, debug = false) {
             if (!creep.room.memory.sourceReset) {
                 creep.room.memory.sourceReset = true;
             }
-            Game.notify('Miner Creep unable to assign a source');
+            Game.notify(Game.time + ' Miner Creep unable to assign a source');
         }
     }
 
@@ -133,7 +133,7 @@ module.exports.run = function (creep, debug = false) {
         } else {
             if (debug) { console.log('Creep[' + creep.name + '] Miner cannot find source!!'); }
             creep.say('WTF?');
-            Game.notify('Miner Creep unable to assign a source');
+            Game.notify(Game.time + ' Miner Creep unable to assign a source');
         }
     }
 }

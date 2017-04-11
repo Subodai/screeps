@@ -24,11 +24,11 @@ module.exports.run = function(debug = false) {
         // Are there any hostiles?
         var hostiles = theRoom.find(FIND_HOSTILE_CREEPS);
         if (hostiles.length > 0 && !theRoom.memory.guard) {
-            Game.notify('Room put into guard mode spawning guards');
+            Game.notify(Game.time + ' Room put into guard mode spawning guards');
             theRoom.memory.guard = true;
         }
         if (hostiles.length == 0 && theRoom.memory.guard) {
-            Game.notify('Room no longer in guard mode');
+            Game.notify(Game.time + ' Room no longer in guard mode');
             theRoom.memory.guard = false;
             delete theRoom.memory.guard;
         }
@@ -39,7 +39,7 @@ module.exports.run = function(debug = false) {
         }
         var list = _.filter(Game.creeps, (creep) => !creep.memory.dying);
         if (list.length == 0 && !theRoom.memory.emergency){
-            Game.notify('Room '+ name + ' In Emergency Mode!!');
+            Game.notify(Game.time + ' Room '+ name + ' In Emergency Mode!!');
             console.log('Emergency Activated');
             theRoom.memory.emergency = true;
             delete theRoom.memory.assignedSources;
@@ -48,7 +48,7 @@ module.exports.run = function(debug = false) {
 
         }
         if (list.length >= 15 && theRoom.memory.emergency) {
-            Game.notify('Room ' + name + ' No Longer in Emergency Mode');
+            Game.notify(Game.time + ' Room ' + name + ' No Longer in Emergency Mode');
             console.log('Emergency Deactivated');
             theRoom.memory.emergency = false;
             delete theRoom.memory.emergency;
@@ -58,11 +58,11 @@ module.exports.run = function(debug = false) {
         }
         // If the room sources need resetting
         if (theRoom.memory.sourceReset) {
-            Game.notify('Room ' + name + ' Resetting mining sources');
+            Game.notify(Game.time + ' Room ' + name + ' Resetting mining sources');
             console.log('Resetting Room Sources');
             var miner = require('spawn.miner');
             miner.setup();
-            Game.notify('Room ' + name + ' Sources reset successfully.');
+            Game.notify(Game.time + ' Room ' + name + ' Sources reset successfully.');
             console.log('Room sources reset successfully');
             delete theRoom.memory.sourceReset;
         }

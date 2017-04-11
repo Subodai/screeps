@@ -115,7 +115,7 @@ module.exports.run = function(creep) {
 
                 if (creep.memory.idle >= 50) {
                     console.log('Creep idle too long, switching to refiller');
-                    Game.notify('Harvester Idle too long, switching to refiller');
+                    Game.notify(Game.time + ' Harvester Idle too long, switching to refiller');
                     delete creep.memory.idle;
                     delete creep.memory.delivering;
                     creep.memory.role = 'smallrefiller';

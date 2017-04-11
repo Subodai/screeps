@@ -49,7 +49,7 @@ module.exports.run = function (creep, debug = false) {
         return;
     }
     if (creep.memory.idle >= 200) {
-        Game.notify('Despawning Guard');
+        Game.notify(Game.time + ' Despawning Guard');
         creep.suicide();
     }
     // Get a target
