@@ -15,7 +15,7 @@ module.exports.loop = function () {
     var debug = false;
     despawner.run(debug);
     cleaner.run(debug);
-    if (Game.time % 5) { counter.run(); } // Every 5 ticks run the counter
+    if (Game.time % 5 == 0) { counter.run(); } // Every 5 ticks run the counter
     spawner.run(debug);
     movement.run(debug);
     turret.run(debug);
