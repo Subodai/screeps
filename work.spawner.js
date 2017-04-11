@@ -15,8 +15,7 @@ var miner = require('role.miner');
 var spawner = {
     run: function(debug = false) {
         var _cpu = Game.cpu.getUsed();
-        var n = Game.time.toString().slice(-1);
-        if (n == 0 || n == 5) {
+        if (Game.time % 5) {
             if (debug) { console.log('Running Spawner'); }
             var desired = require('settings.desired');
 
