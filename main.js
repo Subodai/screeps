@@ -11,7 +11,7 @@ var counter   = require('work.counter');
  * Main game loop, call all other functions from here
  */
 module.exports.loop = function () {
-    var msg = 'CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '}'
+    var msg = Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '}'
     var debug = false;
     // Only need these once every 10 ticks
     if (Game.time % 10 == 0) {
@@ -26,5 +26,9 @@ module.exports.loop = function () {
     movement.run(debug);
     turret.run(debug);
     turret2.run(debug);
-    console.log(msg + ' {' + Game.cpu.getUsed().toFixed(3) + '}');
+    msg += ' {' + Game.cpu.getUsed().toFixed(3) + '}';
+    console.log(msg);
+    if (Game.cpu.getUser() > 50) {
+        Game.notify(msg);
+    }
 }
