@@ -17,7 +17,7 @@ module.exports = {
     emptyContainers: false,
     // Desired Small sized creeps
     SmlH: 2,
-    SmlU: 4,
+    SmlU: 2,
     SmlB: 5,
     SmlR: 5,
     // Desired Mid sized creeps
@@ -25,7 +25,7 @@ module.exports = {
     MidU: 0,
     MidB: 0,
     // Desired BIG sized creeps
-    BigH: 2,
-    BigU: 4,
+    BigH: 3,
+    BigU: 6,
     BigB: 0
 }
