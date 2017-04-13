@@ -19,7 +19,7 @@ module.exports.run = function (debug = false) {
             if (tower.energy >= 500) {
                 // First lets find the closest container
                 var closestRampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                    filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits = 1
+                    filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits == 1
                 });
                 if(closestRampart) {
                     tower.repair(closestRampart);
