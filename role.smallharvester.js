@@ -1,12 +1,3 @@
-/*
- * Module code goes here. Use 'module.exports' to export things:
- * module.exports.thing = 'a thing';
- *
- * You can import it from another modules like this:
- * var mod = require('role.smallharvester.new');
- * mod.thing == 'a thing'; // true
- */
-
 /**
  * Small Harvester Role
  */
@@ -54,12 +45,12 @@ module.exports.run = function(creep) {
             // Can we harvest right now?
             if (creep.withdraw(box, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 // No do we have half our energy?
-                if (creep.carry.energy <= (creep.carryCapacity/2)) {
+                if (_.sum(creep.carry) <= (creep.carryCapacity/2)) {
                     // No lets move to the source we want
                     creep.moveTo(box, {
                         visualizePathStyle: {
-                            stroke: '#00FF00',
-                            opacity: .9
+                            stroke: global.colourPickup,
+                            opacity: global.pathOpacity
                         },
                         reusePath:0
                     });
@@ -79,11 +70,11 @@ module.exports.run = function(creep) {
         if (resource) {
             creep.memory.idle = 0;
             if (creep.pickup(resource) == ERR_NOT_IN_RANGE) {
-                if (creep.carry.energy <= (creep.carryCapacity/2)) {
+                if (_.sum(creep.carry) <= (creep.carryCapacity/2)) {
                     creep.moveTo(resource,{
                         visualizePathStyle: {
-                            stroke: '#ff0000',
-                            opacity: .9
+                            stroke: global.colourResPickup,
+                            opacity: global.pathOpacity
                         },
                         reusePath:3
                     });
@@ -106,8 +97,8 @@ module.exports.run = function(creep) {
             creep.say('???');
             creep.moveTo(Game.spawns['Sub1'],{
                     visualizePathStyle: {
-                        stroke: '#000000',
-                        opacity: .1
+                        stroke: global.colourIdle,
+                        opacity: global.pathOpacity
                     },
                     reusePath:5
                 });
@@ -127,9 +118,13 @@ module.exports.run = function(creep) {
         if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.memory.idle = 0;
             // No do we have half our energy?
-            if (creep.carry.energy <= (creep.carryCapacity/2)) {
-                // No lets move to the source we want
-                creep.moveTo(container, {visualizePathStyle: {stroke: '#ffffff'}});
+            if (_.sum(creep.carry) <= (creep.carryCapacity/2)) {
+                creep.moveTo(container, {
+                    visualizePathStyle: {
+                        stroke: global.colourPickup,
+                        opacity: global.pathOpacity
+                    }
+                });
             } else {
                 creep.memory.delivering = true;
                 creep.say('PUT');
@@ -141,44 +136,83 @@ module.exports.run = function(creep) {
 
     // Alright at this point if we're delivering it's time to move the Creep to a drop off
     if (creep.memory.delivering) {
-        var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return (
-                    structure.structureType == STRUCTURE_EXTENSION ||
-                    structure.structureType == STRUCTURE_SPAWN
-                ) && structure.energy < structure.energyCapacity;
-            }
-        });
-        if (target) {
-            creep.memory.idle = 0;
-            if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target, {visualizePathStyle: {stroke: '#00ff00'}});
-            } else {
-                creep.say('\/');
-            }
-        } else {
-            var towers = creep.room.find(FIND_STRUCTURES, {
+        if (creep.carry.energy > 0) {
+            var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => {
-                    return structure.structureType == STRUCTURE_TOWER && structure.energy < structure.energyCapacity;
+                    return (
+                        structure.structureType == STRUCTURE_EXTENSION ||
+                        structure.structureType == STRUCTURE_SPAWN
+                    ) && structure.energy < structure.energyCapacity;
                 }
             });
-            if (towers.length > 0) {
-                if(creep.transfer(towers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(towers[0], {visualizePathStyle: {stroke: '#00ffff'}});
+        }
+
+        if (target) {
+            creep.memory.idle = 0;
+            for(var resourceType in creep.carry) {
+                if (creep.transfer(target, resourceType) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(target, {
+                        visualizePathStyle: {
+                            stroke: global.colourDropoff,
+                            opacity: global.pathOpacity
+                        }
+                    });
                 } else {
                     creep.say('\/');
                 }
-                return;
+            }
+            // if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            //     creep.moveTo(target, {visualizePathStyle: {stroke: '#00ff00'}});
+            // } else {
+            //     creep.say('\/');
+            // }
+        } else {
+            if (creep.carry.energy > 0) {
+                // var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                //     filter : (i) => {
+                //         return i.structureType = STRUCTURE_STORAGE && (_.sum(i.store) < i.storeCapacity)
+                //     }
+                // });
+                var towers = creep.room.find(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return structure.structureType == STRUCTURE_TOWER && structure.energy < structure.energyCapacity;
+                    }
+                });
+                if (towers.length > 0) {
+                    if(creep.transfer(towers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(towers[0], {
+                            visualizePathStyle: {
+                                stroke: global.colourTower,
+                                opacity: global.pathOpacity
+                            }
+                        });
+                    } else {
+                        creep.say('\/');
+                    }
+                    return;
+                }
             }
 
             var target = creep.room.storage;
             if (target) {
                 creep.memory.idle = 0;
-                if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, {visualizePathStyle: {stroke: '#00ff00'}});
-                } else {
-                    creep.say('\/');
+                for(var resourceType in creep.carry) {
+                    if (creep.transfer(target, resourceType) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(target, {
+                            visualizePathStyle: {
+                                stroke: global.colourDropoff,
+                                opacity: global.pathOpacity
+                            }
+                        });
+                    } else {
+                        creep.say('\/');
+                    }
                 }
+                // if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                //     creep.moveTo(target, {visualizePathStyle: {stroke: '#00ff00'}});
+                // } else {
+                //     creep.say('\/');
+                // }
             } else {
                 creep.memory.idle++;
                 creep.say('idle: ' + creep.memory.idle);
