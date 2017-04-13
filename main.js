@@ -4,6 +4,7 @@ var despawner = require('work.despawner');
 var spawner   = require('work.spawner');
 var movement  = require('movement.creeps');
 var cleaner   = require('work.cleaner');
+var towers    = require('work.towers');
 var turret    = require('work.turret');
 var turret2   = require('work.turret2');
 var counter   = require('work.counter');
@@ -25,6 +26,7 @@ module.exports.loop = function () {
         spawner.run(debug);
     }
     movement.run(debug);
+    // towers.run(debug);
     turret.run(debug);
     turret2.run(debug);
     msg += ' {' + Game.cpu.getUsed().toFixed(3) + '}';
