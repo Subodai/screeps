@@ -60,7 +60,12 @@ module.exports.run = function(creep, debug = false) {
             });
             if (containersWithEnergy.length > 0) {
                 if(creep.withdraw(containersWithEnergy[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(containersWithEnergy[0], {visualizePathStyle: {stroke: '#00ff00'}});
+                    creep.moveTo(containersWithEnergy[0], {
+                        visualizePathStyle: {
+                            stroke: global.colourPickup,
+                            opacity: .9
+                        }
+                    });
                 } else {
                     creep.say('^^');
                 }
@@ -73,7 +78,7 @@ module.exports.run = function(creep, debug = false) {
                     if (creep.carry.energy <= (creep.carryCapacity/2)) {
                         creep.moveTo(resource,{
                             visualizePathStyle: {
-                                stroke: '#ff0000',
+                                stroke: global.colourResPickup,
                                 opacity: .9
                             },
                             reusePath:3
@@ -88,19 +93,21 @@ module.exports.run = function(creep, debug = false) {
                 return;
             }
 
-            var sources = creep.room.find(FIND_SOURCES);
-            // Can we harvest right now?
-            if (creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
-                // No do we have half our energy?
-                if (creep.carry.energy <= (creep.carryCapacity/2)) {
+            var target = creep.room.storage;
+            if (target) {
+                if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     // No lets move to the source we want
-                    creep.moveTo(sources[1], {visualizePathStyle: {stroke: '#ffffff'}});
+                    creep.moveTo(target, {
+                        visualizePathStyle: {
+                            stroke: global.colourPickup,
+                            opacity: .9
+                        }
+                    });
+                    creep.say('>>');
                 } else {
+                    creep.say('^^');
                     creep.memory.delivering = true;
-                    creep.say('PUT');
                 }
-            } else {
-                creep.say('^^');
             }
         }
     }
@@ -118,7 +125,12 @@ module.exports.run = function(creep, debug = false) {
             });
             if (target) {
                 if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, {visualizePathStyle: {stroke: '#00ff00'}});
+                    creep.moveTo(target, {
+                        visualizePathStyle: {
+                            stroke: global.colourDropoff,
+                            opacity: .9
+                        }
+                    });
                 } else {
                     creep.say('\/');
                 }
@@ -134,7 +146,12 @@ module.exports.run = function(creep, debug = false) {
         });
         if (towers.length > 0) {
             if(creep.transfer(towers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(towers[0], {visualizePathStyle: {stroke: '#00ff00'}});
+                creep.moveTo(towers[0], {
+                    visualizePathStyle: {
+                        stroke: global.colourTower,
+                        opacity: .9
+                    }
+                });
             } else {
                 creep.say('\/');
             }
@@ -148,7 +165,12 @@ module.exports.run = function(creep, debug = false) {
         });
         if (containers.length > 0) {
             if(creep.transfer(containers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(containers[0], {visualizePathStyle: {stroke: '#00ff00'}});
+                creep.moveTo(containers[0], {
+                    visualizePathStyle: {
+                        stroke: global.colourDropoff,
+                        opacity: .9
+                    }
+                });
             } else {
                 creep.say('\/');
             }

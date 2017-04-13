@@ -26,7 +26,12 @@ module.exports.run = function(creep) {
 
     if(creep.memory.upgrading) {
         if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#0000ff'}});
+            creep.moveTo(creep.room.controller, {
+                visualizePathStyle: {
+                    stroke: global.colourUpgrade,
+                    opacity: .9
+                }
+            });
         } else {
             creep.say('(>.<)');
         }
@@ -38,7 +43,7 @@ module.exports.run = function(creep) {
                 if (creep.carry.energy <= (creep.carryCapacity/2)) {
                     creep.moveTo(resource,{
                         visualizePathStyle: {
-                            stroke: '#ff0000',
+                            stroke: global.colourResPickup,
                             opacity: .9
                         },
                         reusePath:3
@@ -64,8 +69,8 @@ module.exports.run = function(creep) {
         if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(container, {
                 visualizePathStyle: {
-                    stroke: '#fffff',
-                    opacity: .5
+                    stroke: global.colourPickup,
+                    opacity: .9
                 },
                 reusePath:0
             });

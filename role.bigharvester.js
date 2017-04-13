@@ -49,7 +49,7 @@ module.exports.run = function(creep) {
                     // No lets move to the source we want
                     creep.moveTo(box, {
                         visualizePathStyle: {
-                            stroke: '#00FF00',
+                            stroke: global.colourPickup,
                             opacity: .9
                         },
                         reusePath:0
@@ -73,7 +73,7 @@ module.exports.run = function(creep) {
                 if (_.sum(creep.carry) <= (creep.carryCapacity/2)) {
                     creep.moveTo(resource,{
                         visualizePathStyle: {
-                            stroke: '#ff0000',
+                            stroke: global.colourResPickup,
                             opacity: .9
                         },
                         reusePath:3
@@ -96,7 +96,7 @@ module.exports.run = function(creep) {
             creep.say('???');
             creep.moveTo(Game.spawns['Sub1'],{
                     visualizePathStyle: {
-                        stroke: '#000000',
+                        stroke: global.colourIdle,
                         opacity: .1
                     },
                     reusePath:5
@@ -119,7 +119,12 @@ module.exports.run = function(creep) {
             // No do we have half our energy?
             if (_.sum(creep.carry) <= (creep.carryCapacity/2)) {
                 // No lets move to the source we want
-                creep.moveTo(container, {visualizePathStyle: {stroke: '#ffffff'}});
+                creep.moveTo(container, {
+                    visualizePathStyle: {
+                        stroke: global.colourPickup,
+                        opacity: .9
+                    }
+                });
             } else {
                 creep.memory.delivering = true;
                 creep.say('PUT');
@@ -146,7 +151,12 @@ module.exports.run = function(creep) {
             creep.memory.idle = 0;
             for(var resourceType in creep.carry) {
                 if (creep.transfer(target, resourceType) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, {visualizePathStyle: {stroke: '#00ff00'}});
+                    creep.moveTo(target, {
+                        visualizePathStyle: {
+                            stroke: global.colourDropoff,
+                            opacity: .9
+                        }
+                    });
                 } else {
                     creep.say('\/');
                 }
@@ -170,7 +180,12 @@ module.exports.run = function(creep) {
                 });
                 if (towers.length > 0) {
                     if(creep.transfer(towers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(towers[0], {visualizePathStyle: {stroke: '#00ffff'}});
+                        creep.moveTo(towers[0], {
+                            visualizePathStyle: {
+                                stroke: global.colourTower,
+                                opacity: .9
+                            }
+                        });
                     } else {
                         creep.say('\/');
                     }
@@ -183,7 +198,12 @@ module.exports.run = function(creep) {
                 creep.memory.idle = 0;
                 for(var resourceType in creep.carry) {
                     if (creep.transfer(target, resourceType) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(target, {visualizePathStyle: {stroke: '#00ff00'}});
+                        creep.moveTo(target, {
+                            visualizePathStyle: {
+                                stroke: global.colourDropoff,
+                                opacity: .9
+                            }
+                        });
                     } else {
                         creep.say('\/');
                     }

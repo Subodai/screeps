@@ -30,7 +30,12 @@ module.exports.run = function(creep) {
             creep.say('?');
         }
         if(creep.build(site) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(site, {visualizePathStyle: {stroke: '#ffff00'}});
+            creep.moveTo(site, {
+                visualizePathStyle: {
+                    stroke: global.colourBuild,
+                    opacity: .9
+                }
+            });
         } else {
             creep.say('MAKE');
         }
@@ -51,8 +56,8 @@ module.exports.run = function(creep) {
                 // No lets move to the source we want
                 creep.moveTo(target, {
                     visualizePathStyle: {
-                        stroke: '#00FFFF',
-                        opacity: .4
+                        stroke: global.colourPickup,
+                        opacity: .9
                     }
                 });
                 creep.say('>>');
