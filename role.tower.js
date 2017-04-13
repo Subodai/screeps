@@ -25,6 +25,15 @@ module.exports.run = function (tower, debug = false) {
             filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits == 1
         });
 
+        // No single hit ramparts, okay, any with less than 300 hits or less (will be destroyed on next decay)?
+        if (!rampart) {
+            // First lets find the closest rampart
+            var rampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits <= 300
+            });
+        }
+
+
         // No single hit ramparts, okay, any with less than 5000 hits?
         if (!rampart) {
             // First lets find the closest rampart
