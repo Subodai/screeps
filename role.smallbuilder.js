@@ -33,7 +33,7 @@ module.exports.run = function(creep) {
             creep.moveTo(site, {
                 visualizePathStyle: {
                     stroke: global.colourBuild,
-                    opacity: .9
+                    opacity: global.pathOpacity
                 }
             });
         } else {
@@ -57,7 +57,7 @@ module.exports.run = function(creep) {
                 creep.moveTo(target, {
                     visualizePathStyle: {
                         stroke: global.colourPickup,
-                        opacity: .9
+                        opacity: global.pathOpacity
                     }
                 });
                 creep.say('>>');
@@ -75,7 +75,7 @@ module.exports.run = function(creep) {
         //             creep.moveTo(resource,{
         //                 visualizePathStyle: {
         //                     stroke: '#ff0000',
-        //                     opacity: .9
+        //                     opacity: global.pathOpacity
         //                 },
         //                 reusePath:3
         //             });
@@ -101,7 +101,7 @@ module.exports.run = function(creep) {
         //     creep.moveTo(container, {
         //         visualizePathStyle: {
         //             stroke: '#fffff',
-        //             opacity: .5
+        //             opacity: global.pathOpacity
         //         },
         //         reusePath:0
         //     });

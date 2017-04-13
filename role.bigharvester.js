@@ -50,7 +50,7 @@ module.exports.run = function(creep) {
                     creep.moveTo(box, {
                         visualizePathStyle: {
                             stroke: global.colourPickup,
-                            opacity: .9
+                            opacity: global.pathOpacity
                         },
                         reusePath:0
                     });
@@ -74,7 +74,7 @@ module.exports.run = function(creep) {
                     creep.moveTo(resource,{
                         visualizePathStyle: {
                             stroke: global.colourResPickup,
-                            opacity: .9
+                            opacity: global.pathOpacity
                         },
                         reusePath:3
                     });
@@ -97,7 +97,7 @@ module.exports.run = function(creep) {
             creep.moveTo(Game.spawns['Sub1'],{
                     visualizePathStyle: {
                         stroke: global.colourIdle,
-                        opacity: .1
+                        opacity: global.pathOpacity
                     },
                     reusePath:5
                 });
@@ -122,7 +122,7 @@ module.exports.run = function(creep) {
                 creep.moveTo(container, {
                     visualizePathStyle: {
                         stroke: global.colourPickup,
-                        opacity: .9
+                        opacity: global.pathOpacity
                     }
                 });
             } else {
@@ -154,7 +154,7 @@ module.exports.run = function(creep) {
                     creep.moveTo(target, {
                         visualizePathStyle: {
                             stroke: global.colourDropoff,
-                            opacity: .9
+                            opacity: global.pathOpacity
                         }
                     });
                 } else {
@@ -183,7 +183,7 @@ module.exports.run = function(creep) {
                         creep.moveTo(towers[0], {
                             visualizePathStyle: {
                                 stroke: global.colourTower,
-                                opacity: .9
+                                opacity: global.pathOpacity
                             }
                         });
                     } else {
@@ -201,7 +201,7 @@ module.exports.run = function(creep) {
                         creep.moveTo(target, {
                             visualizePathStyle: {
                                 stroke: global.colourDropoff,
-                                opacity: .9
+                                opacity: global.pathOpacity
                             }
                         });
                     } else {

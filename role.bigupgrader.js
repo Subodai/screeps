@@ -29,7 +29,7 @@ module.exports.run = function(creep) {
             creep.moveTo(creep.room.controller, {
                 visualizePathStyle: {
                     stroke: global.colourUpgrade,
-                    opacity: .9
+                    opacity: global.pathOpacity
                 }
             });
         } else {
@@ -44,7 +44,7 @@ module.exports.run = function(creep) {
                     creep.moveTo(resource,{
                         visualizePathStyle: {
                             stroke: global.colourResPickup,
-                            opacity: .9
+                            opacity: global.pathOpacity
                         },
                         reusePath:3
                     });
@@ -70,7 +70,7 @@ module.exports.run = function(creep) {
             creep.moveTo(container, {
                 visualizePathStyle: {
                     stroke: global.colourPickup,
-                    opacity: .9
+                    opacity: global.pathOpacity
                 },
                 reusePath:0
             });

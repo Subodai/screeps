@@ -63,7 +63,7 @@ module.exports.run = function(creep, debug = false) {
                     creep.moveTo(containersWithEnergy[0], {
                         visualizePathStyle: {
                             stroke: global.colourPickup,
-                            opacity: .9
+                            opacity: global.pathOpacity
                         }
                     });
                 } else {
@@ -79,7 +79,7 @@ module.exports.run = function(creep, debug = false) {
                         creep.moveTo(resource,{
                             visualizePathStyle: {
                                 stroke: global.colourResPickup,
-                                opacity: .9
+                                opacity: global.pathOpacity
                             },
                             reusePath:3
                         });
@@ -100,7 +100,7 @@ module.exports.run = function(creep, debug = false) {
                     creep.moveTo(target, {
                         visualizePathStyle: {
                             stroke: global.colourPickup,
-                            opacity: .9
+                            opacity: global.pathOpacity
                         }
                     });
                     creep.say('>>');
@@ -128,7 +128,7 @@ module.exports.run = function(creep, debug = false) {
                     creep.moveTo(target, {
                         visualizePathStyle: {
                             stroke: global.colourDropoff,
-                            opacity: .9
+                            opacity: global.pathOpacity
                         }
                     });
                 } else {
@@ -149,7 +149,7 @@ module.exports.run = function(creep, debug = false) {
                 creep.moveTo(towers[0], {
                     visualizePathStyle: {
                         stroke: global.colourTower,
-                        opacity: .9
+                        opacity: global.pathOpacity
                     }
                 });
             } else {
@@ -168,7 +168,7 @@ module.exports.run = function(creep, debug = false) {
                 creep.moveTo(containers[0], {
                     visualizePathStyle: {
                         stroke: global.colourDropoff,
-                        opacity: .9
+                        opacity: global.pathOpacity
                     }
                 });
             } else {
