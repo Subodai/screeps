@@ -15,11 +15,23 @@ module.exports.run = function (debug = false) {
                 return;
             }
 
-            // If we have 800 energy, lets repair some ramparts
+            // If we have 800 energy, get ramparts up to max hits
             if (tower.energy >= 800) {
                 // First lets find the closest container
                 var closestRampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
                     filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits < i.hitsMax
+                });
+                if(closestRampart) {
+                    tower.repair(closestRampart);
+                    return;
+                }
+            }
+
+            // If we have 600 energy, get ramparts up to 5000 hits
+            if (tower.energy >= 600) {
+                // First lets find the closest container
+                var closestRampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                    filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits < 5000
                 });
                 if(closestRampart) {
                     tower.repair(closestRampart);
