@@ -15,7 +15,19 @@ module.exports.run = function (debug = false) {
                 return;
             }
 
-            // Keep 200 in reserve for attackers
+            // If we have 800 energy, lets repair some ramparts
+            if (tower.energy >= 800) {
+                // First lets find the closest container
+                var closestRampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                    filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits < structure.hitsMax
+                });
+                if(closestRampart) {
+                    tower.repair(closestRampart);
+                    return;
+                }
+            }
+
+            // Keep 400 in reserve for attackers
             if (tower.energy >= 400) {
                 // First lets find the closest container
                 var closestDamagedContainer = tower.pos.findClosestByRange(FIND_STRUCTURES, {
