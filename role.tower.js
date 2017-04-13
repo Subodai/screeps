@@ -77,7 +77,7 @@ module.exports.run = function (tower, debug = false) {
         // Did we get one?
         if (!target) {
             // Nope okay, lets try a road
-            var target = tower.pos.findClosestByRange(FIND_STRUCUTRE, {
+            var target = tower.pos.findClosestByRange(FIND_STRUCTURE, {
                 filter: (i) => i.structureType == STRUCTURE_ROAD && i.hits < i.hitsMax
             });
         }
