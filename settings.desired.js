@@ -16,16 +16,16 @@ module.exports = {
     DeSpawn: false,
     emptyContainers: false,
     // Desired Small sized creeps
-    SmlH: 2,
+    SmlH: 1,
     SmlU: 1,
-    SmlB: 5,
+    SmlB: 1,
     SmlR: 5,
     // Desired Mid sized creeps
     MidH: 0,
     MidU: 0,
     MidB: 0,
     // Desired BIG sized creeps
-    BigH: 3,
+    BigH: 4,
     BigU: 4,
-    BigB: 0
+    BigB: 4
 }
