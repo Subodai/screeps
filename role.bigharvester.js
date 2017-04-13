@@ -131,14 +131,17 @@ module.exports.run = function(creep) {
 
     // Alright at this point if we're delivering it's time to move the Creep to a drop off
     if (creep.memory.delivering) {
-        var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return (
-                    structure.structureType == STRUCTURE_EXTENSION ||
-                    structure.structureType == STRUCTURE_SPAWN
-                ) && structure.energy < structure.energyCapacity;
-            }
-        });
+        if (creep.carry.energy > 0) {
+            var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    return (
+                        structure.structureType == STRUCTURE_EXTENSION ||
+                        structure.structureType == STRUCTURE_SPAWN
+                    ) && structure.energy < structure.energyCapacity;
+                }
+            });
+        }
+
         if (target) {
             creep.memory.idle = 0;
             for(var resourceType in creep.carry) {
@@ -154,23 +157,25 @@ module.exports.run = function(creep) {
             //     creep.say('\/');
             // }
         } else {
-            var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter : (i) => {
-                    return i.structureType = STRUCTURE_STORAGE && (_.sum(i.store) < i.storeCapacity)
+            if (creep.carry.energy > 0) {
+                // var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                //     filter : (i) => {
+                //         return i.structureType = STRUCTURE_STORAGE && (_.sum(i.store) < i.storeCapacity)
+                //     }
+                // });
+                var towers = creep.room.find(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return structure.structureType == STRUCTURE_TOWER && structure.energy < structure.energyCapacity;
+                    }
+                });
+                if (towers.length > 0) {
+                    if(creep.transfer(towers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(towers[0], {visualizePathStyle: {stroke: '#00ffff'}});
+                    } else {
+                        creep.say('\/');
+                    }
+                    return;
                 }
-            });
-            var towers = creep.room.find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return structure.structureType == STRUCTURE_TOWER && structure.energy < structure.energyCapacity;
-                }
-            });
-            if (towers.length > 0) {
-                if(creep.transfer(towers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(towers[0], {visualizePathStyle: {stroke: '#00ffff'}});
-                } else {
-                    creep.say('\/');
-                }
-                return;
             }
 
             var target = creep.room.storage;
