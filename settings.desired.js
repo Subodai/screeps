@@ -19,7 +19,7 @@ module.exports = {
     SmlH: 1,
     SmlU: 1,
     SmlB: 1,
-    SmlR: 5,
+    SmlR: 4,
     // Desired Mid sized creeps
     MidH: 0,
     MidU: 0,
@@ -27,5 +27,5 @@ module.exports = {
     // Desired BIG sized creeps
     BigH: 4,
     BigU: 4,
-    BigB: 4
+    BigB: 2
 }
