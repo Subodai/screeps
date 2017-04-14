@@ -139,14 +139,36 @@ module.exports.run = function(creep, debug = false) {
             }
             return;
         }
-        var towers = creep.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return structure.structureType == STRUCTURE_TOWER && structure.energy < structure.energyCapacity;
+
+        // First find towers with less than 400 energy
+        var tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+            filter : (i) => { 
+                return i.structureType == STRUCTURE_TOWER && i.energy < 400
             }
         });
-        if (towers.length > 0) {
-            if(creep.transfer(towers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(towers[0], {
+
+        // If we didn't find any get them with less than 800
+        if (!tower) {
+            var tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                filter : (i) => { 
+                    return i.structureType == STRUCTURE_TOWER && i.energy < 800
+                }
+            });
+        }
+
+        // Okay all above 800, get any now
+        if (!tower) {
+            var tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                filter : (i) => { 
+                    return i.structureType == STRUCTURE_TOWER && i.energy < i.energyCapacity
+                }
+            });
+        }
+
+        // So did we find one?
+        if (tower) {
+            if(creep.transfer(tower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(tower, {
                     visualizePathStyle: {
                         stroke: global.colourTower,
                         opacity: global.pathOpacity
