@@ -26,6 +26,6 @@ module.exports = {
     MidB: 0,
     // Desired BIG sized creeps
     BigH: 4,
-    BigU: 4,
+    BigU: 2,
     BigB: 2
 }
