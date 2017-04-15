@@ -32,9 +32,31 @@ module.exports.run = function (tower, debug = false) {
         }
     }
 
+    // We don't have loads of spare energy, can we repair some containers?
+    if (tower.energy >= 400) {
+        // First lets try containers since they decay
+        var target = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+            filter: (i) => i.structureType == STRUCTURE_CONTAINER && i.hits < i.hitsMax
+        });
+
+        // Did we get one?
+        if (!target) {
+            // Nope okay, lets try a road
+            var target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: (i) => i.structureType == STRUCTURE_ROAD && i.hits < i.hitsMax
+            });
+        }
+
+        // So did we find a target?
+        if (target) {
+            tower.repair(target);
+            return;
+        }
+    }
+
     // Alright, no hostiles.. lets see what energy we have
     // If we're idling with 600 energy, lets make sure all ramparts have been repaired at least once
-    if (tower.energy >= 700) {
+    if (tower.energy >= 800) {
         // Get the closest rampart with only 300 hit left
         var rampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
             filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits <= 300
@@ -69,28 +91,6 @@ module.exports.run = function (tower, debug = false) {
             // Repair it
             tower.repair(rampart);
             // STAHP
-            return;
-        }
-    }
-
-    // We don't have loads of spare energy, can we repair some containers?
-    if (tower.energy >= 400) {
-        // First lets try containers since they decay
-        var target = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-            filter: (i) => i.structureType == STRUCTURE_CONTAINER && i.hits < i.hitsMax
-        });
-
-        // Did we get one?
-        if (!target) {
-            // Nope okay, lets try a road
-            var target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (i) => i.structureType == STRUCTURE_ROAD && i.hits < i.hitsMax
-            });
-        }
-
-        // So did we find a target?
-        if (target) {
-            tower.repair(target);
             return;
         }
     }
