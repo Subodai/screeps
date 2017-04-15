@@ -18,8 +18,8 @@ var spawner = {
         if (debug) { console.log('Running Spawner'); }
         var desired = require('settings.desired');
 
-        if (Game.flags.scout > 0 && desired.SpawnScouts) {
-            if (debug) { console.log('We have a flag, run scout spawner'); }
+        if (Game.flags.scout && desired.SpawnScouts) {
+            console.log('We have a flag, run scout spawner');
             var scoutSpawn = require('spawn.scout');
             if (scoutSpawn.run(debug)) {
                 console.log('Spawner used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
