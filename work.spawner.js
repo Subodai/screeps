@@ -18,8 +18,7 @@ var spawner = {
         if (debug) { console.log('Running Spawner'); }
         var desired = require('settings.desired');
 
-        var flags = Game.flags;
-        if (flags.length > 0 && desired.SpawnScouts) {
+        if (Game.flags.scout > 0 && desired.SpawnScouts) {
             if (debug) { console.log('We have a flag, run scout spawner'); }
             var scoutSpawn = require('spawn.scout');
             if (scoutSpawn.run(debug)) {
