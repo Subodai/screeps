@@ -18,6 +18,16 @@ var spawner = {
         if (debug) { console.log('Running Spawner'); }
         var desired = require('settings.desired');
 
+        var flags = Game.flags;
+        if (flags.length > 0 && desired.SpawnScouts) {
+            if (debug) { console.log('We have a flag, run scout spawner'); }
+            var scoutSpawn = require('spawn.scout');
+            if (scoutSpawn.run(debug)) {
+                console.log('Spawner used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
+                return;
+            }
+        }
+
         // Can we spawn miners?
         for (var name in Game.rooms) {
             if (Game.rooms[name].memory.guard) {

@@ -10,6 +10,7 @@
 module.exports = {
     SpawnMiners: true,
     SpawnMovers: false,
+    SpawnScouts: false,
     SpawnBig: true,
     SpawnMid: true,
     SpawnSml: true,
@@ -18,7 +19,7 @@ module.exports = {
     // Desired Small sized creeps
     SmlH: 1,
     SmlU: 1,
-    SmlB: 1,
+    SmlB: 4,
     SmlR: 0,
     // Desired Mid sized creeps
     MidH: 0,
@@ -27,5 +28,5 @@ module.exports = {
     // Desired BIG sized creeps
     BigH: 4,
     BigU: 2,
-    BigB: 2
+    BigB: 0
 }

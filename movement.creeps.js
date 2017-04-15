@@ -52,6 +52,13 @@ module.exports.run = function(debug = false) {
         _cpu = Game.cpu.getUsed();
     }
 
+    var ScoutMover = require('movement.scout');
+    ScoutMover.run(debug);
+    if (debug) {
+        console.log('Sc Move used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
+        _cpu = Game.cpu.getUsed();
+    }
+
     var Mover = require('movement.mover');
     Mover.run(debug);
     if (debug) {
