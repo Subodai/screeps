@@ -50,6 +50,49 @@ module.exports.run = function(creep) {
     }
     else {
 
+        var resource = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
+            filter (i) => i.resourceType == RESOURCE_ENERGY
+        });
+
+        if (resource) {
+            if (creep.pickup(resource) == ERR_NOT_IN_RANGE) {
+                if (creep.carry.energy <= (creep.carryCapacity/2)) {
+                    creep.moveTo(resource,{
+                        visualizePathStyle: {
+                            stroke: global.colourPickupRes,
+                            opacity: global.pathOpacity
+                        },
+                        reusePath:3
+                    });
+                    creep.say('>>');
+                } else {
+                    creep.memory.building = true;
+                }
+            } else {
+                creep.say('^^');
+            }
+            return;
+        }
+
+        var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+            filter: (i) => i.structureType == STRUCTURE_CONTAINER && i.store[RESOURCE_ENERGY] > 100
+        });
+
+        if(container) {
+           // Can we harvest right now?
+            if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(container, {
+                    visualizePathStyle: {
+                        stroke: global.colourPickup,
+                        opacity: global.pathOpacity
+                    },
+                    reusePath:3
+                });
+            } else {
+                creep.say('^^');
+            }
+        } 
+
         var target = creep.room.storage;
         if (target) {
             if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
@@ -66,48 +109,6 @@ module.exports.run = function(creep) {
                 creep.memory.building = true;
             }
         }
-
-        // var resource = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES);
-
-        // if (resource) {
-        //     if (creep.pickup(resource) == ERR_NOT_IN_RANGE) {
-        //         if (creep.carry.energy <= (creep.carryCapacity/2)) {
-        //             creep.moveTo(resource,{
-        //                 visualizePathStyle: {
-        //                     stroke: '#ff0000',
-        //                     opacity: global.pathOpacity
-        //                 },
-        //                 reusePath:3
-        //             });
-        //             creep.say('>>');
-        //         } else {
-        //             creep.memory.building = true;
-        //         }
-        //     } else {
-        //         creep.say('^^');
-        //     }
-        //     return;
-        // }
-
-        // var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-        //     filter: (structure) => structure.structureType == STRUCTURE_CONTAINER && structure.store[RESOURCE_ENERGY] > 100
-        // });
-
-        // if(!container) {
-        //     creep.say('???');
-        // }
-        // // Can we harvest right now?
-        // if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-        //     creep.moveTo(container, {
-        //         visualizePathStyle: {
-        //             stroke: '#fffff',
-        //             opacity: global.pathOpacity
-        //         },
-        //         reusePath:0
-        //     });
-        // } else {
-        //     creep.say('^^');
-        // }
     }
 }
 
