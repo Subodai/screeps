@@ -90,11 +90,12 @@ module.exports.run = function(creep) {
                 });
             } else {
                 creep.say('^^');
+                creep.memory.building = true;
             }
         } 
 
         var target = creep.room.storage;
-        if (target) {
+        if (target  && target.store[RESOURCE_ENERGY] > 100) {
             if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 // No lets move to the source we want
                 creep.moveTo(target, {
