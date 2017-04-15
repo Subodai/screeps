@@ -79,12 +79,12 @@ module.exports.run = function (tower, debug = false) {
         }
 
         // Still none wow our ramparts must be super energised! Lets get any that need reps
-        if (!rampart) {
-            // First lets find the closest rampart
-            var rampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits < i.hitsMax
-            });
-        }
+        // if (!rampart) {
+        //     // First lets find the closest rampart
+        //     var rampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+        //         filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits < i.hitsMax
+        //     });
+        // }
 
         // Did we find one?
         if (rampart) {
