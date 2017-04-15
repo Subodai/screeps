@@ -74,7 +74,7 @@ module.exports.run = function (tower, debug = false) {
         if (!rampart) {
             // First lets find the closest rampart
             var rampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits < 100000
+                filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits < 50000
             });
         }
 
