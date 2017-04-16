@@ -47,9 +47,7 @@ module.exports.run = function (creep, debug = false) {
         if (debug) { console.log('Creep[' + creep.name + '] Extractor without assigned Source, assigning'); }
         // Okay lets get the room memory for assigned sources
         var sourceId = false;
-        var extractors = creep.room.find(FIND_STRUCTURES, {
-            filter: (i) => i.structureType == STRUCTURE_EXTRACTOR
-        });
+        var extractors = creep.room.find(FIND_MINERALS);
         var assigned = creep.room.memory.assignedExtractors;
         // Can't loop through extractors to just to an i = loop to get them
         for (var i=0;i<=extractors.length-1;i++) {
@@ -114,7 +112,7 @@ module.exports.run = function (creep, debug = false) {
         var extractor = Game.getObjectById(creep.memory.assignedExtractor);
         if (extractor) {
             // Okay we have a extractor, lets trying harvesting it!
-            if (creep.harvest(extractor) == ERR_NOT_IN_RANGE) {
+            if (creep.harvest(extractor) != OK) {
                 if (debug) { console.log('Creep[' + creep.name + '] Extractor not in range, moving into range'); }
                 // We're not at the thing! Lets go there!
                 creep.moveTo(extractor, {

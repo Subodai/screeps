@@ -19,9 +19,7 @@ module.exports.setup = function () {
         delete theRoom.memory.minersNeeded;
         
         if (!theRoom.memory.assignedExtractors) {
-            var extractors = theRoom.find(FIND_STRUCTURES, {
-                filter: (i) => i.structureType == STRUCTURE_EXTRACTOR
-            });
+            var extractors = theRoom.find(FIND_MINERALS);
             var array = {};
             for (var i = 0; i <= extractors.length -1; i++) {
                 console.log(extractors[i].id);
@@ -40,9 +38,7 @@ module.exports.setup = function () {
         }
 
         // First get the extractors
-        var extractors = theRoom.find(FIND_STRUCTURES, {
-            filter: (i) => i.structureType == STRUCTURE_EXTRACTOR
-        });
+        var extractors = theRoom.find(FIND_MINERALS);
         // Loop through the extractors
         for (var i=0; i<=extractors.length-1; i++) {
             // Get the extractors
