@@ -84,10 +84,10 @@ module.exports.run = function (creep, debug = false) {
 
     // Are we dropping?
     if (creep.memory.dropping) {
-        // This may need to change, depends if the drop costs fatigue or if dropping goes into a container
-        console.log(creep.drop(RESOURCE_CATALYST));
+        // // This may need to change, depends if the drop costs fatigue or if dropping goes into a container
+        // console.log(creep.drop(RESOURCE_CATALYST));
         creep.memory.dropping = false;
-        creep.say('\/');
+        // creep.say('\/');
 
         // DANGER we just drop resources here... This could leave a pile of resources if our transfer dudes aren't keeping up
 
@@ -115,8 +115,10 @@ module.exports.run = function (creep, debug = false) {
         // Alright if we're not dropping, we're harvesting lets try harvesting our assigned source
         var extractor = Game.getObjectById(creep.memory.assignedExtractor);
         if (extractor) {
-            // Okay we have a extractor, lets trying harvesting it!
-            if (creep.harvest(extractor) == ERR_NOT_IN_RANGE) {
+            if (creep.harvest(extractor) == ERR_TIRED) {
+                creep.say('q(-_-)p');
+                return;
+            } else if (creep.harvest(extractor) == ERR_NOT_IN_RANGE) {
                 if (debug) { console.log('Creep[' + creep.name + '] Extractor not in range, moving into range'); }
                 // We're not at the thing! Lets go there!
                 creep.moveTo(extractor, {
@@ -127,14 +129,13 @@ module.exports.run = function (creep, debug = false) {
                     reusePath:5
                 });
                 // Moving make a say
-                creep.say('>>')
-            } else if (creep.harvest(extractor) == ERR_NOT_ENOUGH_RESOURCES) {
-                creep.say('q(-_-)p');
-            } else {
-                // Mining say we're mining
-                if (!creep.memory.dying) {
-                    creep.say('d(^-^)b');
-                }
+                creep.say('>>');
+                return;
+            }
+                
+            // Mining say we're mining
+            if (!creep.memory.dying) {
+                creep.say('d(^-^)b');
             }
         } else {
             if (debug) { console.log('Creep[' + creep.name + '] Extractor cannot find extractor!!'); }
