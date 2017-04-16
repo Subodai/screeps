@@ -13,7 +13,7 @@ module.exports.setup = function () {
     // Loop through the game rooms we have
     for (var name in Game.rooms) {
         console.log('Setting up room ' + name);
-        var theRoom = theRoom;
+        var theRoom = Game.rooms[name];
 
         delete theRoom.memory.assignedExtractors;
         delete theRoom.memory.minersNeeded;
@@ -87,7 +87,7 @@ module.exports.run = function(debug = false) {
     if (debug) { console.log('We have ' + mList.length + ' Active Extractors'); }
     // Loop through our rooms
     for (var name in Game.rooms) {
-        var theRoom = theRoom;
+        var theRoom = Game.rooms[name];
         var needed = theRoom.memory.extractorsNeeded;
         console.log('We need ' + needed + ' Extractors in this room');
         // Check if our room needs a extractor
