@@ -42,6 +42,8 @@ module.exports.run = function (creep, debug = false) {
 
     // Only do this if we don't have an assigned Source
     if (!creep.memory.assignedExtractor) {
+        var spawn = require('spawn.extractor');
+        spawn.setup();
         if (debug) { console.log('Creep[' + creep.name + '] Extractor without assigned Source, assigning'); }
         // Okay lets get the room memory for assigned sources
         var sourceId = false;
@@ -71,7 +73,7 @@ module.exports.run = function (creep, debug = false) {
     }
 
     // Are we full?
-    if (creep.energy == creep.carryCapacity) {
+    if (_.sum(creep.carry). == creep.carryCapacity) {
         if (debug) { console.log('Creep[' + creep.name + '] Extractor full, dropping!'); }
         creep.memory.dropping = true;
     } else {
@@ -117,8 +119,8 @@ module.exports.run = function (creep, debug = false) {
                 // We're not at the thing! Lets go there!
                 creep.moveTo(source, {
                     visualizePathStyle: {
-                        stroke: '#ff5555',
-                        opacity: .5
+                         stroke: global.colourMine,
+                        opacity: global.pathOpacity
                     },
                     reusePath:5
                 });

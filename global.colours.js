@@ -9,6 +9,7 @@ global.colourIdle      = '#555555';
 global.colourTower     = '#FFFF99';
 global.colourUpgrade   = '#33cc33';
 global.colourClaim     = '#330033';
+global.colourMine      = '#330000';
 
 // The path opacity
 global.pathOpacity   = .3;

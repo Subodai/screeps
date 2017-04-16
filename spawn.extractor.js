@@ -13,9 +13,13 @@ module.exports.setup = function () {
     // Loop through the game rooms we have
     for (var name in Game.rooms) {
         console.log('Setting up room ' + name);
+        var theRoom = theRoom;
+
+        delete theRoom.memory.assignedExtractors;
+        delete theRoom.memory.minersNeeded;
         
-        if (!Game.rooms[name].memory.assignedExtractors) {
-            var extractors = Game.rooms[name].find(FIND_STRUCTURES, {
+        if (!theRoom.memory.assignedExtractors) {
+            var extractors = theRoom.find(FIND_STRUCTURES, {
                 filter: (i) => i.structureType == STRUCTURE_EXTRACTOR
             });
             var array = {};
@@ -23,16 +27,48 @@ module.exports.setup = function () {
                 console.log(extractors[i].id);
                 array[extractors[i].id] = null;
             }
-            Game.rooms[name].memory.assignedExtractors = array();
+            theRoom.memory.assignedExtractors = array;
             // Check for the extractorsNeeded flag
-            if (!Game.rooms[name].memory.extractorsNeeded) {
+            if (!theRoom.memory.extractorsNeeded) {
                 console.log('Setting extrators Needed to ' + extractors.length);
-                Game.rooms[name].memory.extractorsNeeded = extractors.length;
+                theRoom.memory.extractorsNeeded = extractors.length;
             } else {
-                console.log('Currently set to ' + Game.rooms[name].memory.extractorsNeeded);
+                console.log('Currently set to ' + theRoom.memory.extractorsNeeded);
             }
         } else {
             console.log('Assigned Extractors already exists. leaving alone!');
+        }
+
+        // First get the extractors
+        var extractors = theRoom.find(FIND_STRUCTURES, {
+            filter: (i) => i.structureType == STRUCTURE_EXTRACTOR
+        });
+        // Loop through the extractors
+        for (var i=0; i<=extractors.length-1; i++) {
+            // Get the extractors
+            var extractor = extractors[i];
+            // Make found false by default
+            var found = false;
+            var creepId = null;
+            var extractorId = extractor.id;
+            theRoom.memory.assignedExtractors[extractorId] = null;
+            // Loop through the miners
+            for (var creepName in Game.creeps) {
+                // Define the creep
+                var creep = Game.creeps[creepName];
+                if (!creep.memory.role == 'miner' || creep.memory.dying) {
+                    continue;
+                }
+                // If this creep has the assigned Source, we found it
+                if (creep.memory.assignedExtractor == extractorId) {
+                    found = true;
+                    creepId = creep.id;
+                    break;
+                }
+            }
+            if (found) {
+                theRoom.memory.assignedExtractors[extractorId] = creepId;
+            }
         }
     }
     return '++Extractor Setup Complete++';
@@ -51,7 +87,8 @@ module.exports.run = function(debug = false) {
     if (debug) { console.log('We have ' + mList.length + ' Active Extractors'); }
     // Loop through our rooms
     for (var name in Game.rooms) {
-        var needed = Game.rooms[name].memory.extractorsNeeded;
+        var theRoom = theRoom;
+        var needed = theRoom.memory.extractorsNeeded;
         console.log('We need ' + needed + ' Extractors in this room');
         // Check if our room needs a extractor
         if (needed > 0) {

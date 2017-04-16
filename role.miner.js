@@ -117,8 +117,8 @@ module.exports.run = function (creep, debug = false) {
                 // We're not at the thing! Lets go there!
                 creep.moveTo(source, {
                     visualizePathStyle: {
-                        stroke: '#ff5555',
-                        opacity: .5
+                        stroke: global.colourMine,
+                        opacity: global.pathOpacity
                     },
                     reusePath:5
                 });

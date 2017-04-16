@@ -92,6 +92,15 @@ module.exports.run = function(creep) {
             filter: (structure) => structure.structureType == STRUCTURE_CONTAINER && structure.store[RESOURCE_ENERGY] >= 100
         });
 
+        var pickup = RESOURCE_ENERGY;
+
+        if(!container) {
+            var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: (structure) => structure.structureType == STRUCTURE_CONTAINER && structure.store[RESOURCE_CATALYST] >= 100
+            });
+            var pickup = RESOURCE_CATALYST;
+        }
+
         if(!container) {
 
             creep.say('???');
@@ -115,7 +124,7 @@ module.exports.run = function(creep) {
             return;
         }
         // Can we harvest right now?
-        if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        if (creep.withdraw(container, pickup) == ERR_NOT_IN_RANGE) {
             creep.memory.idle = 0;
             // No do we have half our energy?
             if (_.sum(creep.carry) <= (creep.carryCapacity/2)) {
@@ -215,7 +224,11 @@ module.exports.run = function(creep) {
                 }
             }
 
-            var target = creep.room.storage;
+            var target = creep.room.terminal;
+            if (!target) {
+                var target = creep.room.storage;
+            }
+
             if (target) {
                 creep.memory.idle = 0;
                 for(var resourceType in creep.carry) {
