@@ -73,7 +73,7 @@ module.exports.run = function (creep, debug = false) {
     }
 
     // Are we full?
-    if (_.sum(creep.carry). == creep.carryCapacity) {
+    if (_.sum(creep.carry) == creep.carryCapacity) {
         if (debug) { console.log('Creep[' + creep.name + '] Extractor full, dropping!'); }
         creep.memory.dropping = true;
     } else {
