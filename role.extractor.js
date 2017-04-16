@@ -116,7 +116,7 @@ module.exports.run = function (creep, debug = false) {
         var extractor = Game.getObjectById(creep.memory.assignedExtractor);
         if (extractor) {
             // Okay we have a extractor, lets trying harvesting it!
-            if (creep.harvest(extractor) != OK) {
+            if (creep.harvest(extractor) == ERR_NOT_IN_RANGE) {
                 if (debug) { console.log('Creep[' + creep.name + '] Extractor not in range, moving into range'); }
                 // We're not at the thing! Lets go there!
                 creep.moveTo(extractor, {
@@ -128,6 +128,8 @@ module.exports.run = function (creep, debug = false) {
                 });
                 // Moving make a say
                 creep.say('>>')
+            } else if (creep.harvest(extractor) == ERR_NOT_ENOUGH_RESOURCES) {
+                creep.say('q(-_-)p');
             } else {
                 // Mining say we're mining
                 if (!creep.memory.dying) {
