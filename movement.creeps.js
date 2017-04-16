@@ -45,6 +45,13 @@ module.exports.run = function(debug = false) {
         _cpu = Game.cpu.getUsed();
     }
 
+    var ExtractorMover = require('movement.extractor');
+    ExtractorMover.run(debug);
+    if (debug) {
+        console.log('Ex Move used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
+        _cpu = Game.cpu.getUsed();
+    }
+
     var GuardMover = require('movement.guard');
     GuardMover.run(debug);
     if (debug) {
