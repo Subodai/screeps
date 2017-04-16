@@ -83,7 +83,7 @@ module.exports.run = function (creep, debug = false) {
     // Are we dropping?
     if (creep.memory.dropping) {
         // This may need to change, depends if the drop costs fatigue or if dropping goes into a container
-        console.log(creep.drop(RESOURCE_ENERGY));
+        console.log(creep.drop(RESOURCE_CATALYST));
         creep.memory.dropping = false;
         creep.say('\/');
 
@@ -117,7 +117,7 @@ module.exports.run = function (creep, debug = false) {
             if (creep.harvest(extractor) == ERR_NOT_IN_RANGE) {
                 if (debug) { console.log('Creep[' + creep.name + '] Extractor not in range, moving into range'); }
                 // We're not at the thing! Lets go there!
-                creep.moveTo(source, {
+                creep.moveTo(extractor, {
                     visualizePathStyle: {
                          stroke: global.colourMine,
                         opacity: global.pathOpacity
