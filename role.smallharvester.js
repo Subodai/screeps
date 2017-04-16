@@ -24,13 +24,13 @@ module.exports.run = function(creep) {
     }
 
     // Is the creep dropping off and empty?
-    if (creep.memory.delivering && creep.carry.energy == 0) {
+    if (creep.memory.delivering && _.sum(creep.carry) == 0) {
         creep.memory.delivering = false;
         creep.say('GET');
     }
 
     // Is the creep not delivering and full?
-    if (!creep.memory.delivering && creep.carry.energy == creep.carryCapacity) {
+    if (!creep.memory.delivering && _.sum(creep.carry) == creep.carryCapacity) {
         creep.memory.delivering = true;
         creep.say('PUT');
     }
