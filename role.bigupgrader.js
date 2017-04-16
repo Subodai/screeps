@@ -36,7 +36,9 @@ module.exports.run = function(creep) {
             creep.say('(>.<)');
         }
     } else {
-        var resource = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES);
+        var resource = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES,{
+            filter: (i) => i.resourceType == RESOURCE_ENERGY
+        });
 
         if (resource) {
             if (creep.pickup(resource) == ERR_NOT_IN_RANGE) {
