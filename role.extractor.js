@@ -5,10 +5,14 @@ module.exports.role = 'extractor';
 module.exports.sType = 'specialist';
 
 /* Parts *//* ANY MORE THAN 5 WORKS WON'T LET THE SOURCE REGENERATE */
-module.exports.parts = [WORK,WORK,WORK,WORK,WORK,MOVE];
+module.exports.parts = [WORK,WORK,WORK,WORK,WORK,
+                        WORK,WORK,WORK,WORK,WORK,
+                        WORK,WORK,WORK,WORK,WORK,
+                        WORK,WORK,WORK,WORK,WORK,
+                        MOVE];
 
 /* Energy Cost */
-module.exports.energyCost = 550;
+module.exports.energyCost = 2050;
 
 /* Run method */
 module.exports.run = function (creep, debug = false) {
