@@ -1,5 +1,5 @@
-/* Specialist Miner Drone */
-module.exports.role = 'miner';
+/* Specialist Extractor Drone */
+module.exports.role = 'extractor';
 
 /* SType */
 module.exports.sType = 'specialist';
@@ -22,57 +22,59 @@ module.exports.run = function (creep, debug = false) {
     // Okay, health check
     var ticks = creep.ticksToLive;
     if (ticks <= 100 && !creep.memory.dying) {
-        if (debug) { console.log('Creep[' + creep.name + '] Miner Dying Making sure we spawn a new one'); }
+        if (debug) { console.log('Creep[' + creep.name + '] Extractor Dying Making sure we spawn a new one'); }
         // set dying to true and set the sourceId to null in room memory
         creep.memory.dying = true;
-        var sourceId = creep.memory.assignedSource;
-        creep.room.memory.assignedSources[sourceId] = null;
+        var extractorId = creep.memory.assignedSExtractor;
+        creep.room.memory.assignedExtractors[extractorId] = null;
     }
 
     // Alright if it's dying, output the timer
     if (creep.memory.dying) {
-        if (debug) { console.log('Creep[' + creep.name + '] Miner Dying, ticking down'); }
+        if (debug) { console.log('Creep[' + creep.name + '] Extractor Dying, ticking down'); }
         creep.say(ticks);
         // If it's less than 10 ticks, drop what we have
         if (ticks < 10) {
-            if (debug) { console.log('Creep[' + creep.name + '] Miner about to die'); }
+            if (debug) { console.log('Creep[' + creep.name + '] Extractor about to die'); }
             creep.say('!!' + ticks + '!!');
         }
     }
 
     // Only do this if we don't have an assigned Source
-    if (!creep.memory.assignedSource) {
-        var spawn = require('spawn.miner');
+    if (!creep.memory.assignedExtractor) {
+        var spawn = require('spawn.extractor');
         spawn.setup();
-        if (debug) { console.log('Creep[' + creep.name + '] Miner without assigned Source, assigning'); }
+        if (debug) { console.log('Creep[' + creep.name + '] Extractor without assigned Source, assigning'); }
         // Okay lets get the room memory for assigned sources
         var sourceId = false;
-        var sources = creep.room.find(FIND_SOURCES);
-        var assigned = creep.room.memory.assignedSources;
-        // Can't loop through sources to just to an i = loop to get them
-        for (var i=0;i<=sources.length-1;i++) {
-            var source = sources[i];
-            if (assigned[source.id] == null) {
-                sourceId = source.id;
-                creep.room.memory.assignedSources[sourceId] = creep.id;
-                creep.memory.assignedSource = sourceId;
-                // Make sure we break out so we don't break the next source too
+        var extractors = creep.room.find(FIND_STRUCTURES, {
+            filter: (i) => i.structureType == STRUCTURE_EXTRACTOR
+        });
+        var assigned = creep.room.memory.assignedExtractors;
+        // Can't loop through extractors to just to an i = loop to get them
+        for (var i=0;i<=extractors.length-1;i++) {
+            var extractor = extractors[i];
+            if (assigned[extractor.id] == null) {
+                extractorId = extractor.id;
+                creep.room.memory.assignedExtractors[extractorId] = creep.id;
+                creep.memory.assignedExtractor = extractorId;
+                // Make sure we break out so we don't break the next extractor too
                 break;
             }
         }
-        // Do we have a sourceId?
-        if (sourceId == false) {
-            if (debug) { console.log('Creep[' + creep.name + '] Miner cannot find source!!'); }
-            if (!creep.room.memory.sourceReset) {
-                creep.room.memory.sourceReset = true;
+        // Do we have a extractorId?
+        if (extractorId == false) {
+            if (debug) { console.log('Creep[' + creep.name + '] Extractor cannot find extractor!!'); }
+            if (!creep.room.memory.extractorReset) {
+                creep.room.memory.extractorReset = true;
             }
-            Game.notify(Game.time + ' Miner Creep unable to assign a source');
+            Game.notify('Extractor Creep unable to assign a extractor');
         }
     }
 
     // Are we full?
-    if (creep.energy == creep.carryCapacity) {
-        if (debug) { console.log('Creep[' + creep.name + '] Miner full, dropping!'); }
+    if (_.sum(creep.carry). == creep.carryCapacity) {
+        if (debug) { console.log('Creep[' + creep.name + '] Extractor full, dropping!'); }
         creep.memory.dropping = true;
     } else {
         creep.memory.dropping = false;
@@ -109,15 +111,15 @@ module.exports.run = function (creep, debug = false) {
 
     if (!creep.memory.dropping) {
         // Alright if we're not dropping, we're harvesting lets try harvesting our assigned source
-        var source = Game.getObjectById(creep.memory.assignedSource);
-        if (source) {
-            // Okay we have a source, lets trying harvesting it!
-            if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                if (debug) { console.log('Creep[' + creep.name + '] Miner not in range, moving into range'); }
+        var extractor = Game.getObjectById(creep.memory.assignedExtractor);
+        if (extractor) {
+            // Okay we have a extractor, lets trying harvesting it!
+            if (creep.harvest(extractor) == ERR_NOT_IN_RANGE) {
+                if (debug) { console.log('Creep[' + creep.name + '] Extractor not in range, moving into range'); }
                 // We're not at the thing! Lets go there!
                 creep.moveTo(source, {
                     visualizePathStyle: {
-                        stroke: global.colourMine,
+                         stroke: global.colourMine,
                         opacity: global.pathOpacity
                     },
                     reusePath:5
@@ -131,9 +133,9 @@ module.exports.run = function (creep, debug = false) {
                 }
             }
         } else {
-            if (debug) { console.log('Creep[' + creep.name + '] Miner cannot find source!!'); }
+            if (debug) { console.log('Creep[' + creep.name + '] Extractor cannot find extractor!!'); }
             creep.say('WTF?');
-            Game.notify(Game.time + ' Miner Creep unable to assign a source');
+            Game.notify('Extractor Creep unable to assign a extractor');
         }
     }
 }
