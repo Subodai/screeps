@@ -10,9 +10,45 @@ module.exports.run = function (debug = false) {
             var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
             if(closestHostile) {
                 console.log('running attack');
-                Game.notify('Turret Attacking Hostiles');
+                Game.notify(Game.time + ' Turret Attacking Hostiles');
                 tower.attack(closestHostile);
                 return;
+            }
+
+            // If we have 500 energy, get a rampart above 1 hit
+            if (tower.energy >= 500) {
+                // First lets find the closest container
+                var closestRampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                    filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits == 1
+                });
+                if(closestRampart) {
+                    tower.repair(closestRampart);
+                    return;
+                }
+            }
+
+            // If we have 800 energy, get ramparts up to max hits
+            if (tower.energy >= 800) {
+                // First lets find the closest container
+                var closestRampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                    filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits < i.hitsMax
+                });
+                if(closestRampart) {
+                    tower.repair(closestRampart);
+                    return;
+                }
+            }
+
+            // If we have 600 energy, get ramparts up to 5000 hits
+            if (tower.energy >= 600) {
+                // First lets find the closest container
+                var closestRampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                    filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits < 5000
+                });
+                if(closestRampart) {
+                    tower.repair(closestRampart);
+                    return;
+                }
             }
 
             // Keep 200 in reserve for attackers

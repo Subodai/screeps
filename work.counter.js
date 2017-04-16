@@ -24,11 +24,11 @@ module.exports.run = function(debug = false) {
         // Are there any hostiles?
         var hostiles = theRoom.find(FIND_HOSTILE_CREEPS);
         if (hostiles.length > 0 && !theRoom.memory.guard) {
-            Game.notify('Room put into guard mode spawning guards');
+            Game.notify(Game.time + ' Room put into guard mode spawning guards');
             theRoom.memory.guard = true;
         }
         if (hostiles.length == 0 && theRoom.memory.guard) {
-            Game.notify('Room no longer in guard mode');
+            Game.notify(Game.time + ' Room no longer in guard mode');
             theRoom.memory.guard = false;
             delete theRoom.memory.guard;
         }
@@ -39,7 +39,7 @@ module.exports.run = function(debug = false) {
         }
         var list = _.filter(Game.creeps, (creep) => !creep.memory.dying);
         if (list.length == 0 && !theRoom.memory.emergency){
-            Game.notify('Room '+ name + ' In Emergency Mode!!');
+            Game.notify(Game.time + ' Room '+ name + ' In Emergency Mode!!');
             console.log('Emergency Activated');
             theRoom.memory.emergency = true;
             delete theRoom.memory.assignedSources;
@@ -48,7 +48,7 @@ module.exports.run = function(debug = false) {
 
         }
         if (list.length >= 15 && theRoom.memory.emergency) {
-            Game.notify('Room ' + name + ' No Longer in Emergency Mode');
+            Game.notify(Game.time + ' Room ' + name + ' No Longer in Emergency Mode');
             console.log('Emergency Deactivated');
             theRoom.memory.emergency = false;
             delete theRoom.memory.emergency;
@@ -58,39 +58,11 @@ module.exports.run = function(debug = false) {
         }
         // If the room sources need resetting
         if (theRoom.memory.sourceReset) {
-            Game.notify('Room ' + name + ' Resetting mining sources');
+            Game.notify(Game.time + ' Room ' + name + ' Resetting mining sources');
             console.log('Resetting Room Sources');
-            // First get the sources
-            var sources = theRoom.find(FIND_SOURCES);
-            // Loop through the sources
-            for (var i=0; i<=sources.length-1; i++) {
-                // Get the sources
-                var source = sources[i];
-                // Make found false by default
-                var found = false;
-                var creepId = null;
-                var sourceId = source.id;
-                // Loop through the miners
-                for (var creepName in Game.creeps) {
-                    // Define the creep
-                    var creep = Game.creeps[creepName];
-                    if (!creep.memory.role == 'miner') {
-                        continue;
-                    }
-                    // If this creep has the assigned Source, we found it
-                    if (creep.memory.assignedSource == sourceId) {
-                        found = true;
-                        creepId = creep.id;
-                        break;
-                    }
-                }
-                if (found) {
-                    theRoom.memory.assignedSources[sourceId] = creepId;
-                } else {
-                    theRoom.memory.assignedSources[sourceId] = null;
-                }
-            }
-            Game.notify('Room ' + name + ' Sources reset successfully.');
+            var miner = require('spawn.miner');
+            miner.setup();
+            Game.notify(Game.time + ' Room ' + name + ' Sources reset successfully.');
             console.log('Room sources reset successfully');
             delete theRoom.memory.sourceReset;
         }

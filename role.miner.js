@@ -42,6 +42,8 @@ module.exports.run = function (creep, debug = false) {
 
     // Only do this if we don't have an assigned Source
     if (!creep.memory.assignedSource) {
+        var spawn = require('spawn.miner');
+        spawn.setup();
         if (debug) { console.log('Creep[' + creep.name + '] Miner without assigned Source, assigning'); }
         // Okay lets get the room memory for assigned sources
         var sourceId = false;
@@ -64,7 +66,7 @@ module.exports.run = function (creep, debug = false) {
             if (!creep.room.memory.sourceReset) {
                 creep.room.memory.sourceReset = true;
             }
-            Game.notify('Miner Creep unable to assign a source');
+            Game.notify(Game.time + ' Miner Creep unable to assign a source');
         }
     }
 
@@ -131,7 +133,7 @@ module.exports.run = function (creep, debug = false) {
         } else {
             if (debug) { console.log('Creep[' + creep.name + '] Miner cannot find source!!'); }
             creep.say('WTF?');
-            Game.notify('Miner Creep unable to assign a source');
+            Game.notify(Game.time + ' Miner Creep unable to assign a source');
         }
     }
 }
