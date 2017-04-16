@@ -9,7 +9,7 @@
 
 module.exports = {
     SpawnMiners: true,
-    SpawnExtractors: false,
+    SpawnExtractors: true,
     SpawnMovers: false,
     SpawnScouts: false,
     SpawnBig: true,
