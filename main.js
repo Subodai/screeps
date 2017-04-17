@@ -18,6 +18,13 @@ module.exports.loop = function () {
         despawner.run(debug);
         cleaner.run(debug);
     }
+    // Run the source setups once every 50 ticks
+    if (Game.time % 50 == 0) {
+        var minerSpawner = require('spawn.miner');
+        var extractorSpawner = require('spawn.extractor');
+        minerSpawner.setup();
+        extractorSpawner.setup();
+    }
     // Only need these once every 5 ticks
     if (Game.time % 5 == 0) {
         counter.run(debug);

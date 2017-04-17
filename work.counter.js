@@ -13,10 +13,12 @@ module.exports.run = function(debug = false) {
     var midSpawner = require('spawn.mid');
     var smallSpawner = require('spawn.small');
     var minerSpawner = require('spawn.miner');
+    var extractorSpawner = require('spawn.extractor');
     bigSpawner.count();
     midSpawner.count();
     smallSpawner.count();
     minerSpawner.count();
+    extractorSpawner.count();
 
     // Loop through the rooms
     for(var name in Game.rooms) {
