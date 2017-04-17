@@ -11,6 +11,9 @@ var midCost = 450;
 var bigCost = 650;
 
 var miner = require('role.miner');
+var minerSpawn = require('spawn.miner');
+var extractor = require('role.extractor');
+var extractorSpawn = require('spawn.extractor');
 
 var spawner = {
     run: function(debug = false) {
@@ -36,7 +39,7 @@ var spawner = {
                 console.log('Spawner used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
                 return;
             }
-            var minerSpawn = require('spawn.miner');
+            
             if (desired.SpawnMiners && Game.rooms[name].energyAvailable >= miner.energyCost) {
                 if (debug) { console.log('Enough Energy for Miner Spawn'); }
                 if (minerSpawn.run(debug)) {
@@ -52,22 +55,20 @@ var spawner = {
                 console.log('Spawner used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
                 return;
             }
-        }
-        // Run the loops
-        for (var name in Game.rooms) {
+
+            if (desired.SpawnExtractors && Game.rooms[name].energyAvailable >= extractor.energyCost) {
+                if (debug) { console.log('Enough Energy for Extractor Spawn'); }
+                if (extractorSpawn.run(debug)) {
+                    console.log('Spawner used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
+                    return;
+                }
+            }
+            
             if (desired.SpawnMovers) {
                 var moverSpawn = require('spawn.mover');
                 if (moverSpawn.run(debug)) {
                     console.log('Spawner used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
                     return;
-                }
-                var extractorSpawn = require('spawn.extractor');
-                if (desired.SpawnExtractors && Game.rooms[name].energyAvailable >= extractor.energyCost) {
-                    if (debug) { console.log('Enough Energy for Extractor Spawn'); }
-                    if (extractorSpawn.run(debug)) {
-                        console.log('Spawner used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
-                        return;
-                    }
                 }
             }
             if (desired.SpawnBig && Game.rooms[name].energyAvailable >= bigCost) {
