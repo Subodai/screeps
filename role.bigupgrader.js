@@ -17,7 +17,8 @@ module.exports.run = function(creep) {
 
     if (creep.room.memory.emergency) {
         delete creep.memory.upgrading;
-        creep.memory.role.bigharvester;
+        delete creep.memory.idle;
+        creep.memory.role = 'bigharvester';
         return
     }
 
