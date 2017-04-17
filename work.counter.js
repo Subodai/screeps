@@ -17,7 +17,7 @@ module.exports.run = function(debug = false) {
     bigSpawner.count();
     midSpawner.count();
     smallSpawner.count();
-    minerSpawner.count();
+    var miners = minerSpawner.count();
     extractorSpawner.count();
 
     // Loop through the rooms
@@ -40,7 +40,7 @@ module.exports.run = function(debug = false) {
             console.log('We are still in guard mode');
         }
         var list = _.filter(Game.creeps, (creep) => !creep.memory.dying);
-        if (list.length == 0 && !theRoom.memory.emergency){
+        if ((list.length == 0 || miners == 0) && !theRoom.memory.emergency){
             Game.notify(Game.time + ' Room '+ name + ' In Emergency Mode!!');
             console.log('Emergency Activated');
             theRoom.memory.emergency = true;
@@ -49,7 +49,7 @@ module.exports.run = function(debug = false) {
             miner.setup();
 
         }
-        if (list.length >= 15 && theRoom.memory.emergency) {
+        if ((list.length >= 20 && miners > 0) && theRoom.memory.emergency) {
             Game.notify(Game.time + ' Room ' + name + ' No Longer in Emergency Mode');
             console.log('Emergency Deactivated');
             theRoom.memory.emergency = false;
