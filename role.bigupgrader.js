@@ -15,6 +15,12 @@ module.exports.run = function(creep) {
         creep.memory.role = 'bigharvester';
     }
 
+    if (creep.room.memory.emergency) {
+        delete creep.memory.upgrading;
+        creep.memory.role.bigharvester;
+        return
+    }
+
     if(creep.memory.upgrading && creep.carry.energy == 0) {
         creep.memory.upgrading = false;
         creep.say('GET');
