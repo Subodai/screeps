@@ -35,7 +35,7 @@ module.exports.run = function (tower, debug = false) {
     // We don't have loads of spare energy, can we repair some containers?
     if (tower.energy >= 400) {
         // First lets try containers since they decay
-        var target = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+        var target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
             filter: (i) => i.structureType == STRUCTURE_CONTAINER && i.hits < i.hitsMax
         });
 
