@@ -17,7 +17,6 @@ module.exports.setup = function () {
         var theRoom = Game.rooms[name];
 
         delete theRoom.memory.assignedSources;
-        delete theRoom.memory.minersNeeded;
         
         if (!theRoom.memory.assignedSources) {
             var sources = theRoom.find(FIND_SOURCES);

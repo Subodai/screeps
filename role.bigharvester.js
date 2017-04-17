@@ -114,11 +114,11 @@ module.exports.run = function(creep) {
             creep.say('idle: ' + creep.memory.idle);
 
             if (creep.memory.idle >= 50) {
-                console.log('Creep idle too long, switching to upgrader');
-                Game.notify(Game.time + ' Harvester Idle too long, switching to upgrader');
-                delete creep.memory.idle;
-                delete creep.memory.delivering;
-                creep.memory.role = 'bigupgrader';
+                console.log('Creep idle too long');
+                Game.notify(Game.time + ' Harvester Idle for ' + creep.memory.idle);
+                // delete creep.memory.idle;
+                // delete creep.memory.delivering;
+                // creep.memory.role = 'bigupgrader';
             }
             return;
         }
