@@ -70,7 +70,7 @@ module.exports.run = function(debug = false) {
             delete theRoom.memory.sourceReset;
         }
 
-        var msg += ' [' + name + ':' + Game.rooms[name].energyAvailable + ']';
+        msg += ' [' + name + ':' + Game.rooms[name].energyAvailable + ']';
     }
     console.log('Counter used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
     return msg;
