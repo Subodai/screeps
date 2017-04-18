@@ -34,7 +34,7 @@ module.exports.roster = {
     S : 1,
     M : 0,
     L : 4,
-    XL: 1
+    XL: 2
 };
 
 /**
