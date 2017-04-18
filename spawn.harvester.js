@@ -50,7 +50,7 @@ module.exports.run = function(debug = false) {
             gSize : 'XL',
             sType : harvester.sType
         });
-        console.log('Spawning new XL harvester' + creepName);
+        console.log('Spawning new XL harvester ' + creepName);
         spawned = true;
     }
 
