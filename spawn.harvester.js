@@ -34,7 +34,7 @@ module.exports.run = function(debug = false) {
         spawned = true;
     }
 
-    if (_Room.energyAvailable >= harvester.costL && mList.length < roster.L && !spawned) {
+    if (_Room.energyAvailable >= harvester.costL && lList.length < roster.L && !spawned) {
         var creepName = _Spawner.createCreep(harvester.bodyL, undefined, {
             role : harvester.roleName,
             gSize : 'L',
