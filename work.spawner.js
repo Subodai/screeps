@@ -39,7 +39,7 @@ var spawner = {
                 console.log('Spawner used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
                 return;
             }
-            
+
             if (desired.SpawnMiners && Game.rooms[name].energyAvailable >= miner.energyCost) {
                 if (debug) { console.log('Enough Energy for Miner Spawn'); }
                 if (minerSpawn.run(debug)) {
@@ -63,7 +63,16 @@ var spawner = {
                     return;
                 }
             }
-            
+
+            if (desired.SpawnHarvesters) {
+                var spawner = require('spawn.harvester');
+                if (spawner.run(debug)) {
+                    console.log('Spawner used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
+                    return;
+                }
+            }
+
+
             if (desired.SpawnMovers) {
                 var moverSpawn = require('spawn.mover');
                 if (moverSpawn.run(debug)) {

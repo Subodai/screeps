@@ -8,17 +8,27 @@
  */
 
 module.exports = {
+    DeSpawn: false,
+
+
     SpawnMiners: true,
     SpawnExtractors: true,
+    SpawnHarvesters: true,
+
     SpawnMovers: false,
     SpawnScouts: false,
+
+    emptyContainers: false,
+
     SpawnBig: true,
     SpawnMid: true,
     SpawnSml: true,
-    DeSpawn: false,
-    emptyContainers: false,
+
+
+
+    // OLD DESIRED CODE
     // Desired Small sized creeps
-    SmlH: 1,
+    SmlH: 0,
     SmlU: 1,
     SmlB: 4,
     SmlR: 0,
@@ -27,7 +37,7 @@ module.exports = {
     MidU: 0,
     MidB: 0,
     // Desired BIG sized creeps
-    BigH: 4,
+    BigH: 0,
     BigU: 2,
     BigB: 0
 }

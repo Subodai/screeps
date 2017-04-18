@@ -2,7 +2,7 @@
 require('global.colours');
 var despawner = require('work.despawner');
 var spawner   = require('work.spawner');
-var movement  = require('movement.creeps');
+var movement  = require('work.movement');
 var cleaner   = require('work.cleaner');
 var towers    = require('work.towers');
 var counter   = require('work.counter');
@@ -34,7 +34,7 @@ module.exports.loop = function () {
     towers.run(debug);
     msg += ' {' + Game.cpu.getUsed().toFixed(3) + '}';
     console.log(msg);
-    if (Game.cpu.getUsed() > 50) {
+    if (Game.cpu.getUsed() > 100) {
         Game.notify(msg);
     }
 }
