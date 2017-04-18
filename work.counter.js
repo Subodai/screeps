@@ -19,6 +19,7 @@ module.exports.run = function(debug = false) {
     smallSpawner.count();
     var miners = minerSpawner.count();
     extractorSpawner.count();
+    var msg = '';
 
     // Loop through the rooms
     for(var name in Game.rooms) {
@@ -69,7 +70,8 @@ module.exports.run = function(debug = false) {
             delete theRoom.memory.sourceReset;
         }
 
-        console.log(name + ':' + Game.rooms[name].energyAvailable);
+        var msg = '[' + name + ':' + Game.rooms[name].energyAvailable + ']';
     }
     console.log('Counter used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
+    return msg;
 }

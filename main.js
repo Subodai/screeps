@@ -27,7 +27,7 @@ module.exports.loop = function () {
     }
     // Only need these once every 5 ticks
     if (Game.time % 5 == 0) {
-        counter.run(debug);
+        msg += counter.run(debug);
         spawner.run(debug);
     }
     movement.run(debug);
