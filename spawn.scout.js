@@ -6,9 +6,9 @@ module.exports.run = function(debug = false) {
     if (debug) { console.log('Running scout spawner'); }
     console.log('Checking for viable scout Creep Spawns');
     var spawned = false;
-    var sList = _.filter(Game.creeps, (creep) => creep.memory.role == scout.role && creep.memory.gSize == 'S' && !creep.memory.dying);
-    var mList = _.filter(Game.creeps, (creep) => creep.memory.role == scout.role && creep.memory.gSize == 'M' && !creep.memory.dying);
-    var xlList = _.filter(Game.creeps, (creep) => creep.memory.role == scout.role && creep.memory.gSize == 'XL' && !creep.memory.dying);
+    var sList  = _.filter(Game.creeps, (creep) => creep.memory.role == scout.roleName && creep.memory.gSize == 'S' && !creep.memory.dying);
+    var mList  = _.filter(Game.creeps, (creep) => creep.memory.role == scout.roleName && creep.memory.gSize == 'M' && !creep.memory.dying);
+    var xlList = _.filter(Game.creeps, (creep) => creep.memory.role == scout.roleName && creep.memory.gSize == 'XL' && !creep.memory.dying);
     var _Spawner = Game.spawns['Sub1'];
     var _Room = _Spawner.room;
     var roster = scout.roster;
