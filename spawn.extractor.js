@@ -28,7 +28,7 @@ module.exports.setup = function () {
             theRoom.memory.assignedExtractors = array;
             // Check for the extractorsNeeded flag
             if (!theRoom.memory.extractorsNeeded) {
-                console.log('Setting extrators Needed to ' + extractors.length);
+                console.log('Setting extractors Needed to ' + extractors.length);
                 theRoom.memory.extractorsNeeded = extractors.length;
             } else {
                 console.log('Currently set to ' + theRoom.memory.extractorsNeeded);
