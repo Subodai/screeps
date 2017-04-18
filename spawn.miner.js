@@ -13,41 +13,29 @@ module.exports.setup = function () {
     // Loop through the game rooms we have
     for (var name in Game.rooms) {
         console.log('Setting up room ' + name);
-
         var theRoom = Game.rooms[name];
-
+        // Clear Assigned Sources
         delete theRoom.memory.assignedSources;
-        
-        if (!theRoom.memory.assignedSources) {
-            var sources = theRoom.find(FIND_SOURCES);
-            var array = {};
-            for (var i = 0; i <= sources.length -1; i++) {
-                console.log(sources[i].id);
-                array[sources[i].id] = null;
-            }
-            theRoom.memory.assignedSources = array;
-            // Check for the minersNeeded flag
-            if (!theRoom.memory.minersNeeded) {
-                console.log('Setting miners Needed to ' + sources.length);
-                theRoom.memory.minersNeeded = sources.length;
-            } else {
-                console.log('Currently set to ' + theRoom.memory.minersNeeded);
-            }
-        } else {
-            console.log('Assigned Sources already exists. leaving alone!');
-        }
-
-        // First get the sources
+        // Get all the sources available
         var sources = theRoom.find(FIND_SOURCES);
-        // Loop through the sources
+        // Make sure we set the minersNeeded of the room
+        theRoom.memory.minersNeeded = sources.length;
+        // Make an array / object thing
+        var array = {};
+        // Loop through sources
         for (var i=0; i<=sources.length-1; i++) {
-            // Get the sources
+            console.log(sources[i].id);
+            // Set it to null
+            array[sources[i].id] = null;
+        }
+        // Loop through the sources again
+        for (var i=0; i<=sources.length-1; i++) {
+            // Get the source so we can use it's id
             var source = sources[i];
             // Make found false by default
             var found = false;
             var creepId = null;
             var sourceId = source.id;
-            theRoom.memory.assignedSources[sourceId] = null;
             // Loop through the miners
             for (var creepName in Game.creeps) {
                 // Define the creep
@@ -62,10 +50,15 @@ module.exports.setup = function () {
                     break;
                 }
             }
+            // we found it
             if (found) {
-                theRoom.memory.assignedSources[sourceId] = creepId;
+                console.log(sourceId + ' set to ' + creepId);
+                array[sourceId] = creepId;
             }
         }
+
+        // Set the room's assigned Sources to be the object
+        theRoom.memory.assignedSources = array;
     }
     return '++Miner Setup Complete++';
 }
