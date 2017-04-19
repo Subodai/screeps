@@ -72,6 +72,13 @@ var spawner = {
                 }
             }
 
+            if (desired.SpawnUpgraders) {
+                var spawner = require('spawn.upgrader');
+                if (spawner.run(debug)) {
+                    console.log('Spawner used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
+                    return;
+                }
+            }
 
             if (desired.SpawnMovers) {
                 var moverSpawn = require('spawn.mover');

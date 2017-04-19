@@ -29,7 +29,7 @@ module.exports = {
     // OLD DESIRED CODE
     // Desired Small sized creeps
     SmlH: 0,
-    SmlU: 1,
+    SmlU: 0,
     SmlB: 4,
     SmlR: 0,
     // Desired Mid sized creeps
@@ -38,6 +38,6 @@ module.exports = {
     MidB: 0,
     // Desired BIG sized creeps
     BigH: 0,
-    BigU: 2,
+    BigU: 0,
     BigB: 0
 }

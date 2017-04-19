@@ -52,6 +52,12 @@ module.exports.run = function(debug = false) {
         _cpu = Game.cpu.getUsed();
     }
 
+    var upgrader = require('movement.upgrader');
+    upgrader.run(debug);
+    if (debug) {
+        console.log('Up Move used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
+        _cpu = Game.cpu.getUsed();
+    }
 
 
 
