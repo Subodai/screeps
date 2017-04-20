@@ -12,7 +12,7 @@ module.exports.run = function(debug = false) {
     if (debug) { console.log('Running extractor Creep Movement'); }
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
-        if(creep.memory.role == 'extractor') {
+        if(creep.memory.role == extractor.roleName) {
             extractor.run(creep);
         }
     }

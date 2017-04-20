@@ -1,12 +1,6 @@
 /*
- * Module code goes here. Use 'module.exports' to export things:
- * module.exports.thing = 'a thing';
- *
- * You can import it from another modules like this:
- * var mod = require('work.counter');
- * mod.thing == 'a thing'; // true
+ * Counter worker for counting things
  */
-
 module.exports.run = function(debug = false) {
     var _cpu = Game.cpu.getUsed();
     var bigSpawner = require('spawn.big');

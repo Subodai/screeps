@@ -12,7 +12,7 @@ module.exports.run = function(debug = false) {
     if (debug) { console.log('Running harvester Creep Movement'); }
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
-        if(creep.memory.role == 'harvester') {
+        if(creep.memory.role == harvester.roleName) {
             harvester.run(creep);
         }
     }

@@ -38,7 +38,7 @@ module.exports.roster = {
 };
 
 /**
- * Big Harvester Role
+ * Harvester Role
  */
 module.exports.run = function(creep) {
     // If it's fatigued we should just return there's no need to carry on
