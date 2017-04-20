@@ -8,3 +8,5 @@ global.roles = [
 	'upgrader',
 	'builder'
 ];
+
+global.movement = 'old';

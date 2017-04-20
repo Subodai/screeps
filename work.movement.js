@@ -8,6 +8,18 @@ module.exports.run = function(debug = false) {
         console.log('Running Creep Movement ');
     }
     //TODO Wrap these in ifs based on if they exist
+    if (global.movement == 'new') {
+        for (var role in global.roles) {
+            var worker = require('movement.worker');
+            worker.run(role,debug);
+            if (debug) {
+                console.log(role + ' Move used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
+            }
+        }
+
+        return;
+    }
+    
 
     // Run all harvesters
     var harvester = require('movement.harvester');
