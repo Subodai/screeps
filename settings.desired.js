@@ -1,22 +1,14 @@
 /*
- * Module code goes here. Use 'module.exports' to export things:
- * module.exports.thing = 'a thing';
- *
- * You can import it from another modules like this:
- * var mod = require('settings.desired');
- * mod.thing == 'a thing'; // true
+ * Some settings
  */
-
 module.exports = {
     DeSpawn: false,
 
-
     SpawnMiners: true,
-    SpawnExtractors: false,
+    SpawnExtractors: true,
     SpawnHarvesters: true,
     SpawnBuilders: true,
     SpawnUpgraders: true,
-
     SpawnMovers: false,
     SpawnScouts: false,
 

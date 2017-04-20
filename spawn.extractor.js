@@ -48,9 +48,11 @@ module.exports.setup = function () {
         delete theRoom.memory.extractorsNeeded;
 
         if (!theRoom.memory.assignedExtractors) {
-            var extractors = theRoom.find(FIND_MINERALS);
+            var extractors = theRoom.find(FIND_MINERALS, {
+                filter: (i) => i.ticksToRegeneration = 0
+            });
             var array = {};
-            for (var i = 0; i <= extractors.length -1; i++) {
+            for (var i=0;i<=extractors.length-1;i++) {
                 console.log(extractors[i].id);
                 array[extractors[i].id] = null;
             }
@@ -67,9 +69,11 @@ module.exports.setup = function () {
         }
 
         // First get the extractors
-        var extractors = theRoom.find(FIND_MINERALS);
+        var extractors = theRoom.find(FIND_MINERALS, {
+            filter: (i) => i.ticksToRegeneration = 0
+        });
         // Loop through the extractors
-        for (var i=0; i<=extractors.length-1; i++) {
+        for (var i=0;i<=extractors.length-1;i++) {
             // Get the extractors
             var extractor = extractors[i];
             // Make found false by default
@@ -81,7 +85,7 @@ module.exports.setup = function () {
             for (var creepName in Game.creeps) {
                 // Define the creep
                 var creep = Game.creeps[creepName];
-                if (!creep.memory.role == 'miner' || creep.memory.dying) {
+                if (!creep.memory.role == 'extractor' || creep.memory.dying) {
                     continue;
                 }
                 // If this creep has the assigned Source, we found it
