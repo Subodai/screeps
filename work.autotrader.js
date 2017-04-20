@@ -1,4 +1,5 @@
 /*
+ * Autotrader
  */
  module.exports.run = function (debug = false) {
     // So we need to run this per room we control
