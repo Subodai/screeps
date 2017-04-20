@@ -6,7 +6,7 @@ module.exports.run = function(debug = false) {
     if (debug) { console.log('Running miner spawner'); }
     console.log('Checking for viable miner Creep Spawns');
     var spawned = false;
-    var mList = _.filter(Game.creeps, (creep) => creep.memory.role == miner.role && !creep.memory.dying);
+    var mList = _.filter(Game.creeps, (creep) => creep.memory.role == miner.roleName && !creep.memory.dying);
     var _Spawner = Game.spawns['Sub1'];
     if (debug) { console.log('We have ' + mList.length + ' Active Miners'); }
     // Loop through our rooms
@@ -18,7 +18,7 @@ module.exports.run = function(debug = false) {
             // If our needed is greater than what we have we need to spawn a miner!
             if (needed > mList.length) {
 
-                var newName = _Spawner.createCreep(miner.parts, undefined, {role: miner.role, sType: miner.sType});
+                var newName = _Spawner.createCreep(miner.parts, undefined, {role: miner.roleName, sType: miner.sType});
                 console.log('Spawning new Miner: ' + newName);
                 spawned = true;
             }
@@ -96,7 +96,7 @@ module.exports.setup = function () {
  */
 module.exports.count = function() {
     var miner = require('role.miner');
-    var mList = _.filter(Game.creeps, (creep) => creep.memory.role == miner.role && !creep.memory.dying);
+    var mList = _.filter(Game.creeps, (creep) => creep.memory.role == miner.roleName && !creep.memory.dying);
     console.log('Miners[' + mList.length + ']');
     return mList.length;
 }
