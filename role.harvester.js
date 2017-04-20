@@ -98,7 +98,7 @@ module.exports.run = function(creep) {
                     creep.say('RECOVER');
                 }
             } else {
-                creep.say('^');
+                creep.say('^^^');
             }
             return;
         }
@@ -122,7 +122,7 @@ module.exports.run = function(creep) {
                     creep.memory.delivering = true;
                 }
             } else {
-                creep.say('^');
+                creep.say('^^');
             }
             return;
         }
