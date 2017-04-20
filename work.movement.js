@@ -65,30 +65,4 @@ module.exports.run = function(debug = false) {
         console.log('Bu Move used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
         _cpu = Game.cpu.getUsed();
     }
-
-
-
-
-
-    // LEGACY CODE
-    var SmlMover = require('movement.small');
-    SmlMover.run(debug);
-    if (debug) {
-        console.log('S Move  used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
-        _cpu = Game.cpu.getUsed();
-    }
-
-    var MedMover = require('movement.medium');
-    MedMover.run(debug);
-    if (debug) {
-        console.log('M Move  used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
-        _cpu = Game.cpu.getUsed();
-    }
-
-    var BigMover = require('movement.big');
-    BigMover.run(debug);
-    if (debug) {
-        console.log('B Move  used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
-        _cpu = Game.cpu.getUsed();
-    }
 }
