@@ -1,4 +1,5 @@
 // Main imports these should be cached
+require('global.stuff');
 require('global.colours');
 var despawner = require('work.despawner');
 var spawner   = require('work.spawner');
