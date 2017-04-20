@@ -59,6 +59,13 @@ module.exports.run = function(debug = false) {
         _cpu = Game.cpu.getUsed();
     }
 
+    var builder = require('movement.builder');
+    builder.run(debug);
+    if (debug) {
+        console.log('Bu Move used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
+        _cpu = Game.cpu.getUsed();
+    }
+
 
 
 
