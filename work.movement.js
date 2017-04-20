@@ -9,7 +9,8 @@ module.exports.run = function(debug = false) {
     }
     //TODO Wrap these in ifs based on if they exist
     if (global.movement == 'new') {
-        for (var role in global.roles) {
+        for (var i in global.roles) {
+            var role = global.roles[i];
             var worker = require('movement.worker');
             worker.run(role,debug);
             if (debug) {
