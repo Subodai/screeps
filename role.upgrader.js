@@ -47,13 +47,13 @@ module.exports.run = function(creep) {
     if (ticks < 100) {
         console.log('Creep soon to die, switching to harvester role');
         creep.say('!!');
-        creep.memory.role = 'bigharvester';
+        creep.memory.role = 'harvester';
     }
 
     if (creep.room.memory.emergency) {
         delete creep.memory.upgrading;
         delete creep.memory.idle;
-        creep.memory.role = 'bigharvester';
+        creep.memory.role = 'harvester';
         return
     }
 
