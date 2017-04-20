@@ -1,5 +1,5 @@
 /* Specialist Extractor Drone */
-module.exports.role = 'extractor';
+module.exports.roleName = 'extractor';
 
 /* SType */
 module.exports.sType = 'specialist';
@@ -132,7 +132,7 @@ module.exports.run = function (creep, debug = false) {
                 creep.say('>>');
                 return;
             }
-                
+
             // Mining say we're mining
             if (!creep.memory.dying) {
                 creep.say('d(^-^)b');
