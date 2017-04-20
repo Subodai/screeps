@@ -1,5 +1,42 @@
+/* Builder drone */
+module.exports.roleName = 'builder';
+
+/* sType */
+module.exports.sType = 'specialist';
+
+/* Body setups */
+module.exports.bodyS  = [
+                            WORK,
+                            CARRY,
+                            MOVE
+                        ];
+module.exports.bodyM  = [
+                            WORK,WORK,MOVE,CARRY
+                        ];
+module.exports.bodyL = [
+                            WORK,WORK,WORK,CARRY,MOVE,MOVE
+                        ];
+
+module.exports.bodyXL = [
+                            WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE
+                        ];
+
+/* Body Costs */
+module.exports.costS  = 200;
+module.exports.costM  = 300;
+module.exports.costL  = 450;
+module.exports.costXL = 650;
+
+/* Desired Roster */
+module.exports.roster = {
+    S : 4,
+    M : 0,
+    L : 0,
+    XL: 0
+};
+
 /**
- * Small Builder Role
+ * Builder Role
  */
 module.exports.run = function(creep) {
     if (creep.fatigue > 0) {
@@ -12,7 +49,7 @@ module.exports.run = function(creep) {
     if (ticks < 100) {
         console.log('Creep soon to die, switching to harvester role');
         creep.say('!!');
-        creep.memory.role = 'smallharvester';
+        creep.memory.role = 'harvester';
     }
 
     if(creep.memory.building && creep.carry.energy == 0) {
@@ -92,7 +129,7 @@ module.exports.run = function(creep) {
                 creep.say('^^');
                 creep.memory.building = true;
             }
-        } 
+        }
 
         var target = creep.room.storage;
         if (target && target.store[RESOURCE_ENERGY] > 100) {
@@ -112,5 +149,3 @@ module.exports.run = function(creep) {
         }
     }
 }
-
-module.exports.parts = [WORK,WORK,MOVE,CARRY];

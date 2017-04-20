@@ -1,11 +1,39 @@
-/*
- * Module code goes here. Use 'module.exports' to export things:
- * module.exports.thing = 'a thing';
- *
- * You can import it from another modules like this:
- * var mod = require('spawn.small');
- * mod.thing == 'a thing'; // true
+/**
+ * This runs the miner spawner
  */
+module.exports.run = function(debug = false) {
+    var miner = require('role.miner');
+    if (debug) { console.log('Running miner spawner'); }
+    console.log('Checking for viable miner Creep Spawns');
+    var spawned = false;
+    var mList = _.filter(Game.creeps, (creep) => creep.memory.role == miner.role && !creep.memory.dying);
+    var _Spawner = Game.spawns['Sub1'];
+    if (debug) { console.log('We have ' + mList.length + ' Active Miners'); }
+    // Loop through our rooms
+    for (var name in Game.rooms) {
+        var needed = Game.rooms[name].memory.minersNeeded;
+        console.log('We need ' + needed + ' Miners in this room');
+        // Check if our room needs a miner
+        if (needed > 0) {
+            // If our needed is greater than what we have we need to spawn a miner!
+            if (needed > mList.length) {
+
+                var newName = _Spawner.createCreep(miner.parts, undefined, {role: miner.role, sType: miner.sType});
+                console.log('Spawning new Miner: ' + newName);
+                spawned = true;
+            }
+        }
+    }
+
+    if (spawned) {
+        console.log('Miner Creep Spawned');
+        return true;
+    } else {
+        console.log('No Miner Creeps needed');
+        return false;
+    }
+}
+
 /**
  * Run this script to setup rooms ready for assigned miners
  */
@@ -61,42 +89,6 @@ module.exports.setup = function () {
         theRoom.memory.assignedSources = array;
     }
     return '++Miner Setup Complete++';
-}
-
-/**
- * This runs the miner spawner
- */
-module.exports.run = function(debug = false) {
-    var miner = require('role.miner');
-    if (debug) { console.log('Running miner spawner'); }
-    console.log('Checking for viable miner Creep Spawns');
-    var spawned = false;
-    var mList = _.filter(Game.creeps, (creep) => creep.memory.role == miner.role && !creep.memory.dying);
-    var _Spawner = Game.spawns['Sub1'];
-    if (debug) { console.log('We have ' + mList.length + ' Active Miners'); }
-    // Loop through our rooms
-    for (var name in Game.rooms) {
-        var needed = Game.rooms[name].memory.minersNeeded;
-        console.log('We need ' + needed + ' Miners in this room');
-        // Check if our room needs a miner
-        if (needed > 0) {
-            // If our needed is greater than what we have we need to spawn a miner!
-            if (needed > mList.length) {
-
-                var newName = _Spawner.createCreep(miner.parts, undefined, {role: miner.role, sType: miner.sType});
-                console.log('Spawning new Miner: ' + newName);
-                spawned = true;
-            }
-        }
-    }
-
-    if (spawned) {
-        console.log('Miner Creep Spawned');
-        return true;
-    } else {
-        console.log('No Miner Creeps needed');
-        return false;
-    }
 }
 
 /**

@@ -6,14 +6,14 @@
  * var mod = require('movement.small');
  * mod.thing == 'a thing'; // true
  */
-var scout = require('role.scout');
+var upgrader = require('role.upgrader');
 
 module.exports.run = function(debug = false) {
-    if (debug) { console.log('Running scout Creep Movement'); }
+    if (debug) { console.log('Running upgrader Creep Movement'); }
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
-        if(creep.memory.role == scout.roleName) {
-            scout.run(creep);
+        if(creep.memory.role == upgrader.roleName) {
+            upgrader.run(creep);
         }
     }
 }

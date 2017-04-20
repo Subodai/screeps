@@ -1,13 +1,9 @@
 /*
- * Module code goes here. Use 'module.exports' to export things:
- * module.exports.thing = 'a thing';
- *
- * You can import it from another modules like this:
- * var mod = require('work.despawner');
- * mod.thing == 'a thing'; // true
+ * Despawner (not currently in use)
  */
 var despawner = {
     run: function(debug = false) {
+        return false;
         var _cpu = Game.cpu.getUsed();
         if (debug) { console.log('Running Despawner'); }
         var desired = require('settings.desired');
