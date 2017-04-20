@@ -1,32 +1,27 @@
 /* Builder drone */
 module.exports.roleName = 'builder';
-
 /* sType */
-module.exports.sType = 'specialist';
-
-/* Body setups */
-module.exports.bodyS  = [
-                            WORK,
-                            CARRY,
-                            MOVE
-                        ];
-module.exports.bodyM  = [
-                            WORK,WORK,MOVE,CARRY
-                        ];
-module.exports.bodyL = [
-                            WORK,WORK,WORK,CARRY,MOVE,MOVE
-                        ];
-
-module.exports.bodyXL = [
-                            WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE
-                        ];
-
+module.exports.sType = 'normal';
 /* Body Costs */
 module.exports.costS  = 200;
 module.exports.costM  = 300;
 module.exports.costL  = 450;
 module.exports.costXL = 650;
-
+/* Body setups */
+module.exports.bodyS  = [
+    WORK,
+    CARRY,
+    MOVE
+];
+module.exports.bodyM  = [
+    WORK,WORK,MOVE,CARRY
+];
+module.exports.bodyL = [
+    WORK,WORK,WORK,CARRY,MOVE,MOVE
+];
+module.exports.bodyXL = [
+    WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE
+];
 /* Desired Roster */
 module.exports.roster = {
     S : 4,
@@ -34,7 +29,6 @@ module.exports.roster = {
     L : 0,
     XL: 0
 };
-
 /**
  * Builder Role
  */

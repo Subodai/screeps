@@ -1,45 +1,27 @@
 /* Specialist Miner Drone */
 module.exports.roleName = 'scout';
-
 /* SType */
 module.exports.sType = 'specialist';
-
-/* XL Cost */
-module.exports.costXL = 700;
-/* XL Body (Large Tougher Dude) */
+/* Costs */
+module.exports.costS  = 0;
+module.exports.costM  = 0;
+module.exports.costL  = 0;
+module.exports.costXL = 1300;
+/* Body Parts */
+module.exports.bodyS  = [];
+module.exports.bodyM  = [];
+module.exports.bodyL  = [];
 module.exports.bodyXL = [
-    TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,          // 5 Toughs = 50
-    MOVE,MOVE,MOVE,MOVE,MOVE,               // 5 Moves = 250
-    ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,     // 5 Attacks = 400 = 150h/t
+    MOVE,MOVE,      // 2 Moves = 100
+    CLAIM,CLAIM     // 2 CLAIM = 1200
 ];
-
-
-/* M Cost */
-module.exports.costM = 380;
-/* M Body (tougher, still 1 move per turn)*/
-module.exports.bodyM = [
-    TOUGH,TOUGH,            // 2 Toughs = 20
-    MOVE,MOVE,MOVE,MOVE,    // 4 Moves = 200
-    ATTACK,ATTACK,          // 2 Attacks = 160 = 60h/t
-];
-
-
-/* S Cost */
-module.exports.costS = 1300;
-/* S Body (fast attack dog)*/
-module.exports.bodyS = [
-    MOVE,MOVE,              // 2 Moves = 100
-    CLAIM,CLAIM             // 2 CLAIM = 1200
-];
-
-/* What we want to spawn */
+/* Spawn Roster */
 module.exports.roster = {
-    S : 1,  // 1 Small
+    S : 0,  // 1 Small
     M : 0,  // 0 Mid
-    XL: 0   // 0 XL
+    L : 0,  // 0 L
+    XL: 1   // 0 XL
 };
-
-
 /* Okay, lets code the creep */
 module.exports.run = function (creep, debug = false) {
     // Fatigue Check

@@ -1,19 +1,32 @@
 /* Specialist Extractor Drone */
 module.exports.roleName = 'extractor';
-
 /* SType */
 module.exports.sType = 'specialist';
-
-/* Parts *//* ANY MORE THAN 5 WORKS WON'T LET THE SOURCE REGENERATE */
-module.exports.parts = [WORK,WORK,WORK,WORK,WORK,
-                        WORK,WORK,WORK,WORK,WORK,
-                        WORK,WORK,WORK,WORK,WORK,
-                        WORK,WORK,WORK,WORK,WORK,
-                        MOVE];
-
-/* Energy Cost */
-module.exports.energyCost = 2050;
-
+/* Which room memory item should this be checked against */
+module.exports.roomRequirement = 'assignedExtractors';
+/* Costs */
+module.exports.costS  = 0;
+module.exports.costM  = 0;
+module.exports.costL  = 0;
+module.exports.costXL = 2050;
+/* Body parts */
+module.exports.bodyS  = [];
+module.exports.bodyM  = [];
+module.exports.bodyL  = [];
+module.exports.bodyXL = [
+    WORK,WORK,WORK,WORK,WORK,
+    WORK,WORK,WORK,WORK,WORK,
+    WORK,WORK,WORK,WORK,WORK,
+    WORK,WORK,WORK,WORK,WORK,
+    MOVE
+];
+/* Spawn Roster */
+module.exports.roster = {
+    S : 0,
+    M : 0,
+    L : 0,
+    XL: 0
+}
 /* Run method */
 module.exports.run = function (creep, debug = false) {
     // Fatigue Check

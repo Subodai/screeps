@@ -1,42 +1,38 @@
 /* Harvester drone */
 module.exports.roleName = 'harvester';
-
 /* sType */
-module.exports.sType = 'specialist';
-
-/* Body setups */
-module.exports.bodyS  = [
-                            CARRY,
-                            MOVE
-                        ];
-module.exports.bodyM  = [
-                            CARRY,CARRY,CARRY,
-                            MOVE,MOVE,MOVE
-                        ];
-module.exports.bodyL = [
-                            CARRY,CARRY,CARRY,CARRY,CARRY,
-                            MOVE,MOVE,MOVE,MOVE,MOVE
-                        ];
-
-module.exports.bodyXL = [
-                            CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
-                            MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
-                        ];
-
-/* Body Costs */
+module.exports.sType = 'normal';
+/* Costs */
 module.exports.costS  = 100;
 module.exports.costM  = 300;
 module.exports.costL  = 500;
 module.exports.costXL = 1000;
-
-/* Desired Roster */
+/* Body parts */
+module.exports.bodyS  = [
+    CARRY,
+    MOVE
+];
+module.exports.bodyM  = [
+    CARRY,CARRY,CARRY,
+    MOVE,MOVE,MOVE
+];
+module.exports.bodyL = [
+    CARRY,CARRY,CARRY,CARRY,CARRY,
+    MOVE,MOVE,MOVE,MOVE,MOVE
+];
+module.exports.bodyXL = [
+    CARRY,CARRY,CARRY,CARRY,CARRY,
+    CARRY,CARRY,CARRY,CARRY,CARRY,
+    MOVE,MOVE,MOVE,MOVE,MOVE,
+    MOVE,MOVE,MOVE,MOVE,MOVE
+];
+/* Spawn Roster */
 module.exports.roster = {
     S : 1,
     M : 0,
     L : 4,
     XL: 2
 };
-
 /**
  * Harvester Role
  */
