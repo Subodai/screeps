@@ -1,5 +1,5 @@
 /* Specialist Miner Drone */
-module.exports.role = 'miner';
+module.exports.roleName = 'miner';
 
 /* SType */
 module.exports.sType = 'specialist';
