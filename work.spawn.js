@@ -30,10 +30,10 @@ module.exports.run = function(debug = false) {
             }
             // Other requirements
             if (_role.roomRequirement) {
-                console.log('role ' + role + ' has requirent' + _role.roomRequirement);
+                console.log('role ' + role + ' has requirent: ' + _role.roomRequirement);
+                console.log('room ' + _room + ' requires ' + _room.memory[_role.roomRequirement]);
                 // if it requires minersNeeded do some things
                 if (_room.memory[_role.roomRequirement] && _room.memory[_role.roomRequirement] > 0) {
-                    console.log('room ' + _room + ' requires ' + _room.memory[_role.roomRequirement]);
                     // We need the rooms miner count
                     var list = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && !creep.memory.dying);
                     console.log('room ' + _room + ' has ' + list.length);
