@@ -106,7 +106,7 @@ module.exports.setup = function () {
 /**
  * Count Extractor Creeps
  */
-module.exports.count = function() {
+module.exports.count = function(debug = false) {
     var extractor = require('role.extractor');
     var mList = _.filter(Game.creeps, (creep) => creep.memory.role == extractor.roleName && !creep.memory.dying);
     if (debug) { console.log('Extractors [' + mList.length + ']'); }
