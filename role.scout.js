@@ -25,11 +25,12 @@ module.exports.bodyM = [
 
 
 /* S Cost */
-module.exports.costS = 1300;
+module.exports.costS = 1400;
 /* S Body (fast attack dog)*/
 module.exports.bodyS = [
     MOVE,MOVE,              // 2 Moves = 100
-    CLAIM,CLAIM             // 2 CLAIM = 1200
+    CLAIM,CLAIM,            // 2 CLAIM = 1200
+    WORK
 ];
 
 /* What we want to spawn */
@@ -48,18 +49,22 @@ module.exports.run = function (creep, debug = false) {
         creep.say('Zzz');
         return;
     }
-    
+
     // Okay first lets find the flag and go to it
     if (!creep.memory.scouted) {
         // Get the scout flag
         var flag = Game.flags.scout;
         // Move to the flag, if we've arrived it shouldn't return an OK ?
-        if (creep.moveTo(flag, {
+        var result = creep.moveTo(flag, {
             visualizePathStyle : {
                 stroke: global.colourFlag,
                 opacity: global.pathOpacity
             }
-        }) != OK) {
+        });
+        if (result == ERR_BUSY) {
+            return;
+        }
+        if (result != OK) {
             // We must have arrived...
             creep.memory.scouted = true;
         }
@@ -78,6 +83,9 @@ module.exports.run = function (creep, debug = false) {
                         opacity: global.pathOpacity
                     }
                 });
+            } else {
+                // Switch him to a builder
+                creep.memory.role = 'builder';
             }
         }
     }
