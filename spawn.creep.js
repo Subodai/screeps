@@ -1,75 +1,81 @@
 /**
- * This runs the harvester spawner
+ * This runs the creep spawner
  */
-module.exports.run = function(role, debug = false) {
+module.exports.run = function(spawn, role, debug = false) {
     var _role = require('role.' + role);
+    var _spawn = Game.spawns[spawn];
+    var _room = _spawn.room;
     // CONTINUE FROM HERE
-    if (debug) { console.log('Running harvester spawner'); }
-    console.log('Checking for viable harvester Creep Spawns');
+    if (debug) { console.log('Running ' + role + ' spawner'); }
+    console.log('Checking for viable ' + role + ' Creep Spawns');
     var spawned = false;
-    var sList  = _.filter(Game.creeps, (creep) => creep.memory.role == harvester.roleName && creep.memory.gSize == 'S'  && !creep.memory.dying);
-    var mList  = _.filter(Game.creeps, (creep) => creep.memory.role == harvester.roleName && creep.memory.gSize == 'M'  && !creep.memory.dying);
-    var lList  = _.filter(Game.creeps, (creep) => creep.memory.role == harvester.roleName && creep.memory.gSize == 'L'  && !creep.memory.dying);
-    var xlList = _.filter(Game.creeps, (creep) => creep.memory.role == harvester.roleName && creep.memory.gSize == 'XL' && !creep.memory.dying);
-    var _Spawner = Game.spawns['Sub1'];
-    var _Room = _Spawner.room;
-    var roster = harvester.roster;
+    var sList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && creep.memory.gSize == 'S'  && !creep.memory.dying);
+    var mList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && creep.memory.gSize == 'M'  && !creep.memory.dying);
+    var lList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && creep.memory.gSize == 'L'  && !creep.memory.dying);
+    var xlList = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && creep.memory.gSize == 'XL' && !creep.memory.dying);
+    var roster = _role.roster;
 
-    if (_Room.energyAvailable >= harvester.costS && sList.length < roster.S && !spawned) {
-        var creepName = _Spawner.createCreep(harvester.bodyS, undefined, {
-            role : harvester.roleName,
+    if (_room.energyAvailable >= _role.costS && sList.length < roster.S && !spawned) {
+        var creepName = _Spawner.createCreep(_role.bodyS, undefined, {
+            role : _role.roleName,
             gSize : 'S',
-            sType : harvester.sType
+            sType : _role.sType
         });
-        console.log('Spawning new S harvester ' + creepName);
+        console.log('Spawning new S ' + role + ':' + creepName);
         spawned = true;
     }
 
-    if (_Room.energyAvailable >= harvester.costM && mList.length < roster.M && !spawned) {
-        var creepName = _Spawner.createCreep(harvester.bodyM, undefined, {
-            role : harvester.roleName,
+    if (_room.energyAvailable >= _role.costM && mList.length < roster.M && !spawned) {
+        var creepName = _Spawner.createCreep(_role.bodyM, undefined, {
+            role : _role.roleName,
             gSize : 'M',
-            sType : harvester.sType
+            sType : _role.sType
         });
-        console.log('Spawning new M harvester ' + creepName);
+        console.log('Spawning new M ' + role + ':' + creepName);
         spawned = true;
     }
 
-    if (_Room.energyAvailable >= harvester.costL && lList.length < roster.L && !spawned) {
-        var creepName = _Spawner.createCreep(harvester.bodyL, undefined, {
-            role : harvester.roleName,
+    if (_room.energyAvailable >= _role.costL && lList.length < roster.L && !spawned) {
+        var creepName = _Spawner.createCreep(_role.bodyL, undefined, {
+            role : _role.roleName,
             gSize : 'L',
-            sType : harvester.sType
+            sType : _role.sType
         });
-        console.log('Spawning new L harvester ' + creepName);
+        console.log('Spawning new L ' + role + ':' + creepName);
         spawned = true;
     }
 
-    if (_Room.energyAvailable >= harvester.costXL && xlList.length < roster.XL && !spawned) {
-        var creepName = _Spawner.createCreep(harvester.bodyXL, undefined, {
-            role : harvester.roleName,
+    if (_room.energyAvailable >= _role.costXL && xlList.length < roster.XL && !spawned) {
+        var creepName = _Spawner.createCreep(_role.bodyXL, undefined, {
+            role : _role.roleName,
             gSize : 'XL',
-            sType : harvester.sType
+            sType : _role.sType
         });
-        console.log('Spawning new XL harvester ' + creepName);
+        console.log('Spawning new XL ' + role + ':' + creepName);
         spawned = true;
     }
 
     if (spawned) {
-        console.log('harvester Creep Spawned');
+        console.log(role + ' Creep Spawned');
         return true;
     } else {
-        console.log('No harvester Creeps needed');
+        if (debug) { console.log('No ' + role + ' Creeps needed'); }
         return false;
     }
 }
 
 /**
- * Count harvester Creeps
+ * Count Creeps
  */
-module.exports.count = function() {
-    var harvester = require('role.harvester');
-    var list = _.filter(Game.creeps, (creep) => creep.memory.role == harvester.roleName && !creep.memory.dying);
-    console.log('harvesters[' + list.length + ']');
+module.exports.count = function(role, room = null) {
+    var _role = require('role.' + role);
+    if (room != null) {
+        var _room = Game.rooms[room];
+        var list = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && !creep.memory.dying);
+    } else {
+        var list = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && !creep.memory.dying);
+    }
+    
+    console.log(role + '[' + list.length + ']');
     return list.length;
 }

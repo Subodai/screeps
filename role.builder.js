@@ -3,7 +3,7 @@ module.exports.roleName = 'builder';
 /* sType */
 module.exports.sType = 'normal';
 /* Room requirement */
-module.exports.roomRequirement = 'buildsites';
+module.exports.counter = FIND_CONSTRUCTION_SITES;
 /* Body Costs */
 module.exports.costS  = 200;
 module.exports.costM  = 300;

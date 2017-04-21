@@ -20,30 +20,41 @@ module.exports.run = function(debug = false) {
                 continue;
             }
             // Does it require a room 'state'
-            // @TODO change the room state into a flag, so state = guard, emergency, normal etc...
-            if (_role.roomRequirement) {
-                // If the room isn't in guard mode, we need to make sure it gets skipped
-                if (_role.roomRequirement == 'guard' && !_room.memory.guard) {
+            // If the role requires a flag to be set to spawn
+            if (_role.flag) {
+                // If the room isn't in the right mode we need to make sure it gets skipped
+                if (!_room.memory.mode == _role.flag) {
                     continue;
                 }
-                // if it require buildsites we'll need to make sure we check them
-                if (_role.roomRequirement == 'buildsites') {
-                    // Loop through all rooms and look for buildsites
-                    var sites = 0;
-                    for (var i in Game.rooms) {
-                        var count = Game.rooms[i].find(FIND_CONSTRUCTION_SITES);
-                        sites += count.length;
-                    }
-                    // No sites? no bueno! NEXT!
-                    if (sites == 0){
+            }
+            // Other requirements
+            if (_role.roomRequirement) {
+                // if it requires minersNeeded do some things
+                if (_room.memory[_role.roomRequirement] && _room.memory[_role.roomRequirement] > 0) {
+                    // We need the rooms miner count
+                    var list = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && !creep.memory.dying);
+                    if (list.length >= _room.memory[_role.roomRequirement]) {
                         continue;
                     }
+                }
+            }
+            // If the role has a counter
+            if (_role.counter) {
+                // Loop through all rooms and look for buildsites
+                var items = 0;
+                for (var i in Game.rooms) {
+                    var count = Game.rooms[i].find(_role.counter);
+                    items += count.length;
+                }
+                // No items? no bueno! NEXT!
+                if (items == 0){
+                    continue;
                 }
             }
             // Got this far? time to get the spawner
             if (debug) { console.log('Running ' + role + ' Spawner'); }
             // If we get true back from the spawner then it spawned
-            if (spawner.run(role, debug)) {
+            if (spawner.run(spawn, role, debug)) {
                 if (debug) { console.log('Spawner used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU'); }
                 return;
             }
