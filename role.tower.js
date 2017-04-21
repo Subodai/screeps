@@ -55,26 +55,26 @@ module.exports.run = function (tower, debug = false) {
     }
 
     // Alright, no hostiles.. lets see what energy we have
-    // If we're idling with 600 energy, lets make sure all ramparts have been repaired at least once
+    // If we're idling with 800 energy, lets make sure all ramparts have been repaired at least once
     if (tower.energy >= 800) {
         // Get the closest rampart with only 300 hit left
         var rampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
             filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits <= 300
         });
 
-        // No single hit ramparts, okay, any with less than 5000 hits?
+        // No single hit ramparts, okay, any with less than global.rampartMax/4 hits?
         if (!rampart) {
             // First lets find the closest rampart
             var rampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits < 5000
+                filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax/4)
             });
         }
 
-        // Still none? okay find any with less than 100k
+        // Still none? okay find any with less than global.rampartMax
         if (!rampart) {
             // First lets find the closest rampart
             var rampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits < 20000
+                filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits < global.rampartMax
             });
         }
 

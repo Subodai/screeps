@@ -26,10 +26,10 @@ module.exports.bodyXL = [
 ];
 /* Desired Roster */
 module.exports.roster = {
-    S : 4,
+    S : 0,
     M : 0,
     L : 0,
-    XL: 0
+    XL: 3
 };
 /**
  * Builder Role
@@ -43,9 +43,8 @@ module.exports.run = function(creep) {
     // If we have only a few ticks to live, swap it to harvest mode so it seeks home
     var ticks = creep.ticksToLive;
     if (ticks < 100) {
-        console.log('Creep soon to die, switching to harvester role');
         creep.say('!!');
-        creep.memory.role = 'harvester';
+        creep.memory.dying = true;
     }
 
     if(creep.memory.building && creep.carry.energy == 0) {
@@ -58,10 +57,17 @@ module.exports.run = function(creep) {
     }
 
     if(creep.memory.building) {
+        // Try to get sites in current room
         var site = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
-        if(!site) {
-            creep.say('?');
+        // If that fails try all rooms
+        if(site == null) {
+            for (var _site in Game.constructionSites) {
+                var site = Game.getObjectById(_site);
+                break;
+            }
+            // console.log(JSON.stringify(site));
         }
+
         if(creep.build(site) == ERR_NOT_IN_RANGE) {
             creep.moveTo(site, {
                 visualizePathStyle: {
@@ -69,17 +75,10 @@ module.exports.run = function(creep) {
                     opacity: global.pathOpacity
                 }
             });
+            creep.say('>>');
         } else {
             creep.say('MAKE');
         }
-        // var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
-        // if(targets.length) {
-        //     if(creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-        //         creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffff00'}});
-        //     }
-        // } else {
-        //     creep.say('🔨');
-        // }
     }
     else {
 
@@ -121,10 +120,12 @@ module.exports.run = function(creep) {
                     },
                     reusePath:3
                 });
+                creep.say('>>');
             } else {
                 creep.say('^^');
                 creep.memory.building = true;
             }
+            return;
         }
 
         var target = creep.room.storage;
@@ -141,6 +142,27 @@ module.exports.run = function(creep) {
             } else {
                 creep.say('^^');
                 creep.memory.building = true;
+            }
+            return;
+        }
+
+        var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+        if (source) {
+            // Can we harvest this?
+            if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(source, {
+                    visualizePathStyle: {
+                        stroke: global.colourPickup,
+                        opacity: global.pathOpacity
+                    },
+                    reusePath:3
+                });
+                creep.say('>>');
+            } else {
+                creep.say('^^');
+                if (creep.carry.energy == creep.carryCapacity) {
+                    creep.memory.building = true;
+                }
             }
         }
     }

@@ -4,7 +4,7 @@
 module.exports.run = function(debug = false) {
     var upgrader = require('role.upgrader');
     if (debug) { console.log('Running upgrader spawner'); }
-    console.log('Checking for viable upgrader Creep Spawns');
+    if (debug) { console.log('Checking for viable upgrader Creep Spawns'); }
     var spawned = false;
     var sList  = _.filter(Game.creeps, (creep) => creep.memory.role == upgrader.roleName && creep.memory.gSize == 'S'  && !creep.memory.dying);
     var mList  = _.filter(Game.creeps, (creep) => creep.memory.role == upgrader.roleName && creep.memory.gSize == 'M'  && !creep.memory.dying);
@@ -58,7 +58,7 @@ module.exports.run = function(debug = false) {
         console.log('upgrader Creep Spawned');
         return true;
     } else {
-        console.log('No upgrader Creeps needed');
+        if (debug) { console.log('No upgrader Creeps needed'); }
         return false;
     }
 }

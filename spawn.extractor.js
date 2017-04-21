@@ -4,7 +4,7 @@
 module.exports.run = function(debug = false) {
     var extractor = require('role.extractor');
     if (debug) { console.log('Running extractor spawner'); }
-    console.log('Checking for viable extractor Creep Spawns');
+    if (debug) { console.log('Checking for viable extractor Creep Spawns'); }
     var spawned = false;
     var mList = _.filter(Game.creeps, (creep) => creep.memory.role == extractor.roleName && !creep.memory.dying);
     var _Spawner = Game.spawns['Sub1'];
@@ -13,7 +13,7 @@ module.exports.run = function(debug = false) {
     for (var name in Game.rooms) {
         var theRoom = Game.rooms[name];
         var needed = theRoom.memory.extractorsNeeded;
-        console.log('We need ' + needed + ' Extractors in this room');
+        if (debug) { console.log('We need ' + needed + ' Extractors in this room'); }
         // Check if our room needs a extractor
         if (needed > 0) {
             // If our needed is greater than what we have we need to spawn a extractor!
@@ -30,7 +30,7 @@ module.exports.run = function(debug = false) {
         console.log('Extractor Creep Spawned');
         return true;
     } else {
-        console.log('No Extractor Creeps needed');
+        if (debug) { console.log('No Extractor Creeps needed'); }
         return false;
     }
 }
@@ -106,9 +106,9 @@ module.exports.setup = function () {
 /**
  * Count Extractor Creeps
  */
-module.exports.count = function() {
+module.exports.count = function(debug = false) {
     var extractor = require('role.extractor');
     var mList = _.filter(Game.creeps, (creep) => creep.memory.role == extractor.roleName && !creep.memory.dying);
-    console.log('Miners[' + mList.length + ']');
+    if (debug) { console.log('Extractors [' + mList.length + ']'); }
     return mList.length;
 }

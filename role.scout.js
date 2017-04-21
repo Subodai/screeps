@@ -8,14 +8,15 @@ module.exports.flagRequirement = 'scout';
 module.exports.costS  = 0;
 module.exports.costM  = 0;
 module.exports.costL  = 0;
-module.exports.costXL = 1300;
+module.exports.costXL = 1400;
 /* Body Parts */
 module.exports.bodyS  = [];
 module.exports.bodyM  = [];
 module.exports.bodyL  = [];
 module.exports.bodyXL = [
-    MOVE,MOVE,      // 2 Moves = 100
+    MOVE,MOVE,      // 2 MOVE = 100
     CLAIM,CLAIM     // 2 CLAIM = 1200
+    WORK            // 1 WOKR = 100
 ];
 /* Spawn Roster */
 module.exports.roster = {
@@ -38,12 +39,16 @@ module.exports.run = function (creep, debug = false) {
         // Get the scout flag
         var flag = Game.flags.scout;
         // Move to the flag, if we've arrived it shouldn't return an OK ?
-        if (creep.moveTo(flag, {
+        var result = creep.moveTo(flag, {
             visualizePathStyle : {
                 stroke: global.colourFlag,
                 opacity: global.pathOpacity
             }
-        }) != OK) {
+        });
+        if (result == ERR_BUSY) {
+            return;
+        }
+        if (result != OK) {
             // We must have arrived...
             creep.memory.scouted = true;
         }
@@ -62,6 +67,9 @@ module.exports.run = function (creep, debug = false) {
                         opacity: global.pathOpacity
                     }
                 });
+            } else {
+                // Switch him to a builder
+                creep.memory.role = 'builder';
             }
         }
     }

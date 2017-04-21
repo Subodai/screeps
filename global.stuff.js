@@ -10,7 +10,7 @@ global.roles = [
 ];
 
 global.settings = {
-	DeSpawn: false,
+	  DeSpawn: false,
 
     miner	  : true,
     extractor : true,
@@ -23,3 +23,5 @@ global.settings = {
 
     emptyContainers: false,
 }
+
+global.rampartMax = 20000;
