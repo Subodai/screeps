@@ -23,8 +23,10 @@ module.exports.run = function(debug = false) {
             // Does it require a room 'state'
             // If the role requires a flag to be set to spawn
             if (_role.flag) {
+                console.log('role ' + role + ' has flag need: ' + _role.flag);
+                console.log('room ' + _room + ' has flag : ' + _room.memory.mode);
                 // If the room isn't in the right mode we need to make sure it gets skipped
-                if (!_room.memory.mode == _role.flag) {
+                if (_room.memory.mode != _role.flag) {
                     continue;
                 }
             }

@@ -1,24 +1,23 @@
 global.roles = [
-	'miner',
-	'extractor',
-	'harvester',
-	'builder',
-	'upgrader',
-	'mover',
-	'scout',
-	'guard',
+    'guard',
+    'upgrader',
+    'miner',
+    'harvester',
+    'builder',
+    'mover',
+    'scout',
+    'extractor',
 ];
 
 global.settings = {
-	  DeSpawn: false,
-
-    miner	  : true,
+	DeSpawn: false,
+    upgrader  : true,
+    miner     : true,
     extractor : true,
     harvester : true,
     builder	  : true,
-    upgrader  : true,
-    mover	  : false,
-    scout	  : false,
+    mover     : false,
+    scout     : false,
     guard     : true,
 
     emptyContainers: false,
