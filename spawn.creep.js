@@ -16,7 +16,7 @@ module.exports.run = function(spawn, role, debug = false) {
     var roster = _role.roster;
 
     if (_room.energyAvailable >= _role.costS && sList.length < roster.S && !spawned) {
-        var creepName = _Spawner.createCreep(_role.bodyS, undefined, {
+        var creepName = _spawn.createCreep(_role.bodyS, undefined, {
             role : _role.roleName,
             gSize : 'S',
             sType : _role.sType
@@ -26,7 +26,7 @@ module.exports.run = function(spawn, role, debug = false) {
     }
 
     if (_room.energyAvailable >= _role.costM && mList.length < roster.M && !spawned) {
-        var creepName = _Spawner.createCreep(_role.bodyM, undefined, {
+        var creepName = _spawn.createCreep(_role.bodyM, undefined, {
             role : _role.roleName,
             gSize : 'M',
             sType : _role.sType
@@ -36,7 +36,7 @@ module.exports.run = function(spawn, role, debug = false) {
     }
 
     if (_room.energyAvailable >= _role.costL && lList.length < roster.L && !spawned) {
-        var creepName = _Spawner.createCreep(_role.bodyL, undefined, {
+        var creepName = _spawn.createCreep(_role.bodyL, undefined, {
             role : _role.roleName,
             gSize : 'L',
             sType : _role.sType
@@ -46,7 +46,7 @@ module.exports.run = function(spawn, role, debug = false) {
     }
 
     if (_room.energyAvailable >= _role.costXL && xlList.length < roster.XL && !spawned) {
-        var creepName = _Spawner.createCreep(_role.bodyXL, undefined, {
+        var creepName = _spawn.createCreep(_role.bodyXL, undefined, {
             role : _role.roleName,
             gSize : 'XL',
             sType : _role.sType
