@@ -1,15 +1,28 @@
 /* Specialist Miner Drone */
 module.exports.roleName = 'miner';
-
 /* SType */
 module.exports.sType = 'specialist';
-
-/* Parts *//* ANY MORE THAN 5 WORKS WON'T LET THE SOURCE REGENERATE */
-module.exports.parts = [WORK,WORK,WORK,WORK,WORK,MOVE];
-
-/* Energy Cost */
-module.exports.energyCost = 550;
-
+/* Which room memory item should this be checked against */
+module.exports.roomRequirement = 'minersNeeded';
+/* Costs */
+module.exports.costS  = 0;
+module.exports.costM  = 0;
+module.exports.costL  = 0;
+module.exports.costXL = 550;
+/* Body parts */
+module.exports.bodyS  = [];
+module.exports.bodyM  = [];
+module.exports.bodyL  = [];
+module.exports.bodyXL = [
+    WORK,WORK,WORK,WORK,WORK,MOVE
+];
+/* Spawn Roster */
+module.exports.roster = {
+    S : 0,
+    M : 0,
+    L : 0,
+    XL: 10
+}
 /* Run method */
 module.exports.run = function (creep, debug = false) {
     // Fatigue Check
@@ -42,8 +55,7 @@ module.exports.run = function (creep, debug = false) {
 
     // Only do this if we don't have an assigned Source
     if (!creep.memory.assignedSource) {
-        var spawn = require('spawn.miner');
-        spawn.setup();
+        this.setup();
         if (debug) { console.log('Creep[' + creep.name + '] Miner without assigned Source, assigning'); }
         // Okay lets get the room memory for assigned sources
         var sourceId = false;
@@ -63,9 +75,6 @@ module.exports.run = function (creep, debug = false) {
         // Do we have a sourceId?
         if (sourceId == false) {
             if (debug) { console.log('Creep[' + creep.name + '] Miner cannot find source!!'); }
-            if (!creep.room.memory.sourceReset) {
-                creep.room.memory.sourceReset = true;
-            }
             Game.notify(Game.time + ' Miner Creep unable to assign a source');
         }
     }
@@ -136,4 +145,61 @@ module.exports.run = function (creep, debug = false) {
             Game.notify(Game.time + ' Miner Creep unable to assign a source');
         }
     }
+}
+
+/**
+ * Run this script to setup rooms ready for assigned miners
+ */
+module.exports.setup = function () {
+    // Loop through the game rooms we have
+    for (var name in Game.rooms) {
+        console.log('Setting up room ' + name);
+        var theRoom = Game.rooms[name];
+        // Clear Assigned Sources
+        delete theRoom.memory.assignedSources;
+        // Get all the sources available
+        var sources = theRoom.find(FIND_SOURCES);
+        // Make sure we set the minersNeeded of the room
+        theRoom.memory.minersNeeded = sources.length;
+        // Make an array / object thing
+        var array = {};
+        // Loop through sources
+        for (var i=0; i<=sources.length-1; i++) {
+            console.log(sources[i].id);
+            // Set it to null
+            array[sources[i].id] = null;
+        }
+        // Loop through the sources again
+        for (var i=0; i<=sources.length-1; i++) {
+            // Get the source so we can use it's id
+            var source = sources[i];
+            // Make found false by default
+            var found = false;
+            var creepId = null;
+            var sourceId = source.id;
+            // Loop through the miners
+            for (var creepName in Game.creeps) {
+                // Define the creep
+                var creep = Game.creeps[creepName];
+                if (!creep.memory.role == 'miner' || creep.memory.dying) {
+                    continue;
+                }
+                // If this creep has the assigned Source, we found it
+                if (creep.memory.assignedSource == sourceId) {
+                    found = true;
+                    creepId = creep.id;
+                    break;
+                }
+            }
+            // we found it
+            if (found) {
+                console.log(sourceId + ' set to ' + creepId);
+                array[sourceId] = creepId;
+            }
+        }
+
+        // Set the room's assigned Sources to be the object
+        theRoom.memory.assignedSources = array;
+    }
+    return '++Miner Setup Complete++';
 }

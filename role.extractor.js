@@ -1,19 +1,32 @@
 /* Specialist Extractor Drone */
 module.exports.roleName = 'extractor';
-
 /* SType */
 module.exports.sType = 'specialist';
-
-/* Parts *//* ANY MORE THAN 5 WORKS WON'T LET THE SOURCE REGENERATE */
-module.exports.parts = [WORK,WORK,WORK,WORK,WORK,
-                        WORK,WORK,WORK,WORK,WORK,
-                        WORK,WORK,WORK,WORK,WORK,
-                        WORK,WORK,WORK,WORK,WORK,
-                        MOVE];
-
-/* Energy Cost */
-module.exports.energyCost = 2050;
-
+/* Which room memory item should this be checked against */
+module.exports.roomRequirement = 'extractorsNeeded';
+/* Costs */
+module.exports.costS  = 0;
+module.exports.costM  = 0;
+module.exports.costL  = 0;
+module.exports.costXL = 2050;
+/* Body parts */
+module.exports.bodyS  = [];
+module.exports.bodyM  = [];
+module.exports.bodyL  = [];
+module.exports.bodyXL = [
+    WORK,WORK,WORK,WORK,WORK,
+    WORK,WORK,WORK,WORK,WORK,
+    WORK,WORK,WORK,WORK,WORK,
+    WORK,WORK,WORK,WORK,WORK,
+    MOVE
+];
+/* Spawn Roster */
+module.exports.roster = {
+    S : 0,
+    M : 0,
+    L : 0,
+    XL: 10
+}
 /* Run method */
 module.exports.run = function (creep, debug = false) {
     // Fatigue Check
@@ -46,8 +59,7 @@ module.exports.run = function (creep, debug = false) {
 
     // Only do this if we don't have an assigned Source
     if (!creep.memory.assignedExtractor) {
-        var spawn = require('spawn.extractor');
-        spawn.setup();
+        this.setup();
         if (debug) { console.log('Creep[' + creep.name + '] Extractor without assigned Source, assigning'); }
         // Okay lets get the room memory for assigned sources
         var sourceId = false;
@@ -143,4 +155,72 @@ module.exports.run = function (creep, debug = false) {
             Game.notify('Extractor Creep unable to assign a extractor');
         }
     }
+}
+
+/**
+ * Run this script to setup rooms ready for assigned miners
+ */
+module.exports.setup = function () {
+    // Loop through the game rooms we have
+    for (var name in Game.rooms) {
+        console.log('Setting up room ' + name);
+        var theRoom = Game.rooms[name];
+
+        delete theRoom.memory.assignedExtractors;
+        delete theRoom.memory.extractorsNeeded;
+
+        if (!theRoom.memory.assignedExtractors) {
+            var extractors = theRoom.find(FIND_MINERALS, {
+                filter: (i) => i.ticksToRegeneration = 0
+            });
+            var array = {};
+            for (var i=0;i<=extractors.length-1;i++) {
+                console.log(extractors[i].id);
+                array[extractors[i].id] = null;
+            }
+            theRoom.memory.assignedExtractors = array;
+            // Check for the extractorsNeeded flag
+            if (!theRoom.memory.extractorsNeeded) {
+                console.log('Setting extractors Needed to ' + extractors.length);
+                theRoom.memory.extractorsNeeded = extractors.length;
+            } else {
+                console.log('Currently set to ' + theRoom.memory.extractorsNeeded);
+            }
+        } else {
+            console.log('Assigned Extractors already exists. leaving alone!');
+        }
+
+        // First get the extractors
+        var extractors = theRoom.find(FIND_MINERALS, {
+            filter: (i) => i.ticksToRegeneration = 0
+        });
+        // Loop through the extractors
+        for (var i=0;i<=extractors.length-1;i++) {
+            // Get the extractors
+            var extractor = extractors[i];
+            // Make found false by default
+            var found = false;
+            var creepId = null;
+            var extractorId = extractor.id;
+            theRoom.memory.assignedExtractors[extractorId] = null;
+            // Loop through the miners
+            for (var creepName in Game.creeps) {
+                // Define the creep
+                var creep = Game.creeps[creepName];
+                if (!creep.memory.role == 'extractor' || creep.memory.dying) {
+                    continue;
+                }
+                // If this creep has the assigned Source, we found it
+                if (creep.memory.assignedExtractor == extractorId) {
+                    found = true;
+                    creepId = creep.id;
+                    break;
+                }
+            }
+            if (found) {
+                theRoom.memory.assignedExtractors[extractorId] = creepId;
+            }
+        }
+    }
+    return '++Extractor Setup Complete++';
 }

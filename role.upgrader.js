@@ -1,38 +1,34 @@
 /* Upgrader drone */
 module.exports.roleName = 'upgrader';
-
 /* sType */
-module.exports.sType = 'specialist';
-
-/* Body setups */
-module.exports.bodyS  = [
-                            WORK,WORK,MOVE,CARRY
-                        ];
-module.exports.bodyM  = [
-                            WORK,WORK,MOVE,CARRY
-                        ];
-module.exports.bodyL =  [
-                            WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE,MOVE,MOVE
-                        ];
-
-module.exports.bodyXL = [
-                            WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE,MOVE,MOVE
-                        ];
-
-/* Body Costs */
+module.exports.sType = 'normal';
+/* Costs */
 module.exports.costS  = 300;
 module.exports.costM  = 300;
 module.exports.costL  = 650;
 module.exports.costXL = 650;
-
-/* Desired Roster */
+/* Body parts */
+module.exports.bodyS  = [
+    WORK,WORK,MOVE,CARRY
+];
+module.exports.bodyM  = [
+    WORK,WORK,MOVE,CARRY
+];
+module.exports.bodyL =  [
+    WORK,WORK,WORK,WORK,CARRY,
+    MOVE,MOVE,MOVE,MOVE
+];
+module.exports.bodyXL = [
+    WORK,WORK,WORK,WORK,CARRY,
+    MOVE,MOVE,MOVE,MOVE
+];
+/* Spawn Roster */
 module.exports.roster = {
     S : 1,
     M : 0,
     L : 2,
     XL: 0
 };
-
 /**
  * Big Harvester Role
  */

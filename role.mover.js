@@ -1,51 +1,36 @@
 /* Specialist Mover Drone */
 module.exports.roleName = 'mover';
-
 /* SType */
-module.exports.sType = 'specialist';
-
-
-/* XL Cost */
+module.exports.sType = 'normal';
+/* Costs */
+module.exports.costS  = 300;
+module.exports.costM  = 500;
+module.exports.costL  = 600;
 module.exports.costXL = 700;
-/* XL Body (Large Tougher Dude) */
-module.exports.bodyXL = [
-    MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,         // 7 Moves = 350
-    CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,  // 7 Carry = 350
-];
-
-
-/* H Cost */
-module.exports.costH = 600;
-/* H Body (Creep with toughs!) */
-module.exports.bodyH = [
-    TOUGH,TOUGH,TOUGH,TOUGH,     // 4 Tough = 200
-    MOVE,MOVE,MOVE,MOVE,         // 4 Moves = 200
-    CARRY,CARRY,CARRY,CARRY,     // 4 Carry = 200
-];
-
-
-/* M Cost */
-module.exports.costM = 500;
-/* M Body*/
-module.exports.bodyM = [
-    MOVE,MOVE,MOVE,MOVE,MOVE,       // 5 Moves = 250
-    CARRY,CARRY,CARRY,CARRY,CARRY   // 5 Carry = 250
-];
-
-
-/* S Cost */
-module.exports.costS = 300;
-/* S Body*/
+/* Body Parts */
 module.exports.bodyS = [
     MOVE,MOVE,MOVE,     // 3 Moves = 100
     CARRY,CARRY,CARRY,  // 3 Carry = 100
 ];
-
-/* What we want to spawn */
+module.exports.bodyM = [
+    MOVE,MOVE,MOVE,MOVE,MOVE,       // 5 Moves = 250
+    CARRY,CARRY,CARRY,CARRY,CARRY   // 5 Carry = 250
+];
+module.exports.bodyL = [
+    TOUGH,TOUGH,TOUGH,TOUGH,     // 4 Tough = 200
+    MOVE,MOVE,MOVE,MOVE,         // 4 Moves = 200
+    CARRY,CARRY,CARRY,CARRY,     // 4 Carry = 200
+];
+module.exports.bodyXL = [
+    MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,         // 7 Moves = 350
+    CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,  // 7 Carry = 350
+];
+/* Spawn Roster */
 module.exports.roster = {
-    S : 1, // 10 Small
-    M : 1,  // 5 Mid
-    XL: 1   // 5 XL
+    S : 1, // 1 S
+    M : 1, // 1 M
+    L : 1, // 1 L
+    XL: 1  // 1 XL
 };
 
 /**
