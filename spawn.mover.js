@@ -4,7 +4,7 @@
 module.exports.run = function(debug = false) {
     var mover = require('role.mover');
     if (debug) { console.log('Running mover spawner'); }
-    console.log('Checking for viable mover Creep Spawns');
+    if (debug) { console.log('Checking for viable mover Creep Spawns'); }
     var spawned = false;
     var sList  = _.filter(Game.creeps, (creep) => creep.memory.role == mover.roleName && creep.memory.gSize == 'S'  && !creep.memory.dying);
     var mList  = _.filter(Game.creeps, (creep) => creep.memory.role == mover.roleName && creep.memory.gSize == 'M'  && !creep.memory.dying);
@@ -47,7 +47,7 @@ module.exports.run = function(debug = false) {
         console.log('mover Creep Spawned');
         return true;
     } else {
-        console.log('No mover Creeps needed');
+        if (debug) { console.log('No mover Creeps needed'); }
         return false;
     }
 }

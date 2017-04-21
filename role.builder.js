@@ -62,10 +62,17 @@ module.exports.run = function(creep) {
     }
 
     if(creep.memory.building) {
+        // Try to get sites in current room
         var site = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
-        if(!site) {
-            creep.say('?');
+        // If that fails try all rooms
+        if(site == null) {
+            for (var _site in Game.constructionSites) {
+                var site = Game.getObjectById(_site);
+                break;
+            }
         }
+        console.log(JSON.stringify(site));
+        console.log(creep.build(site));
         if(creep.build(site) == ERR_NOT_IN_RANGE) {
             creep.moveTo(site, {
                 visualizePathStyle: {
@@ -73,17 +80,10 @@ module.exports.run = function(creep) {
                     opacity: global.pathOpacity
                 }
             });
+            creep.say('>>');
         } else {
             creep.say('MAKE');
         }
-        // var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
-        // if(targets.length) {
-        //     if(creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-        //         creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffff00'}});
-        //     }
-        // } else {
-        //     creep.say('🔨');
-        // }
     }
     else {
 
@@ -125,10 +125,12 @@ module.exports.run = function(creep) {
                     },
                     reusePath:3
                 });
+                creep.say('>>');
             } else {
                 creep.say('^^');
                 creep.memory.building = true;
             }
+            return;
         }
 
         var target = creep.room.storage;
@@ -140,6 +142,25 @@ module.exports.run = function(creep) {
                         stroke: global.colourPickup,
                         opacity: global.pathOpacity
                     }
+                });
+                creep.say('>>');
+            } else {
+                creep.say('^^');
+                creep.memory.building = true;
+            }
+            return;
+        }
+
+        var source = creep.room.findClosestByRange(FIND_SOURCES_ACTIVE);
+        if (source) {
+            // Can we harvest this?
+            if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(source, {
+                    visualizePathStyle: {
+                        stroke: global.colourPickup,
+                        opacity: global.pathOpacity
+                    },
+                    reusePath:3
                 });
                 creep.say('>>');
             } else {

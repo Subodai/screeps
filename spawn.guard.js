@@ -4,7 +4,7 @@
 module.exports.run = function(debug = false) {
     var guard = require('role.guard');
     if (debug) { console.log('Running guard spawner'); }
-    console.log('Checking for viable guard Creep Spawns');
+    if (debug) { console.log('Checking for viable guard Creep Spawns'); }
     var spawned = false;
     var sList  = _.filter(Game.creeps, (creep) => creep.memory.role == guard.roleName && creep.memory.gSize == 'S' && !creep.memory.dying);
     var mList  = _.filter(Game.creeps, (creep) => creep.memory.role == guard.roleName && creep.memory.gSize == 'M' && !creep.memory.dying);
@@ -47,7 +47,7 @@ module.exports.run = function(debug = false) {
         console.log('Guard Creep Spawned');
         return true;
     } else {
-        console.log('No Guard Creeps needed');
+        if (debug) { console.log('No Guard Creeps needed'); }
         return false;
     }
 }

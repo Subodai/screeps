@@ -73,7 +73,7 @@ var spawner = {
             }
 
             var _Spawner = Game.spawns['Sub1'];
-            var sites = _Spawner.room.find(FIND_CONSTRUCTION_SITES);
+            var sites = Game.rooms[name].find(FIND_CONSTRUCTION_SITES);
 
             if (desired.SpawnBuilders && sites.length > 0) {
                 var spawner = require('spawn.builder');
@@ -90,7 +90,7 @@ var spawner = {
                     return;
                 }
             }
-            
+
             if (debug) { console.log('Not Enough Energy for Active Spawns'); }
         }
 

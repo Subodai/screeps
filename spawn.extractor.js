@@ -4,7 +4,7 @@
 module.exports.run = function(debug = false) {
     var extractor = require('role.extractor');
     if (debug) { console.log('Running extractor spawner'); }
-    console.log('Checking for viable extractor Creep Spawns');
+    if (debug) { console.log('Checking for viable extractor Creep Spawns'); }
     var spawned = false;
     var mList = _.filter(Game.creeps, (creep) => creep.memory.role == extractor.roleName && !creep.memory.dying);
     var _Spawner = Game.spawns['Sub1'];
@@ -30,7 +30,7 @@ module.exports.run = function(debug = false) {
         console.log('Extractor Creep Spawned');
         return true;
     } else {
-        console.log('No Extractor Creeps needed');
+        if (debug) { console.log('No Extractor Creeps needed'); }
         return false;
     }
 }

@@ -4,7 +4,7 @@
 module.exports.run = function(debug = false) {
     var builder = require('role.builder');
     if (debug) { console.log('Running builder spawner'); }
-    console.log('Checking for viable builder Creep Spawns');
+    if (debug) { console.log('Checking for viable builder Creep Spawns'); }
     var spawned = false;
     var sList  = _.filter(Game.creeps, (creep) => creep.memory.role == builder.roleName && creep.memory.gSize == 'S'  && !creep.memory.dying);
     var mList  = _.filter(Game.creeps, (creep) => creep.memory.role == builder.roleName && creep.memory.gSize == 'M'  && !creep.memory.dying);
@@ -58,7 +58,7 @@ module.exports.run = function(debug = false) {
         console.log('builder Creep Spawned');
         return true;
     } else {
-        console.log('No builder Creeps needed');
+        if (debug) { console.log('No builder Creeps needed'); }
         return false;
     }
 }

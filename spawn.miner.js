@@ -4,7 +4,7 @@
 module.exports.run = function(debug = false) {
     var miner = require('role.miner');
     if (debug) { console.log('Running miner spawner'); }
-    console.log('Checking for viable miner Creep Spawns');
+    if (debug) { console.log('Checking for viable miner Creep Spawns'); }
     var spawned = false;
     var mList = _.filter(Game.creeps, (creep) => creep.memory.role == miner.roleName && !creep.memory.dying);
     var _Spawner = Game.spawns['Sub1'];
@@ -29,7 +29,7 @@ module.exports.run = function(debug = false) {
         console.log('Miner Creep Spawned');
         return true;
     } else {
-        console.log('No Miner Creeps needed');
+        if (debug) { console.log('No Miner Creeps needed'); }
         return false;
     }
 }
