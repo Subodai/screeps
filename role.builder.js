@@ -47,9 +47,8 @@ module.exports.run = function(creep) {
     // If we have only a few ticks to live, swap it to harvest mode so it seeks home
     var ticks = creep.ticksToLive;
     if (ticks < 100) {
-        console.log('Creep soon to die, switching to harvester role');
         creep.say('!!');
-        creep.memory.role = 'harvester';
+        creep.memory.dying = true;
     }
 
     if(creep.memory.building && creep.carry.energy == 0) {
