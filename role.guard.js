@@ -2,6 +2,8 @@
 module.exports.roleName = 'guard';
 /* SType */
 module.exports.sType = 'specialist';
+/* Room memory flag requirement */
+module.exports.roomRequirement = 'guard';
 /* Costs */
 module.exports.costS  = 260;
 module.exports.costM  = 380;

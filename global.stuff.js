@@ -19,6 +19,7 @@ global.settings = {
     upgrader  : true,
     mover	  : false,
     scout	  : false,
+    guard     : true,
 
     emptyContainers: false,
 }

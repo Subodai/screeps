@@ -2,6 +2,8 @@
 module.exports.roleName = 'scout';
 /* SType */
 module.exports.sType = 'specialist';
+/* This role requires a flag to be set */
+module.exports.flagRequirement = 'scout';
 /* Costs */
 module.exports.costS  = 0;
 module.exports.costM  = 0;
@@ -30,7 +32,7 @@ module.exports.run = function (creep, debug = false) {
         creep.say('Zzz');
         return;
     }
-    
+
     // Okay first lets find the flag and go to it
     if (!creep.memory.scouted) {
         // Get the scout flag
