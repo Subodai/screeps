@@ -12,7 +12,7 @@ module.exports.run = function(debug = false) {
     // Loop through our rooms
     for (var name in Game.rooms) {
         var needed = Game.rooms[name].memory.minersNeeded;
-        console.log('We need ' + needed + ' Miners in this room');
+        if (debug) { console.log('We need ' + needed + ' Miners in this room'); }
         // Check if our room needs a miner
         if (needed > 0) {
             // If our needed is greater than what we have we need to spawn a miner!
@@ -94,9 +94,9 @@ module.exports.setup = function () {
 /**
  * Count Miner Creeps
  */
-module.exports.count = function() {
+module.exports.count = function(debug = false) {
     var miner = require('role.miner');
     var mList = _.filter(Game.creeps, (creep) => creep.memory.role == miner.roleName && !creep.memory.dying);
-    console.log('Miners[' + mList.length + ']');
+    if (debug) { console.log('Miners[' + mList.length + ']'); }
     return mList.length;
 }
