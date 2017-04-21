@@ -167,14 +167,6 @@ module.exports.run = function(creep) {
                 creep.say('^^');
                 if (creep.carry.energy == creep.carryCapacity) {
                     creep.memory.building = true;
-                } else {
-                    // Try to get sites in current room
-                    var site = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
-                    if (site) {
-                        if (creep.build(site) != ERR_NOT_IN_RANGE) {
-                            creep.say('MAKE');
-                        }
-                    }
                 }
             }
         }
