@@ -70,7 +70,7 @@ module.exports.run = function(creep) {
                 var site = Game.getObjectById(_site);
                 break;
             }
-            console.log(JSON.stringify(site));
+            // console.log(JSON.stringify(site));
         }
 
         if(creep.build(site) == ERR_NOT_IN_RANGE) {
