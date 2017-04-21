@@ -15,7 +15,7 @@ module.exports.bodyM  = [];
 module.exports.bodyL  = [];
 module.exports.bodyXL = [
     MOVE,MOVE,      // 2 MOVE = 100
-    CLAIM,CLAIM     // 2 CLAIM = 1200
+    CLAIM,CLAIM,    // 2 CLAIM = 1200
     WORK            // 1 WOKR = 100
 ];
 /* Spawn Roster */
