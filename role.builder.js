@@ -29,10 +29,10 @@ module.exports.costXL = 650;
 
 /* Desired Roster */
 module.exports.roster = {
-    S : 4,
+    S : 0,
     M : 0,
     L : 0,
-    XL: 0
+    XL: 3
 };
 
 /**
