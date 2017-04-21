@@ -38,7 +38,7 @@ module.exports.run = function(debug = false) {
             miner.setup();
 
         }
-        if ((list.length >= 5 && miners > 0) && theRoom.memory.emergency) {
+        if ((list.length >= 5 || miners > 0) && theRoom.memory.emergency) {
             Game.notify(Game.time + ' Room ' + name + ' No Longer in Emergency Mode');
             console.log('Emergency Deactivated');
             theRoom.memory.emergency = false;
