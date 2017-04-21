@@ -106,21 +106,41 @@ module.exports.run = function(creep) {
             filter: (structure) => structure.structureType == STRUCTURE_CONTAINER && structure.store[RESOURCE_ENERGY] > 100
         });
 
-        if(!container) {
-            creep.say('???');
+        if(container) {
+            // Can we harvest right now?
+            if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(container, {
+                    visualizePathStyle: {
+                        stroke: global.colourPickup,
+                        opacity: global.pathOpacity
+                    },
+                    reusePath:0
+                });
+                creep.say('>>');
+            } else {
+                creep.say('^^');
+            }
+            return;
         }
-        // Can we harvest right now?
-        if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(container, {
-                visualizePathStyle: {
-                    stroke: global.colourPickup,
-                    opacity: global.pathOpacity
-                },
-                reusePath:0
-            });
-            creep.say('>>');
-        } else {
-            creep.say('^^');
+        
+        var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+        if (source) {
+            // Can we harvest this?
+            if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(source, {
+                    visualizePathStyle: {
+                        stroke: global.colourPickup,
+                        opacity: global.pathOpacity
+                    },
+                    reusePath:3
+                });
+                creep.say('>>');
+            } else {
+                creep.say('^^');
+                if (creep.carry.energy == creep.carryCapacity) {
+                    creep.memory.upgrading = true;
+                }
+            }
         }
     }
 }
