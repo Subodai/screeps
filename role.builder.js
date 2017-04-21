@@ -2,6 +2,8 @@
 module.exports.roleName = 'builder';
 /* sType */
 module.exports.sType = 'normal';
+/* Room requirement */
+module.exports.roomRequirement = 'buildsites';
 /* Body Costs */
 module.exports.costS  = 200;
 module.exports.costM  = 300;
