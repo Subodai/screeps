@@ -52,8 +52,6 @@ module.exports.run = function(debug = false) {
                     continue;
                 }
             }
-            // Got this far? time to get the spawner
-            if (debug) { console.log('Running ' + role + ' Spawner'); }
             // If we get true back from the spawner then it spawned
             if (spawner.run(spawn, role, debug)) {
                 if (debug) { console.log('Spawner used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU'); }
