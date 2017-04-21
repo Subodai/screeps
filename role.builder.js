@@ -151,7 +151,7 @@ module.exports.run = function(creep) {
             return;
         }
 
-        var source = creep.room.findClosestByRange(FIND_SOURCES_ACTIVE);
+        var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
         if (source) {
             // Can we harvest this?
             if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
