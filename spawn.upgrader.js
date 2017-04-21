@@ -58,7 +58,7 @@ module.exports.run = function(debug = false) {
         console.log('upgrader Creep Spawned');
         return true;
     } else {
-        console.log('No upgrader Creeps needed');
+        if (debug) { console.log('No upgrader Creeps needed'); }
         return false;
     }
 }
