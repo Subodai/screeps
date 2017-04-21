@@ -13,7 +13,7 @@ module.exports.run = function(debug = false) {
         var _spawned = false;
         // Now lets loop through the roles
         for (var i in global.roles) {
-            if (spawned) { break; }
+            if (_spawned) { break; }
             var role = global.roles[i];
             var _role = require('role.' + role);
             // Is this role enabled
@@ -57,7 +57,7 @@ module.exports.run = function(debug = false) {
             // If we get true back from the spawner then it spawned
             if (spawner.run(spawn, role, debug)) {
                 if (debug) { console.log('Spawner used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU'); }
-                spawned = true;
+                _spawned = true;
             }
         }
     }
