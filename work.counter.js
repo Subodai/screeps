@@ -3,7 +3,7 @@
  */
 module.exports.run = function(debug = false) {
     var _cpu = Game.cpu.getUsed();
-    var spawner = require('spawn.creeps');
+    var spawner = require('spawn.creep');
     var msg = '';
 
     // Loop through the rooms
