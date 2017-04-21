@@ -7,7 +7,7 @@ module.exports.run = function(spawn, role, debug = false) {
     var _room = _spawn.room;
     // CONTINUE FROM HERE
     if (debug) { console.log('Running ' + role + ' spawner'); }
-    console.log('Checking for viable ' + role + ' Creep Spawns');
+    console.log('Checking for viable ' + role + ' Creep Spawns in ' + _spawn.room);
     var spawned = false;
     var sList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && creep.memory.gSize == 'S'  && !creep.memory.dying);
     var mList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && creep.memory.gSize == 'M'  && !creep.memory.dying);

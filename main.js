@@ -2,7 +2,7 @@
 require('global.stuff');
 require('global.colours');
 var despawner = require('work.despawner');
-var spawner   = require('work.spawner');
+var spawner   = require('work.spawn');
 var movement  = require('work.movement');
 var cleaner   = require('work.cleaner');
 var towers    = require('work.towers');
