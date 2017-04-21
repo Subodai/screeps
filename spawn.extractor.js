@@ -13,7 +13,7 @@ module.exports.run = function(debug = false) {
     for (var name in Game.rooms) {
         var theRoom = Game.rooms[name];
         var needed = theRoom.memory.extractorsNeeded;
-        console.log('We need ' + needed + ' Extractors in this room');
+        if (debug) { console.log('We need ' + needed + ' Extractors in this room'); }
         // Check if our room needs a extractor
         if (needed > 0) {
             // If our needed is greater than what we have we need to spawn a extractor!
@@ -109,6 +109,6 @@ module.exports.setup = function () {
 module.exports.count = function() {
     var extractor = require('role.extractor');
     var mList = _.filter(Game.creeps, (creep) => creep.memory.role == extractor.roleName && !creep.memory.dying);
-    console.log('Miners[' + mList.length + ']');
+    if (debug) { console.log('Extractors [' + mList.length + ']'); }
     return mList.length;
 }
