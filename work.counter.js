@@ -26,7 +26,7 @@ module.exports.run = function(debug = false) {
             console.log('We are still in guard mode');
         }
         var list = _.filter(Game.creeps, (creep) => !creep.memory.dying);
-        if ((list.length == 0 || miners == 0) && !theRoom.memory.emergency){
+        if ((list.length == 0 && miners == 0) && !theRoom.memory.emergency){
             Game.notify(Game.time + ' Room '+ room + ' In Emergency Mode!!');
             console.log('Emergency Activated');
             theRoom.memory.emergency = true;
