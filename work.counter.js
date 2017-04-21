@@ -3,14 +3,8 @@
  */
 module.exports.run = function(debug = false) {
     var _cpu = Game.cpu.getUsed();
-    var bigSpawner = require('spawn.big');
-    var midSpawner = require('spawn.mid');
-    var smallSpawner = require('spawn.small');
     var minerSpawner = require('spawn.miner');
     var extractorSpawner = require('spawn.extractor');
-    bigSpawner.count();
-    midSpawner.count();
-    smallSpawner.count();
     var miners = minerSpawner.count();
     extractorSpawner.count();
     var msg = '';
@@ -44,7 +38,7 @@ module.exports.run = function(debug = false) {
             miner.setup();
 
         }
-        if ((list.length >= 10 && miners > 0) && theRoom.memory.emergency) {
+        if ((list.length >= 5 && miners > 0) && theRoom.memory.emergency) {
             Game.notify(Game.time + ' Room ' + name + ' No Longer in Emergency Mode');
             console.log('Emergency Deactivated');
             theRoom.memory.emergency = false;
