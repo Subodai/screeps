@@ -79,9 +79,9 @@ module.exports.run = function(creep) {
             creep.memory.idle = 0;
             // We are in emergency mode, get energy from terminal first, then storage
             var box = creep.room.terminal;
-            if (box.store[RESOURCE_ENERGY] == 0) {
+            if (box && box.store[RESOURCE_ENERGY] == 0) {
                 var box = creep.room.storage;
-                if (box.store[RESOURCE_ENERGY] == 0) {
+                if (box && box.store[RESOURCE_ENERGY] == 0) {
                     var box = false;
                 }
             }
