@@ -28,7 +28,7 @@ module.exports.run = function(spawn, role, debug = false) {
             role : _role.roleName,
             gSize : 'S',
             sType : _role.sType,
-            roomName : _room
+            roomName : _room.name
         });
         console.log('Spawning new S ' + role + ':' + creepName);
         spawned = true;
@@ -39,7 +39,7 @@ module.exports.run = function(spawn, role, debug = false) {
             role : _role.roleName,
             gSize : 'M',
             sType : _role.sType,
-            roomName : _room
+            roomName : _room.name
         });
         console.log('Spawning new M ' + role + ':' + creepName);
         spawned = true;
@@ -50,7 +50,7 @@ module.exports.run = function(spawn, role, debug = false) {
             role : _role.roleName,
             gSize : 'L',
             sType : _role.sType,
-            roomName : _room
+            roomName : _room.name
         });
         console.log('Spawning new L ' + role + ':' + creepName);
         spawned = true;
@@ -61,7 +61,7 @@ module.exports.run = function(spawn, role, debug = false) {
             role : _role.roleName,
             gSize : 'XL',
             sType : _role.sType,
-            roomName : _room
+            roomName : _room.name
         });
         console.log('Spawning new XL ' + role + ':' + creepName);
         spawned = true;
