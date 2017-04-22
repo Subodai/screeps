@@ -9,12 +9,15 @@ module.exports.run = function(spawn, role, debug = false) {
     if (debug) { console.log('Running ' + role + ' spawner'); }
     if (debug) { console.log('Checking for viable ' + role + ' Creep Spawns in ' + _spawn.room); }
     var spawned = false;
+
     if (_role.limit == 'global') {
+        if (debug) { console.log('Checking global counts') };
         var sList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.memory.gSize == 'S'  && !creep.memory.dying);
         var mList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.memory.gSize == 'M'  && !creep.memory.dying);
         var lList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.memory.gSize == 'L'  && !creep.memory.dying);
         var xlList = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.memory.gSize == 'XL' && !creep.memory.dying);
     } else {
+        if (debug) { console.log('Checking spawner room counts') };
         var sList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && creep.memory.gSize == 'S'  && !creep.memory.dying);
         var mList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && creep.memory.gSize == 'M'  && !creep.memory.dying);
         var lList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && creep.memory.gSize == 'L'  && !creep.memory.dying);
