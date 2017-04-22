@@ -21,10 +21,10 @@ module.exports.loop = function () {
     }
     // Run the source setups once every 50 ticks
     if (Game.time % 50 == 0) {
-        var minerSpawner = require('spawn.miner');
-        var extractorSpawner = require('spawn.extractor');
-        minerSpawner.setup();
-        extractorSpawner.setup();
+        var miner = require('role.miner');
+        var extractor = require('role.extractor');
+        miner.setup();
+        extractor.setup();
     }
     // Only need these once every 5 ticks
     if (Game.time % 5 == 0) {
