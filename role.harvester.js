@@ -269,21 +269,25 @@ module.exports.run = function(creep) {
             }
             var terminal = creep.room.terminal;
             var storage = creep.room.storage;
-            if (creep.carry.energy > 0) {
-                // Lets just assume these exist and get the percentage filled
-                var terminalP = 100 - ((terminal.storeCapacity - _.sum(terminal.store)) / (terminal.storeCapacity / 100));
-                var storageP = 100 - ((storage.storeCapacity - _.sum(storage.store))  / (storageP.storeCapacity / 100));
-                if (terminalP > storageP) {
+            if (storage && terminal) {
+                if (creep.carry.energy > 0) {
+                    // Lets just assume these exist and get the percentage filled
+                    var terminalP = 100 - ((terminal.storeCapacity - _.sum(terminal.store)) / (terminal.storeCapacity / 100));
+                    var storageP = 100 - ((storage.storeCapacity - _.sum(storage.store))  / (storageP.storeCapacity / 100));
+                    if (terminalP > storageP) {
+                        var target = terminal;
+                    }
+                    if (storageP > terminalP) {
+                        var target = storage;
+                    }
+                } else {
                     var target = terminal;
+                    if (!target) {
+                        var target = storage;
+                    }
                 }
-                if (storageP > terminalP) {
-                    var target = storage;
-                }
-            } else {
-                var target = creep.room.terminal;
-                if (!target) {
-                    var target = creep.room.storage;
-                }
+            } else if (storage) {
+                var target = storage;
             }
             
             if (target) {
