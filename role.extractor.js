@@ -167,7 +167,6 @@ module.exports.setup = function () {
         var theRoom = Game.rooms[name];
 
         delete theRoom.memory.assignedExtractors;
-        delete theRoom.memory.extractorsNeeded;
 
         if (!theRoom.memory.assignedExtractors) {
             var extractors = theRoom.find(FIND_MINERALS, {
