@@ -23,8 +23,10 @@ module.exports.run = function(debug = false) {
             // Does it require a room 'state'
             // If the role requires a flag to be set to spawn
             if (_role.flag) {
-                console.log('role ' + role + ' has flag need: ' + _role.flag);
-                console.log('room ' + _room.name + ' has flag : ' + _room.memory.mode);
+                if (debug) { 
+                    console.log('role ' + role + ' has flag need: ' + _role.flag);
+                    console.log('room ' + _room.name + ' has flag : ' + _room.memory.mode);
+                }
                 // If the room isn't in the right mode we need to make sure it gets skipped
                 if (_room.memory.mode != _role.flag) {
                     continue;
@@ -33,7 +35,7 @@ module.exports.run = function(debug = false) {
             // Other requirements
             if (_role.roomRequirement) {
                 if (debug) { console.log('role ' + role + ' has requirent: ' + _role.roomRequirement); }
-                console.log('room ' + _room.name + ' requires ' + _room.memory[_role.roomRequirement]);
+                 if (debug) { console.log('room ' + _room.name + ' requires ' + _room.memory[_role.roomRequirement]); }
                 // if it requires minersNeeded do some things
                 if (_room.memory[_role.roomRequirement] && _room.memory[_role.roomRequirement] > 0) {
                     // We need the rooms miner count
