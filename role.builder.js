@@ -26,7 +26,7 @@ module.exports.bodyXL = [
 ];
 /* Desired Roster */
 module.exports.roster = {
-    S : 0,
+    S : 3,
     M : 0,
     L : 0,
     XL: 3
