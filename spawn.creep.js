@@ -18,10 +18,14 @@ module.exports.run = function(spawn, role, debug = false) {
         var xlList = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.memory.gSize == 'XL' && !creep.memory.dying);
     } else {
         if (debug) { console.log('Checking spawner room counts') };
-        var sList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && creep.memory.gSize == 'S'  && !creep.memory.dying);
-        var mList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && creep.memory.gSize == 'M'  && !creep.memory.dying);
-        var lList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && creep.memory.gSize == 'L'  && !creep.memory.dying);
-        var xlList = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && creep.memory.gSize == 'XL' && !creep.memory.dying);
+        var sList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.memory.roomName == _room.name && creep.memory.gSize == 'S'  && !creep.memory.dying);
+        var mList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.memory.roomName == _room.name && creep.memory.gSize == 'M'  && !creep.memory.dying);
+        var lList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.memory.roomName == _room.name && creep.memory.gSize == 'L'  && !creep.memory.dying);
+        var xlList = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.memory.roomName == _room.name && creep.memory.gSize == 'XL' && !creep.memory.dying);
+    }
+
+    if (debug) {
+        console.log('s:'+sList.length+ ' m:' + mList.length+ ' l:' + lList.length + ' xl:' + xlList.length);
     }
    
     var roster = _role.roster;
