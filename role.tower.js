@@ -21,7 +21,7 @@ module.exports.run = function (tower, debug = false) {
     if (tower.energy >= 100) {
         // Get the closest rampart with only 1 hit left
         var rampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-            filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits == 1
+            filter: (i) => (i.structureType == STRUCTURE_RAMPART || i.structureType == STRUCTURE_WALL) && i.hits == 1
         });
         // Did we find one?
         if (rampart) {
@@ -59,14 +59,14 @@ module.exports.run = function (tower, debug = false) {
     if (tower.energy >= 800) {
         // Get the closest rampart with only 300 hit left
         var rampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-            filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits <= 300
+            filter: (i) => (i.structureType == STRUCTURE_RAMPART || i.structureType == STRUCTURE_WALL) && i.hits <= 300
         });
 
         // No single hit ramparts, okay, any with less than global.rampartMax/4 hits?
         if (!rampart) {
             // First lets find the closest rampart
             var rampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax/4)
+                filter: (i) => (i.structureType == STRUCTURE_RAMPART || i.structureType == STRUCTURE_WALL) && i.hits < (global.rampartMax/4)
             });
         }
 
@@ -74,7 +74,7 @@ module.exports.run = function (tower, debug = false) {
         if (!rampart) {
             // First lets find the closest rampart
             var rampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                filter: (i) => i.structureType == STRUCTURE_RAMPART && i.hits < global.rampartMax
+                filter: (i) => (i.structureType == STRUCTURE_RAMPART || i.structureType == STRUCTURE_WALL) && i.hits < global.rampartMax
             });
         }
 
