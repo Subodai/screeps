@@ -32,7 +32,7 @@ module.exports.roster = {
     L : 1, // 1 L
     XL: 1  // 1 XL
 };
-
+module.exports.limit = 'room';
 /**
  * @memory.tartgetId    int     The current id of the oject this creep is interested in
  * @memory.targetType   string  The type of target this creep is interested in

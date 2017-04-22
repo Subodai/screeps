@@ -27,6 +27,7 @@ module.exports.roster = {
     L : 0,
     XL: 1
 }
+module.exports.limit = 'room';
 /* Run method */
 module.exports.run = function (creep, debug = false) {
     // Fatigue Check

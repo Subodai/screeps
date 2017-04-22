@@ -36,6 +36,7 @@ module.exports.roster = {
     L : 5,  // 5 L
     XL: 5   // 5 XL
 };
+module.exports.limit = 'room';
 /* Okay, lets code the creep */
 module.exports.run = function (creep, debug = false) {
     // Fatigue Check

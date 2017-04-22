@@ -25,6 +25,7 @@ module.exports.roster = {
     L : 0,  // 0 L
     XL: 1   // 0 XL
 };
+module.exports.limit = 'global';
 /* Okay, lets code the creep */
 module.exports.run = function (creep, debug = false) {
     // Fatigue Check

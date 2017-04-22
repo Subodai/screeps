@@ -9,17 +9,26 @@ module.exports.run = function(spawn, role, debug = false) {
     if (debug) { console.log('Running ' + role + ' spawner'); }
     if (debug) { console.log('Checking for viable ' + role + ' Creep Spawns in ' + _spawn.room); }
     var spawned = false;
-    var sList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.memory.gSize == 'S'  && !creep.memory.dying);
-    var mList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.memory.gSize == 'M'  && !creep.memory.dying);
-    var lList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.memory.gSize == 'L'  && !creep.memory.dying);
-    var xlList = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.memory.gSize == 'XL' && !creep.memory.dying);
+    if (_role.limit == 'global') {
+        var sList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.memory.gSize == 'S'  && !creep.memory.dying);
+        var mList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.memory.gSize == 'M'  && !creep.memory.dying);
+        var lList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.memory.gSize == 'L'  && !creep.memory.dying);
+        var xlList = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.memory.gSize == 'XL' && !creep.memory.dying);
+    } else {
+        var sList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && creep.memory.gSize == 'S'  && !creep.memory.dying);
+        var mList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && creep.memory.gSize == 'M'  && !creep.memory.dying);
+        var lList  = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && creep.memory.gSize == 'L'  && !creep.memory.dying);
+        var xlList = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && creep.memory.gSize == 'XL' && !creep.memory.dying);
+    }
+   
     var roster = _role.roster;
 
     if (_room.energyAvailable >= _role.costS && sList.length < roster.S && !spawned) {
         var creepName = _spawn.createCreep(_role.bodyS, undefined, {
             role : _role.roleName,
             gSize : 'S',
-            sType : _role.sType
+            sType : _role.sType,
+            roomName : _room
         });
         console.log('Spawning new S ' + role + ':' + creepName);
         spawned = true;
@@ -29,7 +38,8 @@ module.exports.run = function(spawn, role, debug = false) {
         var creepName = _spawn.createCreep(_role.bodyM, undefined, {
             role : _role.roleName,
             gSize : 'M',
-            sType : _role.sType
+            sType : _role.sType,
+            roomName : _room
         });
         console.log('Spawning new M ' + role + ':' + creepName);
         spawned = true;
@@ -39,7 +49,8 @@ module.exports.run = function(spawn, role, debug = false) {
         var creepName = _spawn.createCreep(_role.bodyL, undefined, {
             role : _role.roleName,
             gSize : 'L',
-            sType : _role.sType
+            sType : _role.sType,
+            roomName : _room
         });
         console.log('Spawning new L ' + role + ':' + creepName);
         spawned = true;
@@ -49,7 +60,8 @@ module.exports.run = function(spawn, role, debug = false) {
         var creepName = _spawn.createCreep(_role.bodyXL, undefined, {
             role : _role.roleName,
             gSize : 'XL',
-            sType : _role.sType
+            sType : _role.sType,
+            roomName : _room
         });
         console.log('Spawning new XL ' + role + ':' + creepName);
         spawned = true;
@@ -71,7 +83,7 @@ module.exports.count = function(role, room = null) {
     var _role = require('role.' + role);
     if (room != null) {
         var _room = Game.rooms[room];
-        var list = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && !creep.memory.dying);
+        var list = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && !creep.memory.dying);
     } else {
         var list = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && !creep.memory.dying);
     }

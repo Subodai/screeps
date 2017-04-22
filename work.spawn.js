@@ -48,10 +48,16 @@ module.exports.run = function(debug = false) {
             if (_role.counter) {
                 // Loop through all rooms and look for buildsites
                 var items = 0;
-                for (var i in Game.rooms) {
-                    var count = Game.rooms[i].find(_role.counter);
+                if (_role.limit == 'global') {
+                    for (var i in Game.rooms) {
+                        var count = Game.rooms[i].find(_role.counter);
+                        items += count.length;
+                    }
+                } else {
+                    _room.find(_role.counter);
                     items += count.length;
                 }
+                
                 // No items? no bueno! NEXT!
                 if (items == 0){
                     continue;

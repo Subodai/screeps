@@ -31,6 +31,7 @@ module.exports.roster = {
     L : 0,
     XL: 3
 };
+module.exports.limit = 'global';
 /**
  * Builder Role
  */

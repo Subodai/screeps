@@ -29,6 +29,7 @@ module.exports.roster = {
     L : 2,
     XL: 0
 };
+module.exports.limit = 'room';
 /**
  * Big Harvester Role
  */
