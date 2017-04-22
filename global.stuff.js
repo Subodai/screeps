@@ -13,7 +13,7 @@ global.settings = {
 	DeSpawn: false,
     upgrader  : true,
     miner     : true,
-    extractor : true,
+    extractor : false,
     harvester : true,
     builder	  : true,
     mover     : false,

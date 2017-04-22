@@ -25,7 +25,7 @@ module.exports.roster = {
     S : 0,
     M : 0,
     L : 0,
-    XL: 10
+    XL: 1
 }
 /* Run method */
 module.exports.run = function (creep, debug = false) {
