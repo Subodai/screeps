@@ -273,7 +273,7 @@ module.exports.run = function(creep) {
                 if (creep.carry.energy > 0) {
                     // Lets just assume these exist and get the percentage filled
                     var terminalP = 100 - ((terminal.storeCapacity - _.sum(terminal.store)) / (terminal.storeCapacity / 100));
-                    var storageP = 100 - ((storage.storeCapacity - _.sum(storage.store))  / (storageP.storeCapacity / 100));
+                    var storageP = 100 - ((storage.storeCapacity - _.sum(storage.store))  / (storage.storeCapacity / 100));
                     if (terminalP > storageP) {
                         var target = terminal;
                     }
