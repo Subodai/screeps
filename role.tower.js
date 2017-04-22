@@ -20,7 +20,7 @@ module.exports.run = function (tower, debug = false) {
     // Always ensure that 1 hit ramparts get a quick zap
     if (tower.energy >= 100) {
         // Get the closest rampart with only 1 hit left
-        var rampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+        var rampart = tower.pos.findClosestByRange(FIND_STRUCTURES, {
             filter: (i) => (i.structureType == STRUCTURE_RAMPART || i.structureType == STRUCTURE_WALL) && i.hits == 1
         });
         // Did we find one?
@@ -58,14 +58,14 @@ module.exports.run = function (tower, debug = false) {
     // If we're idling with 800 energy, lets make sure all ramparts have been repaired at least once
     if (tower.energy >= 800) {
         // Get the closest rampart with only 300 hit left
-        var rampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+        var rampart = tower.pos.findClosestByRange(FIND_STRUCTURES, {
             filter: (i) => (i.structureType == STRUCTURE_RAMPART || i.structureType == STRUCTURE_WALL) && i.hits <= 300
         });
 
         // No single hit ramparts, okay, any with less than global.rampartMax/4 hits?
         if (!rampart) {
             // First lets find the closest rampart
-            var rampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+            var rampart = tower.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (i) => (i.structureType == STRUCTURE_RAMPART || i.structureType == STRUCTURE_WALL) && i.hits < (global.rampartMax/4)
             });
         }
@@ -73,7 +73,7 @@ module.exports.run = function (tower, debug = false) {
         // Still none? okay find any with less than global.rampartMax
         if (!rampart) {
             // First lets find the closest rampart
-            var rampart = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+            var rampart = tower.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (i) => (i.structureType == STRUCTURE_RAMPART || i.structureType == STRUCTURE_WALL) && i.hits < global.rampartMax
             });
         }
