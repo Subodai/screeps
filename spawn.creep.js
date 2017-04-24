@@ -27,7 +27,7 @@ module.exports.run = function(spawn, role, debug = false) {
     if (debug) {
         console.log('s:'+sList.length+ ' m:' + mList.length+ ' l:' + lList.length + ' xl:' + xlList.length);
     }
-   
+
     var roster = _role.roster;
 
     if (_room.energyAvailable >= _role.costS && sList.length < roster.S && !spawned) {
@@ -86,15 +86,19 @@ module.exports.run = function(spawn, role, debug = false) {
 /**
  * Count Creeps
  */
-module.exports.count = function(role, room = null) {
+module.exports.count = function(role, room = null, debug) {
     var _role = require('role.' + role);
     if (room != null) {
         var _room = Game.rooms[room];
-        var list = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.room == _room && !creep.memory.dying);
+        var list = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.memory.roomName == _room.name && !creep.memory.dying);
     } else {
         var list = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && !creep.memory.dying);
     }
-    
-    console.log(role + '[' + list.length + ']');
+    if (room != null) {
+        console.log('[' + _room.name + ']:[' + role + '] = ' + list.length);
+    } else {
+        console.log('[global][' + role + '] = ' + list.length);
+    }
+
     return list.length;
 }
