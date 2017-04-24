@@ -24,6 +24,8 @@ module.exports.roster = {
     XL: 2
 }
 module.exports.limit = 'room';
+// Set a time for this creep to 'expire' at
+module.exports.expiry = 150;
 /* Run method */
 module.exports.run = function (creep, debug = false) {
     // Fatigue Check
@@ -35,7 +37,7 @@ module.exports.run = function (creep, debug = false) {
 
     // Okay, health check
     var ticks = creep.ticksToLive;
-    if (ticks <= 100 && !creep.memory.dying) {
+    if (ticks <= 150 && !creep.memory.dying) {
         if (debug) { console.log('Creep[' + creep.name + '] Miner Dying Making sure we spawn a new one'); }
         // set dying to true and set the sourceId to null in room memory
         creep.memory.dying = true;
@@ -151,10 +153,10 @@ module.exports.run = function (creep, debug = false) {
 /**
  * Run this script to setup rooms ready for assigned miners
  */
-module.exports.setup = function () {
+module.exports.setup = function (debug = false) {
     // Loop through the game rooms we have
     for (var name in Game.rooms) {
-        console.log('Setting up room ' + name);
+        if (debug) { console.log('Setting up room ' + name); }
         var theRoom = Game.rooms[name];
         // Clear Assigned Sources
         delete theRoom.memory.assignedSources;
@@ -166,7 +168,7 @@ module.exports.setup = function () {
         var array = {};
         // Loop through sources
         for (var i=0; i<=sources.length-1; i++) {
-            console.log(sources[i].id);
+            if (debug) { console.log(sources[i].id); }
             // Set it to null
             array[sources[i].id] = null;
         }
@@ -194,7 +196,7 @@ module.exports.setup = function () {
             }
             // we found it
             if (found) {
-                console.log(sourceId + ' set to ' + creepId);
+                if (debug) { console.log(sourceId + ' set to ' + creepId); }
                 array[sourceId] = creepId;
             }
         }

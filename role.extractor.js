@@ -28,6 +28,8 @@ module.exports.roster = {
     XL: 1
 }
 module.exports.limit = 'room';
+// Set a time for this creep to 'expire' at
+module.exports.expiry = 200;
 /* Run method */
 module.exports.run = function (creep, debug = false) {
     // Fatigue Check
@@ -39,7 +41,7 @@ module.exports.run = function (creep, debug = false) {
 
     // Okay, health check
     var ticks = creep.ticksToLive;
-    if (ticks <= 100 && !creep.memory.dying) {
+    if (ticks <= 200 && !creep.memory.dying) {
         if (debug) { console.log('Creep[' + creep.name + '] Extractor Dying Making sure we spawn a new one'); }
         // set dying to true and set the sourceId to null in room memory
         creep.memory.dying = true;
@@ -159,12 +161,12 @@ module.exports.run = function (creep, debug = false) {
 }
 
 /**
- * Run this script to setup rooms ready for assigned miners
+ * Run this script to setup rooms ready for assigned extractors
  */
-module.exports.setup = function () {
+module.exports.setup = function (debug = false) {
     // Loop through the game rooms we have
     for (var name in Game.rooms) {
-        console.log('Setting up room ' + name);
+        if (debug) { console.log('Setting up room ' + name); }
         var theRoom = Game.rooms[name];
 
         delete theRoom.memory.assignedExtractors;
@@ -175,19 +177,19 @@ module.exports.setup = function () {
             });
             var array = {};
             for (var i=0;i<=extractors.length-1;i++) {
-                console.log(extractors[i].id);
+                if (debug) { console.log(extractors[i].id); }
                 array[extractors[i].id] = null;
             }
             theRoom.memory.assignedExtractors = array;
             // Check for the extractorsNeeded flag
             if (!theRoom.memory.extractorsNeeded) {
-                console.log('Setting extractors Needed to ' + extractors.length);
+                if (debug) { console.log('Setting extractors Needed to ' + extractors.length); }
                 theRoom.memory.extractorsNeeded = extractors.length;
             } else {
-                console.log('Currently set to ' + theRoom.memory.extractorsNeeded);
+                if (debug) { console.log('Currently set to ' + theRoom.memory.extractorsNeeded); }
             }
         } else {
-            console.log('Assigned Extractors already exists. leaving alone!');
+            if (debug) { console.log('Assigned Extractors already exists. leaving alone!'); }
         }
 
         // First get the extractors
