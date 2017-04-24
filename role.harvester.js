@@ -344,23 +344,24 @@ module.exports.run = function(creep) {
             // Loop through our resources
             for(var resourceType in creep.carry) {
                 // Attempt to transfer them
-                if (creep.transfer(target, resourceType) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, {
-                        visualizePathStyle: {
-                            stroke: global.colourDropoff,
-                            opacity: global.pathOpacity
-                        }
-                    });
-                    // Say because move
-                    creep.say('>>');
-                    // if we failed, we don't need to keep trying
-                    break;
-                } else {
-                    creep.say('V');
+                if (creep.carry[resourceType] > 0) {
+                    if (creep.transfer(target, resourceType) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(target, {
+                            visualizePathStyle: {
+                                stroke: global.colourDropoff,
+                                opacity: global.pathOpacity
+                            }
+                        });
+                        // Say because move
+                        creep.say('>>');
+                        // if we failed, we don't need to keep trying
+                        break;
+                    } else {
+                        creep.say('V');
+                    }
                 }
-                // top here
-                return;
             }
+            return;
         } else {
             creep.memory.idle++;
             creep.say('idle: ' + creep.memory.idle);
