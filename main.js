@@ -1,7 +1,6 @@
 // Main imports these should be cached
 require('global.stuff');
 require('global.colours');
-var despawner = require('work.despawner');
 var spawner   = require('work.spawn');
 var movement  = require('work.movement');
 var cleaner   = require('work.cleaner');
@@ -16,7 +15,6 @@ module.exports.loop = function () {
     var debug = false;
     // Only need these once every 10 ticks
     if (Game.time % 10 == 0) {
-        despawner.run(debug);
         cleaner.run(debug);
     }
     // Run the source setups once every 50 ticks
