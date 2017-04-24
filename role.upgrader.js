@@ -24,9 +24,9 @@ module.exports.bodyXL = [
 ];
 /* Spawn Roster */
 module.exports.roster = {
-    S : 1,
+    S : 3,
     M : 0,
-    L : 2,
+    L : 3,
     XL: 0
 };
 module.exports.limit = 'room';
