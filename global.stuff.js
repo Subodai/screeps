@@ -13,7 +13,7 @@ global.settings = {
 	DeSpawn: false,
     upgrader  : true,
     miner     : true,
-    extractor : false,
+    extractor : true,
     harvester : true,
     builder	  : true,
     mover     : false,
@@ -24,3 +24,9 @@ global.settings = {
 }
 
 global.rampartMax = 20000;
+
+global.resourceList = [
+    RESOURCE_CATALYST,
+    RESOURCE_HYDROGEN,
+    RESOURCE_ENERGY
+];
