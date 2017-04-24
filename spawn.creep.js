@@ -95,9 +95,9 @@ module.exports.count = function(role, room = null, debug) {
         var list = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && !creep.memory.dying);
     }
     if (room != null) {
-        console.log('[' + _room.name + ']:[' + role + '] = ' + list.length);
+        if (debug) { console.log('[' + _room.name + ']:[' + role + '] = ' + list.length); }
     } else {
-        console.log('[global][' + role + '] = ' + list.length);
+        if (debug) { console.log('[global][' + role + '] = ' + list.length); }
     }
 
     return list.length;
