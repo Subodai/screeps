@@ -74,6 +74,7 @@ module.exports.run = function(creep) {
 
     // If we're not delivering, check if we can harvest, if not and we have half energy, go and deliver
     if (!creep.memory.delivering) {
+        // If we're in emergency mode, we need to start emptying the storage buffers
         if (creep.room.memory.emergency) {
             // console.log('Emergency Mode, Empty Storage');
             creep.memory.idle = 0;
@@ -110,7 +111,7 @@ module.exports.run = function(creep) {
         }
 
         var resource = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
-            filter: (resource) => resource.amount >= creep.carryCapacity
+            filter: (resource) => resource.amount >= creep.carryCapacity/10
         });
         if (resource) {
             creep.memory.idle = 0;
