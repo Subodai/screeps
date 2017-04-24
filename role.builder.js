@@ -36,6 +36,7 @@ module.exports.limit = 'global';
  * Builder Role
  */
 module.exports.run = function(creep) {
+    if (creep.spawning) { return; }
     if (creep.fatigue > 0) {
         creep.say('Zzz');
         return;

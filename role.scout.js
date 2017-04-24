@@ -28,6 +28,7 @@ module.exports.roster = {
 module.exports.limit = 'global';
 /* Okay, lets code the creep */
 module.exports.run = function (creep, debug = false) {
+    if (creep.spawning) { return; }
     // Fatigue Check
     if (creep.fatigue > 0) {
         if (debug) { console.log('Creep[' + creep.name + '] Fatgiued ' + creep.fatigue); }

@@ -5,6 +5,7 @@
  *
  */
 module.exports.run = function(creep, debug = false) {
+    if (creep.spawning) { return; }
     // If Fatigued, just return, no point in wasting time
     if (creep.fatigue > 0) {
         if (debug) { console.log('Small Refiller Creep fatigued ignoring'); }

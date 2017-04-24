@@ -44,6 +44,7 @@ module.exports.limit = 'room';
 
 /* Run method */
 module.exports.run = function (creep, debug = false) {
+    if (creep.spawning) { return; }
     // If we're fatigued, stop and go no further
     if (creep.fatigue > 0) {
         creep.say('💤');

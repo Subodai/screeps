@@ -34,6 +34,7 @@ module.exports.limit = 'room';
  * Big Harvester Role
  */
 module.exports.run = function(creep) {
+    if (creep.spawning) { return; }
     if (creep.fatigue > 0) {
         creep.say('Zzz');
         return;

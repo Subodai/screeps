@@ -39,6 +39,7 @@ module.exports.limit = 'room';
  * Harvester Role
  */
 module.exports.run = function(creep) {
+    if (creep.spawning) { return; }
     // If it's fatigued we should just return there's no need to carry on
     if (creep.fatigue > 0) {
         creep.say('Zzz');
