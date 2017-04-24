@@ -5,6 +5,7 @@ module.exports.run = function(debug = false) {
     var _cpu = Game.cpu.getUsed();
     var spawner = require('spawn.creep');
     var msg = '';
+    var notify = false;
 
     // Loop through the rooms
     for(var room in Game.rooms) {
@@ -14,11 +15,13 @@ module.exports.run = function(debug = false) {
         // Are there any hostiles?
         var hostiles = theRoom.find(FIND_HOSTILE_CREEPS);
         if (hostiles.length > 0 && theRoom.memory.mode == 'normal') {
-            Game.notify(Game.time + ' Room put into guard mode spawning guards');
+            notify = true;
+            msg += "\n" + Game.time + ' Room put into guard mode spawning guards' + "\n";
             theRoom.memory.mode = 'guard';
         }
         if (hostiles.length == 0 && theRoom.memory.mode == 'guard') {
-            Game.notify(Game.time + ' Room no longer in guard mode');
+            notify = true;
+            msg += "\n" + Game.time + ' Room no longer in guard mode' + "\n";
             theRoom.memory.mode = 'normal';
         }
         if (theRoom.memory.mode == 'guard') {
@@ -27,14 +30,14 @@ module.exports.run = function(debug = false) {
         }
         var list = _.filter(Game.creeps, (creep) => !creep.memory.dying);
         if ((list.length == 0 && miners == 0) && !theRoom.memory.emergency){
-            Game.notify(Game.time + ' Room '+ room + ' In Emergency Mode!!');
+            notify = true;
+            msg += "\n" + Game.time + ' Room '+ room + ' In Emergency Mode!!' + "\n";
             console.log('Emergency Activated');
             theRoom.memory.emergency = true;
-            var miner = require('role.miner');
-            miner.setup();
         }
         if ((list.length >= 5 || miners > 0) && theRoom.memory.emergency) {
-            Game.notify(Game.time + ' Room ' + room + ' No Longer in Emergency Mode');
+            notify = true;
+            msg += "\n" + Game.time + ' Room ' + room + ' No Longer in Emergency Mode' + "\n";
             console.log('Emergency Deactivated');
             theRoom.memory.emergency = false;
             delete theRoom.memory.emergency;
@@ -46,5 +49,6 @@ module.exports.run = function(debug = false) {
         msg += ' [' + room + ':' + theRoom.energyAvailable + ']';
     }
     console.log('Counter used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
+    if (notify) { Game.notify(msg); }
     return msg;
 }
