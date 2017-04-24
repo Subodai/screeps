@@ -132,7 +132,7 @@ module.exports.run = function(creep, debug = false) {
                         }
                     });
                 } else {
-                    creep.say('\/');
+                    creep.say('V');
                 }
             } else {
                 creep.say('(-_-)');
@@ -142,7 +142,7 @@ module.exports.run = function(creep, debug = false) {
 
         // First find towers with less than 400 energy
         var tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-            filter : (i) => { 
+            filter : (i) => {
                 return i.structureType == STRUCTURE_TOWER && i.energy < 400
             }
         });
@@ -150,7 +150,7 @@ module.exports.run = function(creep, debug = false) {
         // If we didn't find any get them with less than 800
         if (!tower) {
             var tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                filter : (i) => { 
+                filter : (i) => {
                     return i.structureType == STRUCTURE_TOWER && i.energy < 800
                 }
             });
@@ -159,7 +159,7 @@ module.exports.run = function(creep, debug = false) {
         // Okay all above 800, get any now
         if (!tower) {
             var tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                filter : (i) => { 
+                filter : (i) => {
                     return i.structureType == STRUCTURE_TOWER && i.energy < i.energyCapacity
                 }
             });
@@ -175,7 +175,7 @@ module.exports.run = function(creep, debug = false) {
                     }
                 });
             } else {
-                creep.say('\/');
+                creep.say('V');
             }
             return;
         }
@@ -194,7 +194,7 @@ module.exports.run = function(creep, debug = false) {
                     }
                 });
             } else {
-                creep.say('\/');
+                creep.say('V');
             }
             return;
         }

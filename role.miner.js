@@ -95,7 +95,7 @@ module.exports.run = function (creep, debug = false) {
         // This may need to change, depends if the drop costs fatigue or if dropping goes into a container
         console.log(creep.drop(RESOURCE_ENERGY));
         creep.memory.dropping = false;
-        creep.say('\/');
+        creep.say('V');
 
         // DANGER we just drop resources here... This could leave a pile of resources if our transfer dudes aren't keeping up
 
