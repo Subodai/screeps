@@ -143,7 +143,7 @@ module.exports.run = function(creep) {
             if(!container) {
                 // Try to find one
                 var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (structure) => structure.structureType == STRUCTURE_CONTAINER && structure.store[_resource] >= 100
+                    filter: (structure) => structure.structureType == STRUCTURE_CONTAINER && structure.store[_resource] >= creep.carryCapacity/10
                 });
                 // Set the pickup to be this resource for later
                 var pickup = _resource;
