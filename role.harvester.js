@@ -9,9 +9,8 @@ module.exports.costL  = 500;
 module.exports.costXL = 1000;
 /* Body parts */
 module.exports.bodyS  = [
-    WORK,
-    CARRY,
-    MOVE
+    CARRY,CARRY,
+    MOVE,MOVE
 ];
 module.exports.bodyM  = [
     CARRY,CARRY,CARRY,
@@ -29,10 +28,10 @@ module.exports.bodyXL = [
 ];
 /* Spawn Roster */
 module.exports.roster = {
-    S : 1,
+    S : 2,
     M : 0,
-    L : 4,
-    XL: 2
+    L : 2,
+    XL: 4
 };
 module.exports.limit = 'room';
 /**
