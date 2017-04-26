@@ -65,8 +65,8 @@ module.exports.run = function(creep) {
     }
 
     if(creep.memory.upgrading) {
-        if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(creep.room.controller, {
+        if(creep.upgradeController(Game.rooms[creep.memory.roomName].controller) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(Game.rooms[creep.memory.roomName].controller, {
                 visualizePathStyle: {
                     stroke: global.colourUpgrade,
                     opacity: global.pathOpacity
@@ -120,7 +120,7 @@ module.exports.run = function(creep) {
             }
             return;
         }
-        
+
         var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
         if (source) {
             // Can we harvest this?
