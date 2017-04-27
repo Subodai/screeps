@@ -12,7 +12,7 @@ module.exports.run = function (tower, debug = false) {
     var hostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
     if (hostile) {
         console.log('Tower Running Attack');
-        Game.notify(Game.time + ' Tower ' + tower.id + ' Atacking Hostiles');
+        Game.notify(Game.time + ' Tower ' + tower.id + ' Attacking Hostiles in room ' + tower.room);
         tower.attack(hostile);
         return;
     }
