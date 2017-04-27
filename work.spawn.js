@@ -23,7 +23,7 @@ module.exports.run = function(debug = false) {
             // Does it require a room 'state'
             // If the role requires a flag to be set to spawn
             if (_role.flag) {
-                if (debug) { 
+                if (debug) {
                     console.log('role ' + role + ' has flag need: ' + _role.flag);
                     console.log('room ' + _room.name + ' has flag : ' + _room.memory.mode);
                 }
@@ -35,10 +35,10 @@ module.exports.run = function(debug = false) {
             // Other requirements
             if (_role.roomRequirement) {
                 if (debug) { console.log('role ' + role + ' has requirent: ' + _role.roomRequirement); }
-                 if (debug) { console.log('room ' + _room.name + ' requires ' + _room.memory[_role.roomRequirement]); }
-                // if it requires minersNeeded do some things
+                if (debug) { console.log('room ' + _room.name + ' requires ' + _room.memory[_role.roomRequirement]); }
+                // if it requires something do some things
                 if (_room.memory[_role.roomRequirement] && _room.memory[_role.roomRequirement] > 0) {
-                    // We need the rooms miner count
+                    // Get the count of these creeps
                     var list = _.filter(Game.creeps, (creep) => creep.memory.role == _role.roleName && creep.memory.roomName == _room.name && !creep.memory.dying);
                     if (debug) { console.log('room ' + _room.name + ' has ' + list.length); }
                     if (list.length >= _room.memory[_role.roomRequirement]) {
@@ -60,7 +60,7 @@ module.exports.run = function(debug = false) {
                     _room.find(_role.counter);
                     items += count.length;
                 }
-                
+
                 // No items? no bueno! NEXT!
                 if (items == 0){
                     continue;

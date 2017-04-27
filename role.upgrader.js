@@ -6,7 +6,7 @@ module.exports.sType = 'normal';
 module.exports.costS  = 300;
 module.exports.costM  = 300;
 module.exports.costL  = 650;
-module.exports.costXL = 650;
+module.exports.costXL = 1250;
 /* Body parts */
 module.exports.bodyS  = [
     WORK,WORK,MOVE,CARRY
@@ -19,15 +19,16 @@ module.exports.bodyL =  [
     MOVE,MOVE,MOVE,MOVE
 ];
 module.exports.bodyXL = [
-    WORK,WORK,WORK,WORK,CARRY,
-    MOVE,MOVE,MOVE,MOVE
+    WORK,WORK,WORK,WORK,WORK,
+    WORK,WORK,WORK,WORK,WORK,
+    CARRY,MOVE,MOVE,MOVE,MOVE
 ];
 /* Spawn Roster */
 module.exports.roster = {
-    S : 3,
+    S : 0,
     M : 0,
-    L : 3,
-    XL: 0
+    L : 0,
+    XL: 3
 };
 module.exports.limit = 'room';
 /**

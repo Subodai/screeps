@@ -33,7 +33,7 @@ module.exports.loop = function () {
     towers.run(debug);
     msg += ' {' + Game.cpu.getUsed().toFixed(3) + '}';
     console.log(msg);
-    if (Game.cpu.getUsed() > 100) {
+    if (Game.cpu.getUsed() > 200) {
         Game.notify(msg);
     }
 }

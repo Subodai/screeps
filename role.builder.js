@@ -26,10 +26,10 @@ module.exports.bodyXL = [
 ];
 /* Desired Roster */
 module.exports.roster = {
-    S : 2,
+    S : 0,
     M : 0,
-    L : 0,
-    XL: 3
+    L : 3,
+    XL: 0
 };
 module.exports.limit = 'global';
 /**
