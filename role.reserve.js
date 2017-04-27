@@ -70,8 +70,8 @@ module.exports.run = function (creep, debug = false) {
                     }
                 });
             } else {
-                // Switch him to a builder
-                creep.memory.role = 'harvester';
+                creep.signController(creep.room.controller, 'Room Reserved by Subodai');
+                creep.say('MINE');
             }
         }
     }
