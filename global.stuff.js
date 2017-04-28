@@ -32,3 +32,8 @@ global.resourceList = [
     RESOURCE_HYDROGEN,
     RESOURCE_ENERGY
 ];
+
+global.napList = [
+    'Xephael',
+    'SirLovi'
+];

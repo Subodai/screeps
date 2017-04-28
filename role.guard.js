@@ -47,11 +47,13 @@ module.exports.run = function (creep, debug = false) {
         return;
     }
     if (creep.memory.idle >= 200) {
-        Game.notify(Game.time + ' Despawning Guard');
+        if (debug) { console.log(Game.time + ' Despawning Guard'); }
         creep.suicide();
     }
     // Get a target
-    var target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+    var target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
+        filter: (i) => !(global.napList.indexOf(i.owner.username) > -1)
+    });
     if (target) {
         creep.memory.idle = 0;
         if (creep.attack(target) == ERR_NOT_IN_RANGE) {
@@ -59,7 +61,7 @@ module.exports.run = function (creep, debug = false) {
             creep.say('>>');
             return;
         } else {
-            creep.say('FU!');
+            creep.say('FU!',true);
             return;
         }
     } else {
