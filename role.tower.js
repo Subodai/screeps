@@ -9,7 +9,9 @@ module.exports.run = function (tower, debug = false) {
     }
 
     // First let's check for hostiles as they are the priority
-    var hostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+    var hostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
+        filter: (i) => !(global.napList.indexOf(i.owner.username) > -1)
+    });
     if (hostile) {
         console.log('Tower Running Attack');
         Game.notify(Game.time + ' Tower ' + tower.id + ' Attacking Hostiles in room ' + tower.room);
