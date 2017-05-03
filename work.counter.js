@@ -14,7 +14,7 @@ module.exports.run = function(debug = false) {
         var extractors = spawner.count('extractor', room);
         // Are there any hostiles?
         var hostiles = theRoom.find(FIND_HOSTILE_CREEPS, {
-            filter: (i) => !(global.napList.indexOf(i.owner.username) > -1)
+            filter: (i) => !(global.friends.indexOf(i.owner.username) > -1)
         });
         if (hostiles.length > 0 && theRoom.memory.mode == 'normal') {
             notify = true;
