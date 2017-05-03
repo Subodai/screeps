@@ -7,8 +7,8 @@ module.exports.counter = FIND_CONSTRUCTION_SITES;
 /* Body Costs */
 module.exports.costS  = 200;
 module.exports.costM  = 300;
-module.exports.costL  = 450;
-module.exports.costXL = 650;
+module.exports.costL  = 550;
+module.exports.costXL = 850;
 /* Body setups */
 module.exports.bodyS  = [
     WORK,
@@ -16,13 +16,19 @@ module.exports.bodyS  = [
     MOVE
 ];
 module.exports.bodyM  = [
-    WORK,WORK,MOVE,CARRY
+    WORK,WORK,
+    CARRY,
+    MOVE
 ];
 module.exports.bodyL = [
-    WORK,WORK,WORK,CARRY,MOVE,MOVE
+    WORK,WORK,WORK,
+    CARRY,
+    MOVE,MOVE,MOVE,MOVE
 ];
 module.exports.bodyXL = [
-    WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE
+    WORK,WORK,WORK,WORK,
+    CARRY,CARRY,
+    MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
 ];
 /* Desired Roster */
 module.exports.roster = {

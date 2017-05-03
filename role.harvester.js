@@ -30,7 +30,7 @@ module.exports.bodyXL = [
 module.exports.roster = {
     S : 0,
     M : 0,
-    L : 4,
+    L : 3,
     XL: 1
 };
 module.exports.limit = 'room';
