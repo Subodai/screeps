@@ -31,7 +31,7 @@ module.exports.bodyXL = [
 ];
 /* Spawn Roster */
 module.exports.roster = {
-    S : 10, // 10 S
+    S : 2,  // 2 S
     M : 5,  // 5 M
     L : 5,  // 5 L
     XL: 5   // 5 XL
@@ -43,23 +43,25 @@ module.exports.run = function (creep, debug = false) {
     // Fatigue Check
     if (creep.fatigue > 0) {
         if (debug) { console.log('Creep[' + creep.name + '] Fatgiued ' + creep.fatigue); }
-        creep.say('Zzz');
+        creep.say(global.sayTired);
         return;
     }
     if (creep.memory.idle >= 200) {
-        Game.notify(Game.time + ' Despawning Guard');
+        if (debug) { console.log(Game.time + ' Despawning Guard'); }
         creep.suicide();
     }
     // Get a target
-    var target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+    var target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
+        filter: (i) => !(global.friends.indexOf(i.owner.username) > -1)
+    });
     if (target) {
         creep.memory.idle = 0;
         if (creep.attack(target) == ERR_NOT_IN_RANGE) {
             creep.moveTo(target);
-            creep.say('>>');
+            creep.say(global.sayMove);
             return;
         } else {
-            creep.say('FU!');
+            creep.say(global.sayAttack,true);
             return;
         }
     } else {

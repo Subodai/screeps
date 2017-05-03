@@ -9,11 +9,20 @@ module.exports.run = function (tower, debug = false) {
     }
 
     // First let's check for hostiles as they are the priority
-    var hostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+    var hostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
+        filter: (i) => !(global.friends.indexOf(i.owner.username) > -1)
+    });
+
+    // Did we find a valid hostile?
     if (hostile) {
         console.log('Tower Running Attack');
-        Game.notify(Game.time + ' Tower ' + tower.id + ' Attacking Hostiles in room ' + tower.room);
+        // We only really need an alert when the tower is attacking something that's not an invader
+        if (hostile.owner.username != 'Invader') {
+            Game.notify(Game.time + ' Tower ' + tower.id + ' Attacking ' + hostile.owner.username + 's creep in ' tower.room);
+        }
+        // Run the attack
         tower.attack(hostile);
+        // Don't do anything else
         return;
     }
 
