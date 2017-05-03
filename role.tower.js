@@ -18,7 +18,7 @@ module.exports.run = function (tower, debug = false) {
         console.log('Tower Running Attack');
         // We only really need an alert when the tower is attacking something that's not an invader
         if (hostile.owner.username != 'Invader') {
-            Game.notify(Game.time + ' Tower ' + tower.id + ' Attacking ' + hostile.owner.username + 's creep in ' tower.room);
+            Game.notify(Game.time + ' Tower ' + tower.id + ' Attacking ' + hostile.owner.username + 's creep in ' + tower.room);
         }
         // Run the attack
         tower.attack(hostile);
