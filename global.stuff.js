@@ -1,12 +1,12 @@
 global.roles = [
-    'upgrader',
+    'guard',
     'miner',
     'harvester',
+    'upgrader',
     'builder',
     'mover',
     'scout',
     'reserve',
-    'guard',
     'extractor',
 ];
 
@@ -31,9 +31,4 @@ global.resourceList = [
     RESOURCE_CATALYST,
     RESOURCE_HYDROGEN,
     RESOURCE_ENERGY
-];
-
-global.napList = [
-    'Xephael',
-    'SirLovi'
 ];
