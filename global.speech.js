@@ -2,3 +2,9 @@
 global.sayTired 	= 'Zzz';
 global.sayMove 		= '>>';
 global.sayAttack	= 'FU';
+global.sayUpgrade   = '(>.<)';
+global.sayWithdraw  = '^^';
+global.sayOhno      = 'OhNo!';
+global.sayGet       = 'GET';
+global.sayPut       = 'PUT';
+global.sayWhat      = '!!';

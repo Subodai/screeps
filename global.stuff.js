@@ -8,6 +8,7 @@ global.roles = [
     'scout',
     'reserve',
     'extractor',
+    'supergrader',
 ];
 
 global.settings = {
@@ -21,6 +22,7 @@ global.settings = {
     scout     : false,
     reserve   : false,
     guard     : true,
+    supergrader : true,
 
     emptyContainers: false,
 }
