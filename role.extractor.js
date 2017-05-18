@@ -5,15 +5,36 @@ module.exports.sType = 'specialist';
 /* Which room memory item should this be checked against */
 module.exports.roomRequirement = 'extractorsNeeded';
 /* Costs */
-module.exports.costS  = 0;
-module.exports.costM  = 0;
-module.exports.costL  = 0;
-module.exports.costXL = 2050;
+module.exports.cost1 = 0;
+module.exports.cost2 = 0;
+module.exports.cost3 = 0;
+module.exports.cost4 = 0;
+module.exports.cost5 = 0;
+module.exports.cost6 = 2050;
+module.exports.cost7 = 2050;
+module.exports.cost8 = 2050;
+
 /* Body parts */
-module.exports.bodyS  = [];
-module.exports.bodyM  = [];
-module.exports.bodyL  = [];
-module.exports.bodyXL = [
+module.exports.body1 = [];
+module.exports.body2 = [];
+module.exports.body3 = [];
+module.exports.body4 = [];
+module.exports.body5 = [];
+module.exports.body6 = [
+    WORK,WORK,WORK,WORK,WORK,
+    WORK,WORK,WORK,WORK,WORK,
+    WORK,WORK,WORK,WORK,WORK,
+    WORK,WORK,WORK,WORK,WORK,
+    MOVE
+];
+module.exports.body7 = [
+    WORK,WORK,WORK,WORK,WORK,
+    WORK,WORK,WORK,WORK,WORK,
+    WORK,WORK,WORK,WORK,WORK,
+    WORK,WORK,WORK,WORK,WORK,
+    MOVE
+];
+module.exports.body8 = [
     WORK,WORK,WORK,WORK,WORK,
     WORK,WORK,WORK,WORK,WORK,
     WORK,WORK,WORK,WORK,WORK,
@@ -22,10 +43,14 @@ module.exports.bodyXL = [
 ];
 /* Spawn Roster */
 module.exports.roster = {
-    S : 0,
-    M : 0,
-    L : 0,
-    XL: 1
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 1,
+    7: 1,
+    8: 1,
 }
 module.exports.limit = 'room';
 // Set a time for this creep to 'expire' at
@@ -159,6 +184,23 @@ module.exports.run = function (creep, debug = false) {
             Game.notify('Extractor Creep unable to assign a extractor');
         }
     }
+}
+
+/**
+ * Individual check for a room to check if this creep type should be enabled or not
+ */
+module.exports.enabled = function (room, debug = false) {
+    // define the room
+    var theRoom = Game.rooms[room];
+    // Find the mineral site in the room
+    var mineral = theRoom.find(FIND_MINERALS);
+    // does it have minerals?
+    if (mineral.mineralAmount > 0) {
+        // it does, return true!
+        return true;
+    }
+    // This should be disabled
+    return false;
 }
 
 /**
