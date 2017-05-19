@@ -16,8 +16,8 @@ module.exports.run = function(debug = false) {
             if (_spawned) { break; }
             var role = global.roles[i];
             var _role = require('role.' + role);
-            // Is this role enabled
-            if (!global.settings[role]) {
+            // Is this role enabled in this room?
+            if (!_room.memory.roles[role]) {
                 continue;
             }
             // Does it require a room 'state'

@@ -55,6 +55,22 @@ module.exports.roster = {
 module.exports.limit = 'room';
 // Set a time for this creep to 'expire' at
 module.exports.expiry = 200;
+/**
+ * Individual check for a room to check if this creep type should be enabled or not
+ */
+module.exports.enabled = function (room, debug = false) {
+    // define the room
+    var theRoom = Game.rooms[room];
+    // Find the mineral site in the room
+    var mineral = theRoom.find(FIND_MINERALS);
+    // does it have minerals?
+    if (mineral.mineralAmount > 0 && theRoom.controller.level >= 6) {
+        // it does, return true!
+        return true;
+    }
+    // This should be disabled
+    return false;
+}
 /* Run method */
 module.exports.run = function (creep, debug = false) {
     if (creep.spawning) { return; }
@@ -184,23 +200,6 @@ module.exports.run = function (creep, debug = false) {
             Game.notify('Extractor Creep unable to assign a extractor');
         }
     }
-}
-
-/**
- * Individual check for a room to check if this creep type should be enabled or not
- */
-module.exports.enabled = function (room, debug = false) {
-    // define the room
-    var theRoom = Game.rooms[room];
-    // Find the mineral site in the room
-    var mineral = theRoom.find(FIND_MINERALS);
-    // does it have minerals?
-    if (mineral.mineralAmount > 0) {
-        // it does, return true!
-        return true;
-    }
-    // This should be disabled
-    return false;
 }
 
 /**

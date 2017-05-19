@@ -54,3 +54,23 @@ module.exports.run = function(debug = false) {
     if (notify) { Game.notify(msg); }
     return msg;
 }
+
+/* Setup all our rooms and their relevant roles */
+module.exports.setupRoomRoles = function (debug = false) {
+    // Loop through our rooms
+    for (var room in Game.rooms) {
+        // Get the room object, because we'll need it later
+        var _room = Game.rooms[room];
+        // Loop through the roles we have
+        for (var i in global.roles) {
+            // Get the role name
+            var role = global.roles[i];
+            var _role = require('role.' + role);
+            if (_role.enabled(room,debug)) {
+                _room.memory.roles[role] = true;
+            } else {
+                _room.memory.roles[role] = false;
+            }
+        }
+    }
+}
