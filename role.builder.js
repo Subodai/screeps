@@ -2,42 +2,85 @@
 module.exports.roleName = 'builder';
 /* sType */
 module.exports.sType = 'normal';
-/* Room requirement */
-module.exports.counter = FIND_CONSTRUCTION_SITES;
-/* Body Costs */
-module.exports.costS  = 200;
-module.exports.costM  = 300;
-module.exports.costL  = 550;
-module.exports.costXL = 850;
-/* Body setups */
-module.exports.bodyS  = [
-    WORK,
-    CARRY,
-    MOVE
-];
-module.exports.bodyM  = [
-    WORK,WORK,
-    CARRY,
-    MOVE
-];
-module.exports.bodyL = [
-    WORK,WORK,WORK,
-    CARRY,
-    MOVE,MOVE,MOVE,MOVE
-];
-module.exports.bodyXL = [
-    WORK,WORK,WORK,WORK,
-    CARRY,CARRY,
-    MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
-];
-/* Desired Roster */
+/* Costs */
+module.exports.cost = {
+    1 : 300,
+    2 : 550,
+    3 : 800,
+    4 : 800,
+    5 : 800,
+    6 : 800,
+    7 : 800,
+    8 : 800,
+}
+module.exports.body = {
+    1 :  [
+        WORK,WORK
+        CARRY,
+        MOVE
+    ],
+    2 : [
+        WORK,WORK,WORK,
+        CARRY,
+        MOVE,MOVE,MOVE,MOVE
+    ],
+    3 : [
+        WORK,WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+    ],
+    4 : [
+        WORK,WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+    ],
+    5 : [
+        WORK,WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+    ],
+    6 : [
+        WORK,WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+    ],
+    7 : [
+        WORK,WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+    ],
+    8 : [
+        WORK,WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+    ],
+}
+/* Spawn Roster */
 module.exports.roster = {
-    S : 0,
-    M : 0,
-    L : 3,
-    XL: 0
-};
-module.exports.limit = 'global';
+    1: 3,
+    2: 3,
+    3: 3,
+    4: 3,
+    5: 3,
+    6: 3,
+    7: 3,
+    8: 3,
+}
+
+module.exports.enabled = function (room, debug = false) {
+    var items = 0;
+    // Loop around all rooms for build sites
+    for (var i in Game.rooms) {
+        var count = Game.rooms[i].find(FIND_CONSTRUCTION_SITES);
+        items += count.length;
+    }
+    // No buildsites = false
+    if (items == 0) {
+        return false;
+    }
+    // otherwise return true
+    return true;
+}
 /**
  * Builder Role
  */

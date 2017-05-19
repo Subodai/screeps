@@ -5,42 +5,45 @@ module.exports.sType = 'specialist';
 /* Which room memory item should this be checked against */
 module.exports.roomRequirement = 'extractorsNeeded';
 /* Costs */
-module.exports.cost1 = 0;
-module.exports.cost2 = 0;
-module.exports.cost3 = 0;
-module.exports.cost4 = 0;
-module.exports.cost5 = 0;
-module.exports.cost6 = 2050;
-module.exports.cost7 = 2050;
-module.exports.cost8 = 2050;
-
-/* Body parts */
-module.exports.body1 = [];
-module.exports.body2 = [];
-module.exports.body3 = [];
-module.exports.body4 = [];
-module.exports.body5 = [];
-module.exports.body6 = [
-    WORK,WORK,WORK,WORK,WORK,
-    WORK,WORK,WORK,WORK,WORK,
-    WORK,WORK,WORK,WORK,WORK,
-    WORK,WORK,WORK,WORK,WORK,
-    MOVE
-];
-module.exports.body7 = [
-    WORK,WORK,WORK,WORK,WORK,
-    WORK,WORK,WORK,WORK,WORK,
-    WORK,WORK,WORK,WORK,WORK,
-    WORK,WORK,WORK,WORK,WORK,
-    MOVE
-];
-module.exports.body8 = [
-    WORK,WORK,WORK,WORK,WORK,
-    WORK,WORK,WORK,WORK,WORK,
-    WORK,WORK,WORK,WORK,WORK,
-    WORK,WORK,WORK,WORK,WORK,
-    MOVE
-];
+module.exports.cost = {
+    1 : 0,
+    2 : 0,
+    3 : 0,
+    4 : 0,
+    5 : 0,
+    6 : 2050,
+    7 : 2050,
+    8 : 2050,
+}
+/* Body Parts at each RCL */
+module.exports.body = {
+    1 : [],
+    2 : [],
+    3 : [],
+    4 : [],
+    5 : [],
+    6 : [
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        MOVE
+    ],
+    7 : [
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        MOVE
+    ],
+    8 : [
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        MOVE
+    ],
+}
 /* Spawn Roster */
 module.exports.roster = {
     1: 0,
@@ -52,7 +55,6 @@ module.exports.roster = {
     7: 1,
     8: 1,
 }
-module.exports.limit = 'room';
 // Set a time for this creep to 'expire' at
 module.exports.expiry = 200;
 /**

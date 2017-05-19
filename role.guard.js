@@ -2,41 +2,85 @@
 module.exports.roleName = 'guard';
 /* SType */
 module.exports.sType = 'specialist';
-/* Room memory flag requirement */
-module.exports.flag = 'guard';
 /* Costs */
-module.exports.costS  = 260;
-module.exports.costM  = 380;
-module.exports.costL  = 480;
-module.exports.costXL = 700;
-/* Body Parts */
-module.exports.bodyS = [
-    MOVE,MOVE,              // 1 Moves = 100
-    ATTACK,ATTACK,          // 2 Attacks = 160 = 60h/t
-];
-module.exports.bodyM = [
-    TOUGH,TOUGH,            // 2 Toughs = 20
-    MOVE,MOVE,MOVE,MOVE,    // 4 Moves = 200
-    ATTACK,ATTACK,          // 2 Attacks = 160 = 60h/t
-];
-module.exports.bodyL = [
-    TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,  // 2 Toughs = 20
-    MOVE,MOVE,MOVE,MOVE,                        // 4 Moves = 200
-    ATTACK,ATTACK,                              // 2 Attacks = 160 = 60h/t
-];
-module.exports.bodyXL = [
-    TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,          // 5 Toughs = 50
-    MOVE,MOVE,MOVE,MOVE,MOVE,               // 5 Moves = 250
-    ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,     // 5 Attacks = 400 = 150h/t
-];
+module.exports.cost = {
+    1 : 260,
+    2 : 380,
+    3 : 480,
+    4 : 700,
+    5 : 700,
+    6 : 700,
+    7 : 700,
+    8 : 700,
+}
+
+/* Body parts */
+module.exports.body = {
+    1 : [
+        MOVE,MOVE,              // 1 Moves = 100
+        ATTACK,ATTACK,          // 2 Attacks = 160 = 60h/t
+    ],
+    2 : [
+        TOUGH,TOUGH,            // 2 Toughs = 20
+        MOVE,MOVE,MOVE,MOVE,    // 4 Moves = 200
+        ATTACK,ATTACK,          // 2 Attacks = 160 = 60h/t
+    ],
+    3 : [
+        TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,  // 2 Toughs = 20
+        MOVE,MOVE,MOVE,MOVE,                        // 4 Moves = 200
+        ATTACK,ATTACK,                              // 2 Attacks = 160 = 60h/t
+    ],
+    4 : [
+        TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,          // 5 Toughs = 50
+        MOVE,MOVE,MOVE,MOVE,MOVE,               // 5 Moves = 250
+        ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,     // 5 Attacks = 400 = 150h/t
+    ],
+    5 : [
+        TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,          // 5 Toughs = 50
+        MOVE,MOVE,MOVE,MOVE,MOVE,               // 5 Moves = 250
+        ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,     // 5 Attacks = 400 = 150h/t
+    ],
+    6 : [
+        TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,          // 5 Toughs = 50
+        MOVE,MOVE,MOVE,MOVE,MOVE,               // 5 Moves = 250
+        ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,     // 5 Attacks = 400 = 150h/t
+    ],
+    7 : [
+        TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,          // 5 Toughs = 50
+        MOVE,MOVE,MOVE,MOVE,MOVE,               // 5 Moves = 250
+        ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,     // 5 Attacks = 400 = 150h/t
+    ],
+    8 : [
+        TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,          // 5 Toughs = 50
+        MOVE,MOVE,MOVE,MOVE,MOVE,               // 5 Moves = 250
+        ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,     // 5 Attacks = 400 = 150h/t
+    ],
+}
 /* Spawn Roster */
 module.exports.roster = {
-    S : 2,  // 2 S
-    M : 5,  // 5 M
-    L : 5,  // 5 L
-    XL: 5   // 5 XL
-};
-module.exports.limit = 'room';
+    1: 3,
+    2: 3,
+    3: 3,
+    4: 3,
+    5: 3,
+    6: 3,
+    7: 3,
+    8: 3,
+}
+/**
+ * Individual check for a room to check if this creep type should be enabled or not
+ */
+module.exports.enabled = function (room, debug = false) {
+    // define the room
+    var _room = Game.rooms[room];
+    // Is this room in guard mode?
+    if (_room.memory.mode == 'guard') {
+        // yep lets go spawn guards!
+        return true;
+    }
+    // Nope room is not in guard mode
+    return false;
+}
 /* Okay, lets code the creep */
 module.exports.run = function (creep, debug = false) {
     if (creep.spawning) { return; }

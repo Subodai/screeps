@@ -65,7 +65,9 @@ module.exports.setupRoomRoles = function (debug = false) {
         for (var i in global.roles) {
             // Get the role name
             var role = global.roles[i];
+            // Get it's role file
             var _role = require('role.' + role);
+            // Run the code to check if this role should be enabled
             if (_role.enabled(room,debug)) {
                 _room.memory.roles[role] = true;
             } else {
