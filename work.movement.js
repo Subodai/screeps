@@ -19,7 +19,7 @@ module.exports.run = function(debug = false) {
             // Make a creep
             var creep = Game.creeps[name];
             // If this creep's role is the one we are checking
-            if(creep.memory.role == _role.roleName) {
+            if(creep.memory.role == _role.role) {
                 // Run it
                 _role.run(creep);
             }

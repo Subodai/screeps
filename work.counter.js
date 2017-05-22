@@ -18,12 +18,12 @@ module.exports.run = function(debug = false) {
         });
         if (hostiles.length > 0 && theRoom.memory.mode == 'normal') {
             notify = true;
-            msg += "\n" + Game.time + ' Room put into guard mode spawning guards' + "\n";
+            msg += "\n" + Game.time + ' Room ' + room + ' put into guard mode spawning guards' + "\n";
             theRoom.memory.mode = 'guard';
         }
         if (hostiles.length == 0 && theRoom.memory.mode == 'guard') {
             notify = true;
-            msg += "\n" + Game.time + ' Room no longer in guard mode' + "\n";
+            msg += "\n" + Game.time + ' Room ' + room + ' no longer in guard mode' + "\n";
             theRoom.memory.mode = 'normal';
         }
         if (theRoom.memory.mode == 'guard') {

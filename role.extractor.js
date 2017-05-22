@@ -1,5 +1,5 @@
 /* Specialist Extractor Drone */
-module.exports.roleName = 'extractor';
+module.exports.role = 'extractor';
 /* SType */
 module.exports.sType = 'specialist';
 /* Which room memory item should this be checked against */

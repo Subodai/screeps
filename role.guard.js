@@ -1,5 +1,5 @@
 /* Specialist Miner Drone */
-module.exports.roleName = 'guard';
+module.exports.role = 'guard';
 /* SType */
 module.exports.sType = 'specialist';
 /* Costs */

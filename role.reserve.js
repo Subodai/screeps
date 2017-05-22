@@ -1,5 +1,5 @@
 /* Specialist Reserver Drone */
-module.exports.roleName = 'reserve';
+module.exports.role = 'reserve';
 /* SType */
 module.exports.sType = 'specialist';
 /* This role requires a flag to be set */

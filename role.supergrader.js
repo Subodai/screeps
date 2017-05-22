@@ -1,5 +1,5 @@
 /* Super Upgrader drone */
-module.exports.roleName = 'supergrader';
+module.exports.role = 'supergrader';
 /* sType */
 module.exports.sType = 'specialist';
 /* Costs */

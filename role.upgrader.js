@@ -1,38 +1,80 @@
 /* Upgrader drone */
-module.exports.roleName = 'upgrader';
+module.exports.role = 'upgrader';
 /* sType */
 module.exports.sType = 'normal';
 /* Costs */
-module.exports.costS  = 300;
-module.exports.costM  = 300;
-module.exports.costL  = 800;
-module.exports.costXL = 1300;
-/* Body parts */
-module.exports.bodyS  = [
-    WORK,WORK,MOVE,CARRY
-];
-module.exports.bodyM  = [
-    WORK,WORK,MOVE,CARRY
-];
-module.exports.bodyL =  [
-    WORK,WORK,WORK,WORK,
-    CARRY,CARRY,
-    MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
-];
-module.exports.bodyXL = [
-    WORK,WORK,WORK,WORK,WORK,
-    WORK,WORK,WORK,WORK,WORK,
-    CARRY,CARRY,
-    MOVE,MOVE,MOVE,MOVE
-];
+module.exports.cost = {
+    1 : 300,
+    2 : 550,
+    3 : 800,
+    4 : 1300,
+    5 : 1300,
+    6 : 1300,
+    7 : 1300,
+    8 : 1300,
+}
+/* Body Parts at each RCL */
+module.exports.body = {
+    1 : [
+        WORK,WORK,
+        MOVE,
+        CARRY
+    ],
+    2 : [
+        WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE
+    ],
+    3 : [
+        WORK,WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+    ],
+    4 : [
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE
+    ],
+    5 : [
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE
+    ],
+    6 : [
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE
+    ],
+    7 : [
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE
+    ],
+    8 : [
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE
+    ],
+}
 /* Spawn Roster */
 module.exports.roster = {
-    S : 0,
-    M : 0,
-    L : 2,
-    XL: 2
-};
-module.exports.limit = 'room';
+    1: 2,
+    2: 2,
+    3: 2,
+    4: 3,
+    5: 4,
+    6: 5,
+    7: 6,
+    8: 7,
+}
+module.exports.enabled = function (room, debug = false) {
+    return true;
+}
 /**
  * Big Harvester Role
  */

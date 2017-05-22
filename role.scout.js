@@ -1,5 +1,5 @@
 /* Specialist Miner Drone */
-module.exports.roleName = 'scout';
+module.exports.role = 'scout';
 /* SType */
 module.exports.sType = 'specialist';
 /* This role requires a flag to be set */

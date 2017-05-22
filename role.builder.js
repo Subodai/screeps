@@ -1,5 +1,5 @@
 /* Builder drone */
-module.exports.roleName = 'builder';
+module.exports.role = 'builder';
 /* sType */
 module.exports.sType = 'normal';
 /* Costs */

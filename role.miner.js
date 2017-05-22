@@ -1,5 +1,5 @@
 /* Specialist Miner Drone */
-module.exports.roleName = 'miner';
+module.exports.role = 'miner';
 /* SType */
 module.exports.sType = 'specialist';
 /* Costs */
@@ -43,7 +43,7 @@ module.exports.enabled = function (room, debug = false) {
     var _room = Game.rooms[room];
     if (_room.memory.minersNeeded && _room.memory.minersNeeded > 0 && _room.controller.level > 1) {
         // Now count the creeps
-        var list = _.filter(Game.creeps, (creep) => creep.memory.role == this.roleName && creep.memory.roomName == room && !creep.memory.dying);
+        var list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.roomName == room && !creep.memory.dying);
         if (list.length < _room.memory.minersNeeded) {
             return true;
         }

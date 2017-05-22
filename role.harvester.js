@@ -1,5 +1,5 @@
 /* Harvester drone */
-module.exports.roleName = 'harvester';
+module.exports.role = 'harvester';
 /* sType */
 module.exports.sType = 'normal';
 /* Costs */
