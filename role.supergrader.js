@@ -71,13 +71,13 @@ module.exports.enabled = function (room, debug = false) {
     if (!_storage) { return false; }
 
     // If we go over 4/5 full on energy storage and we're not enabled in this room, turn it on!
-    if (_room.memory.charging == true && _storage.store[RESOURCE_ENERGY] >= 800000) {
+    if (_storage.store[RESOURCE_ENERGY] >= 800000) {
         // Flick the switch lets use all the storage to upgrade
         _room.memory.charging = false;
     }
 
     // If we are below 1/5th of room energy storage capacity, return false
-    if (_room.memory.charging == false && _storage.store[RESOURCE_ENERGY] <= 200000) {
+    if (_storage.store[RESOURCE_ENERGY] <= 200000) {
         // Flick the charging switch to true
         _room.memory.charging = true;
     }
