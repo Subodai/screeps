@@ -77,7 +77,7 @@ module.exports.enabled = function (room, debug = false) {
     }
 
     // If we are below 1/5th of room energy storage capacity, return false
-    if (_room.memory.charging = false && _storage.store[RESOURCE_ENERGY] <= 200000) {
+    if (_room.memory.charging == false && _storage.store[RESOURCE_ENERGY] <= 200000) {
         // Flick the charging switch to true
         _room.memory.charging = true;
     }
