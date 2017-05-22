@@ -63,7 +63,7 @@ module.exports.setupRoomRoles = function (debug = false) {
         // Get the room object, because we'll need it later
         var _room = Game.rooms[room];
         // Make sure we initialise the room memory
-        if (!_room.memory.roles) { _room.memory.roles = []; }
+        if (!_room.memory.roles) { console.log('creating room role object'); _room.memory.roles = {}; }
         // Loop through the roles we have
         for (var i in global.roles) {
             // Get the role name
@@ -72,9 +72,9 @@ module.exports.setupRoomRoles = function (debug = false) {
             var _role = require('role.' + role);
             // Run the code to check if this role should be enabled
             if (_role.enabled(room,debug)) {
-                _room.memory.roles[role] = true;
+                _room.memory.roles[role] = 'Yes';
             } else {
-                _room.memory.roles[role] = false;
+                _room.memory.roles[role] = 'No';
             }
         }
     }
