@@ -50,9 +50,20 @@ module.exports.body = {
     8 : [
         WORK,WORK,WORK,WORK,WORK,
         WORK,WORK,WORK,WORK,WORK,
+
         WORK,WORK,WORK,WORK,WORK,
         WORK,WORK,WORK,WORK,WORK,
-        MOVE
+
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
 }
 /* Spawn Roster */
