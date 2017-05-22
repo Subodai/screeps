@@ -67,12 +67,17 @@ module.exports.roster = {
     2: 2,
     3: 2,
     4: 3,
-    5: 4,
-    6: 5,
-    7: 6,
-    8: 7,
+    5: 3,
+    6: 3,
+    7: 3,
+    8: 3,
 }
 module.exports.enabled = function (room, debug = false) {
+    var _room = Game.rooms[room];
+    // Turn off normal upgraders while supergraders are on
+    if (_room.memory.roles['supergrader'] == true) {
+        return false;
+    }
     return true;
 }
 /**
@@ -82,6 +87,12 @@ module.exports.run = function(creep) {
     if (creep.spawning) { return; }
     if (creep.fatigue > 0) {
         creep.say('Zzz');
+        return;
+    }
+
+    // If supergrader is enabled, switch to it, no need for upgraders while supergraders are on
+    if (creep.room.memory.roles['supergrader'] == true) {
+        creep.memory.role = 'supergrader';
         return;
     }
 
