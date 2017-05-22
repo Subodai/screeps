@@ -26,7 +26,7 @@ module.exports.run = function(spawn, role, debug = false) {
             sType : _role.sType,
             roomName : _room.name
         });
-        console.log('Spawning new level ' + _level + ' ' + role + ' : ' + creepName + ' in room '+ _room.roomName);
+        console.log('Spawning new level ' + _level + ' ' + role + ' : ' + creepName + ' in room '+ _room.name);
         spawned = true;
     }
 
