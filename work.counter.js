@@ -61,6 +61,8 @@ module.exports.setupRoomRoles = function (debug = false) {
     for (var room in Game.rooms) {
         // Get the room object, because we'll need it later
         var _room = Game.rooms[room];
+        // Make sure we initialise the room memory
+        if (!_room.memory.roles) { _room.memory.roles = []; }
         // Loop through the roles we have
         for (var i in global.roles) {
             // Get the role name

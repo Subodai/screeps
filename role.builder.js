@@ -15,7 +15,7 @@ module.exports.cost = {
 }
 module.exports.body = {
     1 :  [
-        WORK,WORK
+        WORK,WORK,
         CARRY,
         MOVE
     ],
