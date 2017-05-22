@@ -64,7 +64,24 @@ module.exports.roster = {
     8: 1,
 }
 module.exports.enabled = function (room, debug = false) {
-    return false;
+    // Define the room
+    var _room = Game.rooms[room];
+    var _storage = _room.storage;
+    // No Storage, no ubergraders
+    if (!_storage) { return false; }
+
+    // If we go over 4/5 full on energy storage and we're not enabled in this room, turn it on!
+    if (_room.memory.roles[this.role] == false && _storage.store[RESOURCE_ENERGY] >= ((_storage.storeCapacity/5) * 4)) {
+        return true;
+    }
+
+    // If we are below 1/5th of room energy storage capacity, return false
+    if (_storage.store[RESOURCE_ENERGY] <= _storage.storeCapacity/5) {
+        return false;
+    }
+
+    // If we got here, we should be enabled
+    return true;
 }
 /**
  * Big Harvester Role
@@ -118,7 +135,7 @@ module.exports.run = function(creep) {
         // Is there any?
         if (target) {
             // If it's at least 1 3rd full
-            if (target.store[RESOURCE_ENERGY] > target.storeCapacity/3) {
+            if (target.store[RESOURCE_ENERGY] > target.storeCapacity/5) {
                 // Withdraw or move to it
                 if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     // No lets move to the source we want
