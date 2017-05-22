@@ -10,6 +10,7 @@ module.exports.run = function(debug = false) {
     // Loop through the rooms
     for(var room in Game.rooms) {
         var theRoom = Game.rooms[room];
+        if (!theRoom) { continue; }
         var miners = spawner.count('miner', room);
         var extractors = spawner.count('extractor', room);
         // Are there any hostiles?
