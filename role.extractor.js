@@ -11,9 +11,9 @@ module.exports.cost = {
     3 : 0,
     4 : 0,
     5 : 0,
-    6 : 2050,
-    7 : 2050,
-    8 : 2050,
+    6 : 2300,
+    7 : 5300,
+    8 : 5300,
 }
 /* Body Parts at each RCL */
 module.exports.body = {
@@ -27,14 +27,25 @@ module.exports.body = {
         WORK,WORK,WORK,WORK,WORK,
         WORK,WORK,WORK,WORK,WORK,
         WORK,WORK,WORK,WORK,WORK,
-        MOVE
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
     7 : [
         WORK,WORK,WORK,WORK,WORK,
         WORK,WORK,WORK,WORK,WORK,
+
         WORK,WORK,WORK,WORK,WORK,
         WORK,WORK,WORK,WORK,WORK,
-        MOVE
+
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
     8 : [
         WORK,WORK,WORK,WORK,WORK,
