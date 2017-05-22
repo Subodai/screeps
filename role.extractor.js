@@ -1,35 +1,78 @@
 /* Specialist Extractor Drone */
-module.exports.roleName = 'extractor';
+module.exports.role = 'extractor';
 /* SType */
 module.exports.sType = 'specialist';
 /* Which room memory item should this be checked against */
 module.exports.roomRequirement = 'extractorsNeeded';
 /* Costs */
-module.exports.costS  = 0;
-module.exports.costM  = 0;
-module.exports.costL  = 0;
-module.exports.costXL = 2050;
-/* Body parts */
-module.exports.bodyS  = [];
-module.exports.bodyM  = [];
-module.exports.bodyL  = [];
-module.exports.bodyXL = [
-    WORK,WORK,WORK,WORK,WORK,
-    WORK,WORK,WORK,WORK,WORK,
-    WORK,WORK,WORK,WORK,WORK,
-    WORK,WORK,WORK,WORK,WORK,
-    MOVE
-];
+module.exports.cost = {
+    1 : 0,
+    2 : 0,
+    3 : 0,
+    4 : 0,
+    5 : 0,
+    6 : 2050,
+    7 : 2050,
+    8 : 2050,
+}
+/* Body Parts at each RCL */
+module.exports.body = {
+    1 : [],
+    2 : [],
+    3 : [],
+    4 : [],
+    5 : [],
+    6 : [
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        MOVE
+    ],
+    7 : [
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        MOVE
+    ],
+    8 : [
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        MOVE
+    ],
+}
 /* Spawn Roster */
 module.exports.roster = {
-    S : 0,
-    M : 0,
-    L : 0,
-    XL: 1
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 1,
+    7: 1,
+    8: 1,
 }
-module.exports.limit = 'room';
 // Set a time for this creep to 'expire' at
 module.exports.expiry = 200;
+/**
+ * Individual check for a room to check if this creep type should be enabled or not
+ */
+module.exports.enabled = function (room, debug = false) {
+    // define the room
+    var theRoom = Game.rooms[room];
+    // Find the mineral site in the room
+    var mineral = theRoom.find(FIND_MINERALS);
+    // does it have minerals?
+    if (mineral.mineralAmount > 0 && theRoom.controller.level >= 6) {
+        // it does, return true!
+        return true;
+    }
+    // This should be disabled
+    return false;
+}
 /* Run method */
 module.exports.run = function (creep, debug = false) {
     if (creep.spawning) { return; }

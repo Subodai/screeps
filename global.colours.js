@@ -7,7 +7,7 @@ global.colourHostile   = '#FF0000';
 global.colourResPickup = '#ADAD00';
 global.colourIdle      = '#555555';
 global.colourTower     = '#FFFF99';
-global.colourUpgrade   = '#33cc33';
+global.colourUpgrade   = '#33CC33';
 global.colourClaim     = '#330033';
 global.colourMine      = '#330000';
 

@@ -18,12 +18,12 @@ module.exports.run = function(debug = false) {
         });
         if (hostiles.length > 0 && theRoom.memory.mode == 'normal') {
             notify = true;
-            msg += "\n" + Game.time + ' Room put into guard mode spawning guards' + "\n";
+            msg += "\n" + Game.time + ' Room ' + room + ' put into guard mode spawning guards' + "\n";
             theRoom.memory.mode = 'guard';
         }
         if (hostiles.length == 0 && theRoom.memory.mode == 'guard') {
             notify = true;
-            msg += "\n" + Game.time + ' Room no longer in guard mode' + "\n";
+            msg += "\n" + Game.time + ' Room ' + room + ' no longer in guard mode' + "\n";
             theRoom.memory.mode = 'normal';
         }
         if (theRoom.memory.mode == 'guard') {
@@ -53,4 +53,26 @@ module.exports.run = function(debug = false) {
     console.log('Counter used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
     if (notify) { Game.notify(msg); }
     return msg;
+}
+
+/* Setup all our rooms and their relevant roles */
+module.exports.setupRoomRoles = function (debug = false) {
+    // Loop through our rooms
+    for (var room in Game.rooms) {
+        // Get the room object, because we'll need it later
+        var _room = Game.rooms[room];
+        // Loop through the roles we have
+        for (var i in global.roles) {
+            // Get the role name
+            var role = global.roles[i];
+            // Get it's role file
+            var _role = require('role.' + role);
+            // Run the code to check if this role should be enabled
+            if (_role.enabled(room,debug)) {
+                _room.memory.roles[role] = true;
+            } else {
+                _room.memory.roles[role] = false;
+            }
+        }
+    }
 }

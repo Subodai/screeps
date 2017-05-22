@@ -1,39 +1,78 @@
 /* Harvester drone */
-module.exports.roleName = 'harvester';
+module.exports.role = 'harvester';
 /* sType */
 module.exports.sType = 'normal';
 /* Costs */
-module.exports.costS  = 200;
-module.exports.costM  = 300;
-module.exports.costL  = 500;
-module.exports.costXL = 1000;
+module.exports.cost = {
+    1 : 200,
+    2 : 300,
+    3 : 500,
+    4 : 1000,
+    5 : 1000,
+    6 : 1000,
+    7 : 1000,
+    8 : 1000,
+}
+
 /* Body parts */
-module.exports.bodyS  = [
-    CARRY,CARRY,
-    MOVE,MOVE
-];
-module.exports.bodyM  = [
-    CARRY,CARRY,CARRY,
-    MOVE,MOVE,MOVE
-];
-module.exports.bodyL = [
-    CARRY,CARRY,CARRY,CARRY,CARRY,
-    MOVE,MOVE,MOVE,MOVE,MOVE
-];
-module.exports.bodyXL = [
-    CARRY,CARRY,CARRY,CARRY,CARRY,
-    CARRY,CARRY,CARRY,CARRY,CARRY,
-    MOVE,MOVE,MOVE,MOVE,MOVE,
-    MOVE,MOVE,MOVE,MOVE,MOVE
-];
+module.exports.body = {
+    1 : [
+        CARRY,CARRY,
+        MOVE,MOVE
+    ],
+    2 : [
+        CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE
+    ],
+    3 : [
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE
+    ],
+    4 : [
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,MOVE
+    ],
+    5 : [
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,MOVE
+    ],
+    6 : [
+       CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,MOVE
+    ],
+    7 : [
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,MOVE
+    ],
+    8 : [
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,MOVE
+    ],
+}
 /* Spawn Roster */
 module.exports.roster = {
-    S : 0,
-    M : 0,
-    L : 3,
-    XL: 1
-};
-module.exports.limit = 'room';
+    1: 3,
+    2: 3,
+    3: 3,
+    4: 3,
+    5: 3,
+    6: 3,
+    7: 3,
+    8: 3,
+}
+module.exports.enabled = function (room, debug = false) {
+    return true;
+}
 /**
  * Harvester Role
  */

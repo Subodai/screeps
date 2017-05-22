@@ -1,29 +1,56 @@
 /* Specialist Miner Drone */
-module.exports.roleName = 'miner';
+module.exports.role = 'miner';
 /* SType */
 module.exports.sType = 'specialist';
-/* Which room memory item should this be checked against */
-module.exports.roomRequirement = 'minersNeeded';
 /* Costs */
-module.exports.costS  = 0;
-module.exports.costM  = 0;
-module.exports.costL  = 0;
-module.exports.costXL = 550;
-/* Body parts */
-module.exports.bodyS  = [];
-module.exports.bodyM  = [];
-module.exports.bodyL  = [];
-module.exports.bodyXL = [
-    WORK,WORK,WORK,WORK,WORK,MOVE
-];
+module.exports.cost = {
+    1 : 0,
+    2 : 550,
+    3 : 550,
+    4 : 550,
+    5 : 550,
+    6 : 550,
+    7 : 550,
+    8 : 550,
+}
+/* Body Parts at each RCL */
+module.exports.body = {
+    1 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
+    2 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
+    3 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
+    4 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
+    5 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
+    6 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
+    7 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
+    8 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
+}
+
 /* Spawn Roster */
 module.exports.roster = {
-    S : 0,
-    M : 0,
-    L : 0,
-    XL: 2
+    1: 0,
+    2: 2,
+    3: 2,
+    4: 2,
+    5: 2,
+    6: 2,
+    7: 2,
+    8: 2,
 }
-module.exports.limit = 'room';
+/**
+ * Individual check for a room to check if this creep type should be enabled or not
+ */
+module.exports.enabled = function (room, debug = false) {
+    var _room = Game.rooms[room];
+    if (_room.memory.minersNeeded && _room.memory.minersNeeded > 0 && _room.controller.level > 1) {
+        // Now count the creeps
+        var list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.roomName == room && !creep.memory.dying);
+        if (list.length < _room.memory.minersNeeded) {
+            return true;
+        }
+    }
+    return false;
+}
+
 // Set a time for this creep to 'expire' at
 module.exports.expiry = 150;
 /* Run method */

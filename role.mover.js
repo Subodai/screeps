@@ -1,47 +1,74 @@
 /* Specialist Mover Drone */
-module.exports.roleName = 'mover';
+module.exports.role = 'mover';
 /* SType */
 module.exports.sType = 'normal';
 /* Costs */
-module.exports.costS  = 300;
-module.exports.costM  = 500;
-module.exports.costL  = 600;
-module.exports.costXL = 700;
-/* Body Parts */
-module.exports.bodyS = [
-    MOVE,MOVE,MOVE,     // 3 Moves = 100
-    CARRY,CARRY,CARRY,  // 3 Carry = 100
-];
-module.exports.bodyM = [
-    MOVE,MOVE,MOVE,MOVE,MOVE,       // 5 Moves = 250
-    CARRY,CARRY,CARRY,CARRY,CARRY   // 5 Carry = 250
-];
-module.exports.bodyL = [
-    TOUGH,TOUGH,TOUGH,TOUGH,     // 4 Tough = 200
-    MOVE,MOVE,MOVE,MOVE,         // 4 Moves = 200
-    CARRY,CARRY,CARRY,CARRY,     // 4 Carry = 200
-];
-module.exports.bodyXL = [
-    MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,         // 7 Moves = 350
-    CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,  // 7 Carry = 350
-];
+module.exports.cost = {
+    1 : 300,
+    2 : 500,
+    3 : 600,
+    4 : 700,
+    5 : 700,
+    6 : 700,
+    7 : 700,
+    8 : 700,
+}
+/* Body Parts at each RCL */
+module.exports.body = {
+    1 : [
+        MOVE,MOVE,MOVE,     // 3 Moves = 150
+        CARRY,CARRY,CARRY,  // 3 Carry = 150
+    ],
+    2 : [
+        MOVE,MOVE,MOVE,MOVE,MOVE,       // 5 Moves = 250
+        CARRY,CARRY,CARRY,CARRY,CARRY   // 5 Carry = 250
+    ],
+    3 : [
+        TOUGH,TOUGH,TOUGH,TOUGH,     // 4 Tough = 200
+        MOVE,MOVE,MOVE,MOVE,         // 4 Moves = 200
+        CARRY,CARRY,CARRY,CARRY,     // 4 Carry = 200
+    ],
+    4 : [
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,         // 7 Moves = 350
+        CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,  // 7 Carry = 350
+    ],
+    5 : [
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,         // 7 Moves = 350
+        CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,  // 7 Carry = 350
+    ],
+    6 : [
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,         // 7 Moves = 350
+        CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,  // 7 Carry = 350
+    ],
+    7 : [
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,         // 7 Moves = 350
+        CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,  // 7 Carry = 350
+    ],
+    8 : [
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,         // 7 Moves = 350
+        CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,  // 7 Carry = 350
+    ],
+}
 /* Spawn Roster */
 module.exports.roster = {
-    S : 1, // 1 S
-    M : 1, // 1 M
-    L : 1, // 1 L
-    XL: 1  // 1 XL
-};
-module.exports.limit = 'room';
+    1: 1,
+    2: 1,
+    3: 1,
+    4: 1,
+    5: 1,
+    6: 1,
+    7: 1,
+    8: 1,
+}
+// Set a time for this creep to 'expire' at
+module.exports.expiry = 100;
 /**
- * @memory.tartgetId    int     The current id of the oject this creep is interested in
- * @memory.targetType   string  The type of target this creep is interested in
- * @memory.dying        bool    If the creep has less than 100 ticks to live
- * @memory.delivering   bool    If the creep is currently in drop-off mode
- * @memory.moving       bool    If the creep cannot perform an action it will be in moving mode
- * @memory.path         string  Serialised path for the creep to get to it's target
-
-
+ * Individual check for a room to check if this creep type should be enabled or not
+ */
+module.exports.enabled = function (room, debug = false) {
+    // This should be disabled
+    return false;
+}
 /* Run method */
 module.exports.run = function (creep, debug = false) {
     if (creep.spawning) { return; }

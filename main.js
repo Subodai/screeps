@@ -27,6 +27,10 @@ module.exports.loop = function () {
         miner.setup();
         extractor.setup();
     }
+    // Run this once every 10 ticks
+    if (Game.time % 10 == 0) {
+        msg += counter.setupRoomRoles(debug);
+    }
     // Only need these once every 5 ticks
     if (Game.time % 5 == 0) {
         msg += counter.run(debug);

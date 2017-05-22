@@ -1,31 +1,62 @@
 /* Specialist Reserver Drone */
-module.exports.roleName = 'reserve';
+module.exports.role = 'reserve';
 /* SType */
 module.exports.sType = 'specialist';
 /* This role requires a flag to be set */
 module.exports.flagRequirement = 'reserve';
 /* Costs */
-module.exports.costS  = 0;
-module.exports.costM  = 0;
-module.exports.costL  = 0;
-module.exports.costXL = 1400;
-/* Body Parts */
-module.exports.bodyS  = [];
-module.exports.bodyM  = [];
-module.exports.bodyL  = [];
-module.exports.bodyXL = [
-    MOVE,MOVE,      // 2 MOVE = 100
-    CLAIM,CLAIM,    // 2 CLAIM = 1200
-    WORK            // 1 WOKR = 100
-];
+module.exports.cost = {
+    1 : 0,
+    2 : 0,
+    3 : 0,
+    4 : 0,
+    5 : 1400,
+    6 : 1400,
+    7 : 1400,
+    8 : 1400,
+}
+/* Body Parts at each RCL */
+module.exports.body = {
+    1 : [],
+    2 : [],
+    3 : [],
+    4 : [],
+    5 : [
+        MOVE,MOVE,      // 2 MOVE = 100
+        CLAIM,CLAIM,    // 2 CLAIM = 1200
+        WORK            // 1 WORK = 100
+    ],
+    6 : [
+        MOVE,MOVE,      // 2 MOVE = 100
+        CLAIM,CLAIM,    // 2 CLAIM = 1200
+        WORK            // 1 WORK = 100
+    ],
+    7 : [
+        MOVE,MOVE,      // 2 MOVE = 100
+        CLAIM,CLAIM,    // 2 CLAIM = 1200
+        WORK            // 1 WORK = 100
+    ],
+    8 : [
+        MOVE,MOVE,      // 2 MOVE = 100
+        CLAIM,CLAIM,    // 2 CLAIM = 1200
+        WORK            // 1 WORK = 100
+    ],
+}
 /* Spawn Roster */
 module.exports.roster = {
-    S : 0,  // 1 Small
-    M : 0,  // 0 Mid
-    L : 0,  // 0 L
-    XL: 1   // 0 XL
-};
-module.exports.limit = 'global';
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 1,
+    6: 1,
+    7: 1,
+    8: 1,
+}
+
+module.exports.enabled = function (room, debug = false) {
+    return false;
+}
 /* Okay, lets code the creep */
 module.exports.run = function (creep, debug = false) {
     if (creep.spawning) { return; }
