@@ -58,30 +58,35 @@ module.exports.roster = {
     2: 0,
     3: 0,
     4: 0,
-    5: 1,
-    6: 1,
-    7: 1,
-    8: 1,
+    5: 3,
+    6: 4,
+    7: 5,
+    8: 6,
 }
 module.exports.enabled = function (room, debug = false) {
     // Define the room
     var _room = Game.rooms[room];
     var _storage = _room.storage;
-    // No Storage, no ubergraders
+    // No Storage, no supergraders
     if (!_storage) { return false; }
 
     // If we go over 4/5 full on energy storage and we're not enabled in this room, turn it on!
-    if (_room.memory.roles[this.role] == false && _storage.store[RESOURCE_ENERGY] >= ((_storage.storeCapacity/5) * 4)) {
-        return true;
+    if (_room.memory.charging == true && _storage.store[RESOURCE_ENERGY] >= 800000) {
+        // Flick the switch lets use all the storage to upgrade
+        _room.memory.charging = false;
     }
 
     // If we are below 1/5th of room energy storage capacity, return false
-    if (_storage.store[RESOURCE_ENERGY] <= _storage.storeCapacity/5) {
-        return false;
+    if (_room.memory.charging = false && _storage.store[RESOURCE_ENERGY] <= 200000) {
+        // Flick the charging switch to true
+        _room.memory.charging = true;
     }
 
-    // If we got here, we should be enabled
-    return true;
+    if (_room.memory.charging) {
+        return false;
+    } else {
+        return true;
+    }
 }
 /**
  * Big Harvester Role
