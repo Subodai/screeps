@@ -22,7 +22,7 @@ module.exports.run = function(debug = false) {
             var role = global.roles[i];
             var _role = require('role.' + role);
             // Is this role enabled in this room?
-            if (_room.memory.roles[role] == 'No') {
+            if (!_room.memory.roles[role]) {
                 continue;
             }
             // If we get true back from the spawner then it spawned

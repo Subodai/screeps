@@ -72,9 +72,9 @@ module.exports.setupRoomRoles = function (debug = false) {
             var _role = require('role.' + role);
             // Run the code to check if this role should be enabled
             if (_role.enabled(room,debug)) {
-                _room.memory.roles[role] = 'Yes';
+                _room.memory.roles[role] = true;
             } else {
-                _room.memory.roles[role] = 'No';
+                _room.memory.roles[role] = false;
             }
         }
     }
