@@ -71,7 +71,7 @@ module.exports.enabled = function (room, debug = false) {
     if (!_storage) { return false; }
 
     // If we go over 4/5 full on energy storage and we're not enabled in this room, turn it on!
-    if (_room.memory.roles[this.role] == false && _storage.store[RESOURCE_ENERGY] >= ((_storage.storeCapacity/5) * 4)) {
+    if (_room.memory.roles[this.role] == 'No' && _storage.store[RESOURCE_ENERGY] >= ((_storage.storeCapacity/5) * 4)) {
         return true;
     }
 
