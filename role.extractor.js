@@ -12,8 +12,8 @@ module.exports.cost = {
     4 : 0,
     5 : 0,
     6 : 2300,
-    7 : 5300,
-    8 : 5300,
+    7 : 4750,
+    8 : 4750,
 }
 /* Body Parts at each RCL */
 module.exports.body = {
@@ -43,9 +43,7 @@ module.exports.body = {
         WORK,WORK,WORK,WORK,WORK,
 
         WORK,WORK,WORK,WORK,WORK,
-        WORK,WORK,WORK,WORK,WORK,
-
-        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
     8 : [
         WORK,WORK,WORK,WORK,WORK,
@@ -61,9 +59,7 @@ module.exports.body = {
         WORK,WORK,WORK,WORK,WORK,
 
         WORK,WORK,WORK,WORK,WORK,
-        WORK,WORK,WORK,WORK,WORK,
-
-        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
 }
 /* Spawn Roster */
