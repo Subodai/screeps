@@ -5,7 +5,12 @@ module.exports.run = function(spawn, role, debug = false) {
     var _role = require('role.' + role);
     var _spawn = Game.spawns[spawn];
     var _room = _spawn.room;
-    var _level = _room.controller.level;
+    // If we're in emergency mode, we need to change the level to 1 to force-spawn lower level creeps
+    if (_room.memory.emergency) {
+        var _level = 1;
+    } else {
+        var _level = _room.controller.level;
+    }
     // CONTINUE FROM HERE
     if (debug) { console.log('Running ' + role + ' spawner'); }
     if (debug) { console.log('Checking for viable ' + role + ' Creep Spawns in ' + _spawn.room); }
