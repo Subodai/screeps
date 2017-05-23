@@ -32,5 +32,6 @@ global.rampartMax = 30000;
 global.resourceList = [
     RESOURCE_CATALYST,
     RESOURCE_HYDROGEN,
+    RESOURCE_LEMERGIUM,
     RESOURCE_ENERGY
 ];
