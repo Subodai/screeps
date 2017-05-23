@@ -14,7 +14,7 @@ var counter   = require('work.counter');
  * Main game loop, call all other functions from here
  */
 module.exports.loop = function () {
-    var msg = Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '}'
+    var msg = Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '}';
     var debug = false;
     // Only need these once every 10 ticks
     if (Game.time % 10 == 0) {
@@ -29,7 +29,7 @@ module.exports.loop = function () {
     }
     // Run this once every 10 ticks
     if (Game.time % 10 == 0) {
-        msg += counter.setupRoomRoles(debug);
+        counter.setupRoomRoles(debug);
     }
     // Only need these once every 5 ticks
     if (Game.time % 5 == 0) {
