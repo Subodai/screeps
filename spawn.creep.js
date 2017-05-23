@@ -25,13 +25,13 @@ module.exports.run = function(spawn, role, debug = false) {
     var roster = _role.roster;
 
     if (_room.energyAvailable >= _role.cost[_level] && list.length < roster[_level] && !spawned) {
-        console.log('Spawning new level ' + _level + ' ' + role + ' : ' + creepName + ' in room '+ _room.name + ' [' + (list.length+1) + '/' + roster[_level] + ']');
         var creepName = _spawn.createCreep(_role.body[_level], undefined, {
             role : _role.role,
             level : _level,
             sType : _role.sType,
             roomName : _room.name
         });
+        console.log('Spawning new level ' + _level + ' ' + role + ' : ' + creepName + ' in room '+ _room.name + ' [' + (list.length+1) + '/' + roster[_level] + ']');
         spawned = true;
     }
 
