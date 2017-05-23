@@ -98,6 +98,12 @@ module.exports.run = function(creep) {
         return;
     }
 
+    // If supergrader is enabled, switch to it, no need for upgraders while supergraders are on
+    if (creep.room.memory.roles['supergrader'] == false) {
+        creep.memory.role = 'upgrader';
+        return;
+    }
+
     // If we have only a few ticks to live, swap it to harvest mode so it seeks home
     var ticks = creep.ticksToLive;
     if (ticks < 100) {
