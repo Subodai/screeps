@@ -58,10 +58,10 @@ module.exports.roster = {
     2: 0,
     3: 0,
     4: 0,
-    5: 3,
-    6: 4,
-    7: 5,
-    8: 6,
+    5: 10,
+    6: 10,
+    7: 10,
+    8: 10,
 }
 module.exports.enabled = function (room, debug = false) {
     // Define the room
