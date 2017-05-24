@@ -67,7 +67,7 @@ module.exports.run = function (creep, debug = false) {
         // If we found any
         if (flags.length > 0) {
             for (var i in flags) {
-                var flag = flags[0];
+                var flag = flags[i];
                 var _room = Game.rooms[flag.pos.roomName];
                 // Does this room need miners
                 if (_room.memory.minersNeeded && _room.memory.minersNeeded > 0) {
@@ -81,12 +81,12 @@ module.exports.run = function (creep, debug = false) {
                 }
             }
         } else {
-            console.log('Something went wrong, ' + this.role + ' creep ' + creep.name + ' cannot find a valid flag');
+            // console.log('Something went wrong, ' + this.role + ' creep ' + creep.name + ' cannot find a valid flag');
             return;
         }
     }
     if (!creep.memory.flagName) {
-        console.log('Something went wrong, ' + this.role + ' creep ' + creep.name + ' unhappy!');
+        // console.log('Something went wrong, ' + this.role + ' creep ' + creep.name + ' unhappy!');
         // No point spending more CPU just stop here
         return;
     }
