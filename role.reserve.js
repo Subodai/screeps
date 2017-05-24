@@ -72,7 +72,7 @@ module.exports.run = function (creep, debug = false) {
         // If we found any
         if (flags.length > 0) {
             // Get the first one
-            var flag = flag[0];
+            var flag = flags[0];
             flag.memory.assignedCreep = creep.id;
             creep.memory.flagName = flag.name;
             creep.memory.roomName = flag.pos.roomName;
