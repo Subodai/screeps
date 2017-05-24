@@ -67,8 +67,8 @@ module.exports.roster = {
     4: 3,
     5: 3,
     6: 3,
-    7: 3,
-    8: 3,
+    7: 4,
+    8: 4,
 }
 module.exports.enabled = function (room, debug = false) {
     return true;
