@@ -61,7 +61,7 @@ module.exports.enabled = function (room, debug = false) {
     return (flags.length > 0);
 }
 
-module.exports.expiry = 200;
+module.exports.expiry = 150;
 
 /* Okay, lets code the creep */
 module.exports.run = function (creep, debug = false) {
