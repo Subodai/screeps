@@ -55,13 +55,17 @@ module.exports.roster = {
 }
 
 module.exports.enabled = function (room, debug = false) {
-    // Get all reserve flags without an assigned creep
-    var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['reserve'] && !flag.memory.assignedCreep);
-    // If we don't have any return a false
-    return (flags.length > 0);
+    return false;
+    // // Get all reserve flags without an assigned creep
+    // var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['reserve'] && !flag.memory.assignedCreep && function(flag) {
+    //     var _room = Game.rooms[flag.room];
+    //     return _room.controller.reservation.ticksToEnd < this.expiry*2;
+    // });
+    // // If we don't have any return a false
+    // return (flags.length > 0);
 }
 
-module.exports.expiry = 150;
+module.exports.expiry = 50;
 
 /* Okay, lets code the creep */
 module.exports.run = function (creep, debug = false) {
@@ -102,6 +106,7 @@ module.exports.run = function (creep, debug = false) {
     if (!creep.memory.arrived) {
         // We didn't, alright lets go get the flag's position and head to it!
         var flag = Game.flags[creep.memory.flagName];
+        if (!flag) { return; }
         // If our POS is not the flags
         if (creep.pos.roomName == flag.pos.roomName) {
             // We have arrived!
