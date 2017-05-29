@@ -9,6 +9,7 @@ global.roles = [
     'reserve',
     'extractor',
     'supergrader',
+    'remoteminer',
 ];
 
 global.settings = {

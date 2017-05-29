@@ -41,14 +41,16 @@ module.exports.roster = {
  */
 module.exports.enabled = function (room, debug = false) {
     // Get the flags
-    var flags = _.filter(Game.flags, (flag) => flag.color = global.flagColor['remote']);
+    var flags = _.filter(Game.flags, function(flag) {
+        return flag.color == global.flagColor['remote'];
+    });
     if (flags.length == 0) { return false; }
     for (var i in flags) {
         var flag = flags[i];
-        var _room = Game.rooms[flag.pos.roomName];
+        var _room = Game.rooms[flag.room.name];
         if (_room.memory.minersNeeded && _room.memory.minersNeeded > 0) {
             // Now count the creeps
-            var list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.roomName == flag.pos.roomName && !creep.memory.dying);
+            var list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.roomName == flag.room.name && !creep.memory.dying);
             if (list.length < _room.memory.minersNeeded) {
                 return true;
             }
@@ -57,7 +59,7 @@ module.exports.enabled = function (room, debug = false) {
     return false;
 }
 // Set a time for this creep to 'expire' at
-module.exports.expiry = 300;
+module.exports.expiry = 200;
 /* Run method */
 module.exports.run = function (creep, debug = false) {
     // First have we been assigned a flag?
