@@ -55,14 +55,11 @@ module.exports.roster = {
 }
 
 module.exports.enabled = function (room, debug = false) {
-    return false;
-    // // Get all reserve flags without an assigned creep
-    // var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['reserve'] && !flag.memory.assignedCreep && function(flag) {
-    //     var _room = Game.rooms[flag.room];
-    //     return _room.controller.reservation.ticksToEnd < this.expiry*2;
-    // });
-    // // If we don't have any return a false
-    // return (flags.length > 0);
+    // return false;
+    // Get all reserve flags without an assigned creep
+    var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['reserve'] && (Game.rooms[flag.room].controller.reservervation.ticksToEnd < this.expiry*2);
+    // If we don't have any return a false
+    return (flags.length > 0);
 }
 
 module.exports.expiry = 50;
