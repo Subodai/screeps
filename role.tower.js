@@ -126,7 +126,7 @@ module.exports.run = function (tower, debug = false) {
 
 module.exports.visuals = function (items, room, debug = false) {
     var _room = Game.rooms[room];
-    _room.visual.clear();
+    // _room.visual.clear();
     for (var i in items) {
         var item = items[i];
         if(item.structureType == STRUCTURE_RAMPART) {
