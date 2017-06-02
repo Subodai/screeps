@@ -79,6 +79,7 @@ module.exports.enabled = function (room, debug = false) {
     });
     // Do we have any?
     if (targets.length > 0) {
+        console.log(JSON.stringify(targets));
         return true;
     }
     return false;
@@ -116,28 +117,28 @@ module.exports.run = function(creep) {
         });
 
         // Next lets worry about other non-road stuctures below max
-        if (!targets) {
+        if (targets.length == 0) {
             var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (i) => (i.structureType != STRUCTURE_RAMPART && i.structureType != STRUCTURE_WALL && i.structureType != STRUCTURE_ROAD) && i.hits < i.hitsMax
             });
         }
 
         // Next lets do roads
-        if (!targets) {
+        if (targets.length == 0) {
             var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (i) => i.structureType == STRUCTURE_ROAD && i.hits < i.hitsMax
             });
         }
 
         // Next lets start pumping energy into the walls and ramparts to juicy em up in stages
-        if (!targets) {
+        if (targets.length == 0) {
             var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (i) => (i.structureType == STRUCTURE_RAMPART || i.structureType == STRUCTURE_WALL) && i.hits <= 300
             });
         }
 
         // Next walls and ramparts below 1/4 of their max
-        if (!targets) {
+        if (targets.length == 0) {
             var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (i) => (i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*0.24)) ||
                                (i.structureType == STRUCTURE_WALL && i.hits <= (global.wallMax*0.25))
@@ -145,7 +146,7 @@ module.exports.run = function(creep) {
         }
 
         // Next walls and ramparts below 1/2 their max
-        if (!targets) {
+        if (targets.length == 0) {
             var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (i) => (i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*0.5)) ||
                                (i.structureType == STRUCTURE_WALL && i.hits <= (global.wallMax*0.5))
@@ -153,7 +154,7 @@ module.exports.run = function(creep) {
         }
 
         // Next walls and ramparts below 3/4 their max
-        if (!targets) {
+        if (targets.length == 0) {
             var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (i) => (i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*0.75)) ||
                                (i.structureType == STRUCTURE_WALL && i.hits <= (global.wallMax*0.75))
@@ -161,7 +162,7 @@ module.exports.run = function(creep) {
         }
 
         // Next walls and ramparts below 3/4 their max
-        if (!targets) {
+        if (targets.length == 0) {
             var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (i) => (i.structureType == STRUCTURE_RAMPART && i.hits < global.rampartMax) ||
                                (i.structureType == STRUCTURE_WALL && i.hits <= global.wallMax)
@@ -201,7 +202,7 @@ module.exports.run = function(creep) {
                     },
                     reusePath:3
                 });
-                creep.say(global.sayMove);
+                creep.say(global.sayWhat);
             }
         }
     }
