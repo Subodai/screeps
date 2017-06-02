@@ -118,17 +118,34 @@ module.exports.run = function(creep) {
             }
             // console.log(JSON.stringify(site));
         }
-
-        if(creep.build(site) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(site, {
-                visualizePathStyle: {
-                    stroke: global.colourBuild,
-                    opacity: global.pathOpacity
-                }
-            });
-            creep.say('>>');
+        if (site) {
+            if(creep.build(site) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(site, {
+                    visualizePathStyle: {
+                        stroke: global.colourBuild,
+                        opacity: global.pathOpacity
+                    }
+                });
+                creep.say('>>');
+            } else {
+                creep.say('MAKE');
+            }
         } else {
-            creep.say('MAKE');
+            // No targets.. head back to the room spawn
+            var spawn = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: (i) => i.structureType == STRUCTURE_SPAWN
+            });
+
+            if (spawn.recycleCreep(creep) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(spawn, {
+                    sualizePathStyle: {
+                        stroke: global.colorRepair,
+                        opacity: global.pathOpacity
+                    },
+                    reusePath:3
+                });
+                creep.say(global.sayWhat);
+            }
         }
     }
     else {
