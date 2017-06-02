@@ -104,19 +104,21 @@ module.exports.run = function (tower, debug = false) {
             }
         }
     } else {
-        // Nope okay, lets try a road
-        var targets = tower.room.find(FIND_STRUCTURES, {
-            filter: (i) => i.structureType == STRUCTURE_ROAD && i.hits < i.hitsMax
-        });
+        if (tower.energy >= 400) {
+            // Nope okay, lets try a road
+            var targets = tower.room.find(FIND_STRUCTURES, {
+                filter: (i) => i.structureType == STRUCTURE_ROAD && i.hits < i.hitsMax
+            });
 
-        // So did we find a target?
-        if (targets.length > 0) {
-            this.visuals(targets, tower.room.name, debug);
-            // Sort by hits (may need to check this)
-            targets.sort((a,b) => a.hits - b.hits);
-            var target = targets[0];
-            tower.repair(target);
-            return;
+            // So did we find a target?
+            if (targets.length > 0) {
+                this.visuals(targets, tower.room.name, debug);
+                // Sort by hits (may need to check this)
+                targets.sort((a,b) => a.hits - b.hits);
+                var target = targets[0];
+                tower.repair(target);
+                return;
+            }
         }
     }
 }
