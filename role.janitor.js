@@ -79,7 +79,6 @@ module.exports.enabled = function (room, debug = false) {
     });
     // Do we have any?
     if (targets.length > 0) {
-        console.log(JSON.stringify(targets));
         return true;
     }
     return false;
