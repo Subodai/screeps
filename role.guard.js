@@ -90,9 +90,23 @@ module.exports.run = function (creep, debug = false) {
         creep.say(global.sayTired);
         return;
     }
-    if (creep.memory.idle >= 200) {
-        if (debug) { console.log(Game.time + ' Despawning Guard'); }
-        creep.suicide();
+    if (creep.memory.idle >= 10) {
+        // No targets.. head back to the room spawn
+        var spawn = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+            filter: (i) => i.structureType == STRUCTURE_SPAWN
+        });
+
+        if (spawn.recycleCreep(creep) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(spawn, {
+                sualizePathStyle: {
+                    stroke: global.colorRepair,
+                    opacity: global.pathOpacity
+                },
+                reusePath:3
+            });
+            creep.say(global.sayWhat);
+            return;
+        }
     }
     // Get a target
     var target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
