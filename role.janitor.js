@@ -72,7 +72,7 @@ module.exports.enabled = function (room, debug = false) {
     // Define the room we're in
     var _room = Game.rooms[room];
     // Search for all targets that are walls or ramparts below their global max, or anything else with less hits than max
-    const targets = room.find(FIND_STRUCTURES, {
+    const targets = _room.find(FIND_STRUCTURES, {
         filter: (i) => (i.structureType == STRUCTURE_RAMPART && i.hits <= global.rampartMax) ||
                        (i.structureType == STRUCTURE_WALL && i.hits <= global.wallMax) ||
                        ((i.structureType != STRUCTURE_ROAD && i.structureType != STRUCTURE_RAPART) && i.hits < i.hitsMax)
