@@ -6,10 +6,11 @@ global.roles = [
     'builder',
     'mover',
     'scout',
-    'reserve',
+    //'reserve',
     'extractor',
     'supergrader',
-    'remoteminer',
+    //'remoteminer',
+    'janitor',
 ];
 
 global.settings = {
@@ -29,6 +30,8 @@ global.settings = {
 }
 
 global.rampartMax = 30000;
+global.wallMax = 30000;
+global.towerRepair = false;
 
 global.resourceList = [
     RESOURCE_CATALYST,

@@ -11,6 +11,7 @@ global.colourUpgrade   = '#33CC33';
 global.colourClaim     = '#330033';
 global.colourMine      = '#330000';
 global.colourReserve   = '#330033';
+global.colourRepair    = '#00FF00';
 
 // The path opacity
 global.pathOpacity   = .3;

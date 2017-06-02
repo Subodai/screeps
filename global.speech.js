@@ -8,3 +8,4 @@ global.sayOhno      = 'OhNo!';
 global.sayGet       = 'GET';
 global.sayPut       = 'PUT';
 global.sayWhat      = '!!';
+global.sayRepair    = 'SAP';
