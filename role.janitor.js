@@ -79,7 +79,6 @@ module.exports.enabled = function (room, debug = false) {
     });
     // Do we have any?
     if (targets.length > 0) {
-        this.visuals(targets, room, debug);
         return true;
     }
     return false;
@@ -104,7 +103,7 @@ module.exports.visuals = function (items, room, debug = false) {
         var _color = '#' + this.tohex(r) + this.tohex(g) + this.tohex(b);
         _room.visual.circle(item.pos, {
             fill: _color,
-            radius:0.45,
+            radius:0.1,
             opacity:0.05,
             stroke:_color
         });
@@ -161,11 +160,11 @@ module.exports.run = function(creep) {
         }
 
         // Next lets do roads
-        if (targets.length == 0) {
-            var targets = creep.room.find(FIND_STRUCTURES, {
-                filter: (i) => i.structureType == STRUCTURE_ROAD && i.hits < i.hitsMax
-            });
-        }
+        // if (targets.length == 0) {
+        //     var targets = creep.room.find(FIND_STRUCTURES, {
+        //         filter: (i) => i.structureType == STRUCTURE_ROAD && i.hits < i.hitsMax
+        //     });
+        // }
 
         // Next lets start pumping energy into the walls and ramparts to juicy em up in stages
         if (targets.length == 0) {
@@ -207,6 +206,7 @@ module.exports.run = function(creep) {
         }
         // Do we have any targets?
         if (targets.length > 0) {
+            this.visuals(targets, room, debug);
             // Sort by hits (may need to check this)
             targets.sort((a,b) => a.hits - b.hits);
             // Get the first target on the list
