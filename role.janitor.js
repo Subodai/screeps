@@ -79,9 +79,47 @@ module.exports.enabled = function (room, debug = false) {
     });
     // Do we have any?
     if (targets.length > 0) {
+        this.visuals(targets, room, debug);
         return true;
     }
     return false;
+}
+
+module.exports.visuals = function (items, room, debug = false) {
+    var _room = Game.rooms[room];
+    _room.visual.clear();
+    for (var i in items) {
+        var item = items[i];
+        if(item.structureType == STRUCTURE_RAMPART) {
+            var percent = (item.hits/global.rampartMax)*100;
+        } else if (item.structureType == STRUCTURE_WALL) {
+            var percent = (item.hits/global.wallMax)*100;
+        } else {
+            var percent = (item.hits/item.hitsMax)*100;
+        }
+
+        var r = Math.round(255 - ((255/100)*(percent/100)*100));
+        var g = Math.round((255/100)*(percent/100)*100);
+        var b = 0;
+        var _color = '#' + this.tohex(r) + this.tohex(g) + this.tohex(b);
+        _room.visual.circle(item.pos, {
+            fill: _color,
+            radius:0.45,
+            opacity:0.05,
+            stroke:_color
+        });
+    }
+}
+
+module.exports.tohex = function (d, padding) {
+    var hex = Number(d).toString(16);
+    padding = typeof (padding) === "undefined" || padding === null ? padding = 2 : padding;
+
+    while (hex.length < padding) {
+        hex = "0" + hex;
+    }
+
+    return hex;
 }
 /**
  * Janitor Role
