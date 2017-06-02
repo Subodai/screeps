@@ -75,7 +75,7 @@ module.exports.enabled = function (room, debug = false) {
     const targets = _room.find(FIND_STRUCTURES, {
         filter: (i) => (i.structureType == STRUCTURE_RAMPART && i.hits <= global.rampartMax) ||
                        (i.structureType == STRUCTURE_WALL && i.hits <= global.wallMax) ||
-                       ((i.structureType != STRUCTURE_ROAD && i.structureType != STRUCTURE_RAPART) && i.hits < i.hitsMax)
+                       ((i.structureType != STRUCTURE_ROAD && i.structureType != STRUCTURE_RAMPART) && i.hits < i.hitsMax)
     });
     // Do we have any?
     if (targets.length > 0) {
