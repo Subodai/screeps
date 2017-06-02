@@ -206,7 +206,7 @@ module.exports.run = function(creep) {
         }
         // Do we have any targets?
         if (targets.length > 0) {
-            this.visuals(targets, room, debug);
+            this.visuals(targets, creep.room, debug);
             // Sort by hits (may need to check this)
             targets.sort((a,b) => a.hits - b.hits);
             // Get the first target on the list
