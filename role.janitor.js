@@ -57,14 +57,14 @@ module.exports.body = {
 }
 /* Spawn Roster */
 module.exports.roster = {
-    1: 3,
-    2: 3,
-    3: 3,
-    4: 3,
-    5: 3,
-    6: 3,
-    7: 3,
-    8: 3,
+    1: 1,
+    2: 1,
+    3: 1,
+    4: 1,
+    5: 1,
+    6: 1,
+    7: 1,
+    8: 1,
 }
 
 module.exports.enabled = function (room, debug = false) {
