@@ -78,7 +78,7 @@ module.exports.enabled = function (room, debug = false) {
                        ((i.structureType != STRUCTURE_ROAD && i.structureType != STRUCTURE_RAPART) && i.hits < i.hitsMax)
     });
     // Do we have any?
-    if (const.length > 0) {
+    if (targets.length > 0) {
         return true;
     }
     return false;
