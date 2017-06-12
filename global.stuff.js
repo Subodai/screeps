@@ -5,11 +5,11 @@ global.roles = [
     'upgrader',
     'builder',
     'mover',
-    'scout',
-    //'reserve',
     'extractor',
     'supergrader',
-    //'remoteminer',
+    'scout',
+    'reserve',
+    'remoteminer',
     'janitor',
 ];
 
