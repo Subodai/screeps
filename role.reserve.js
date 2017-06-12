@@ -60,8 +60,8 @@ module.exports.enabled = function (room, debug = false) {
     var flags = _.filter(Game.flags, function(flag) {
         var _room = Game.rooms[flag.room.name];
         // Make sure we match
-        if (flag.color == global.flagColor['reserver'] && 
-            !flag.memory.assignedCreep && 
+        if (flag.color == global.flagColor['reserver'] &&
+            !flag.memory.assignedCreep &&
             _room.controller.reservation.ticksToEnd < this.expiry*2) {
             return true;
         } else {

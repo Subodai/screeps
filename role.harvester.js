@@ -4,7 +4,7 @@ module.exports.role = 'harvester';
 module.exports.sType = 'normal';
 /* Costs */
 module.exports.cost = {
-    1 : 200,
+    1 : 300,
     2 : 300,
     3 : 500,
     4 : 1000,
@@ -17,6 +17,7 @@ module.exports.cost = {
 /* Body parts */
 module.exports.body = {
     1 : [
+        WORK,
         CARRY,CARRY,
         MOVE,MOVE
     ],
@@ -221,13 +222,15 @@ module.exports.run = function(creep) {
 
         var hasWork = false;
         for (var part in creep.body) {
-            if (part == WORK) {
+
+            if (creep.body[part].type == WORK) {
                 hasWork = true;
                 break;
             }
         }
         // Can we work?
         if (hasWork) {
+
             // If we got here, we didn't find a suitable container, are there any active sources?
             var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
             // Did we find a source?
@@ -322,6 +325,12 @@ module.exports.run = function(creep) {
                 });
             }
 
+            // If towers are full, can we dump it into a lab?
+            if (!tower) {
+                var tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                    filter : (i) => i.structureType == STRUCTURE_LAB && i.energy < i.energyCapacity
+                });
+            }
             // So did we find one?
             if (tower) {
                 // Attempt transfer, unless out of range
@@ -384,7 +393,7 @@ module.exports.run = function(creep) {
                     }
                 }
             }
-            
+
         } else if (storage) { // Room storage?
             var target = storage;
         } else {

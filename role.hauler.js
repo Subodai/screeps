@@ -416,7 +416,7 @@ module.exports.run = function(creep) {
                     }
                 }
             }
-            
+
         } else if (storage) { // Room storage?
             var target = storage;
         } else {

@@ -10,10 +10,10 @@ module.exports.cost = {
     2 : 0,
     3 : 0,
     4 : 0,
-    5 : 1400,
-    6 : 1400,
-    7 : 1400,
-    8 : 1400,
+    5 : 1550,
+    6 : 1550,
+    7 : 1550,
+    8 : 1550,
 }
 /* Body Parts at each RCL */
 module.exports.body = {
@@ -22,24 +22,28 @@ module.exports.body = {
     3 : [],
     4 : [],
     5 : [
-        MOVE,MOVE,      // 2 MOVE = 100
-        CLAIM,CLAIM,    // 2 CLAIM = 1200
-        WORK            // 1 WORK = 100
+        MOVE,MOVE,MOVE,MOVE,  // 4 MOVE = 200
+        CLAIM,CLAIM,          // 2 CLAIM = 1200
+        CARRY,                // 1 CARRY = 50
+        WORK                  // 1 WORK = 100
     ],
     6 : [
-        MOVE,MOVE,      // 2 MOVE = 100
-        CLAIM,CLAIM,    // 2 CLAIM = 1200
-        WORK            // 1 WORK = 100
+        MOVE,MOVE,MOVE,MOVE,  // 4 MOVE = 200
+        CLAIM,CLAIM,          // 2 CLAIM = 1200
+        CARRY,                // 1 CARRY = 50
+        WORK                  // 1 WORK = 100
     ],
     7 : [
-        MOVE,MOVE,      // 2 MOVE = 100
-        CLAIM,CLAIM,    // 2 CLAIM = 1200
-        WORK            // 1 WORK = 100
+        MOVE,MOVE,MOVE,MOVE,  // 4 MOVE = 200
+        CLAIM,CLAIM,          // 2 CLAIM = 1200
+        CARRY,                // 1 CARRY = 50
+        WORK                  // 1 WORK = 100
     ],
     8 : [
-        MOVE,MOVE,      // 2 MOVE = 100
-        CLAIM,CLAIM,    // 2 CLAIM = 1200
-        WORK            // 1 WORK = 100
+        MOVE,MOVE,MOVE,MOVE,  // 4 MOVE = 200
+        CLAIM,CLAIM,          // 2 CLAIM = 1200
+        CARRY,                // 1 CARRY = 50
+        WORK                  // 1 WORK = 100
     ],
 }
 /* Spawn Roster */

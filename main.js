@@ -9,6 +9,7 @@ var movement  = require('work.movement');
 var cleaner   = require('work.cleaner');
 var towers    = require('work.towers');
 var counter   = require('work.counter');
+var screepsplus     = require('screepsplus');
 
 /**
  * Main game loop, call all other functions from here
@@ -36,6 +37,7 @@ module.exports.loop = function () {
     }
     movement.run(debug);
     towers.run(debug);
+    screepsplus.collect_stats();
     msg += ' {' + Game.cpu.getUsed().toFixed(3) + '}';
     console.log(msg);
     if (Game.cpu.getUsed() > 200) {

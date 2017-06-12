@@ -14,12 +14,12 @@ global.roles = [
 ];
 
 global.settings = {
-	DeSpawn: false,
+    DeSpawn: false,
     upgrader  : true,
     miner     : true,
     extractor : false,
     harvester : true,
-    builder	  : true,
+    builder   : true,
     mover     : false,
     scout     : false,
     reserve   : false,

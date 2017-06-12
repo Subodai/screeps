@@ -84,9 +84,11 @@ module.exports.enabled = function (room, debug = false) {
     // Find the mineral site in the room
     var mineral = theRoom.find(FIND_MINERALS);
     // does it have minerals?
-    if (mineral[0].mineralAmount > 0 && theRoom.controller.level >= 6) {
-        // it does, return true!
-        return true;
+    if (theRoom.controller) {
+        if (mineral[0].mineralAmount > 0 && theRoom.controller.level >= 6) {
+            // it does, return true!
+            return true;
+        }
     }
     // This should be disabled
     return false;

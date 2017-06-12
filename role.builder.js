@@ -59,12 +59,12 @@ module.exports.body = {
 module.exports.roster = {
     1: 3,
     2: 3,
-    3: 3,
-    4: 3,
+    3: 1,
+    4: 1,
     5: 3,
     6: 3,
     7: 3,
-    8: 3,
+    8: 1,
 }
 
 module.exports.enabled = function (room, debug = false) {
@@ -135,16 +135,23 @@ module.exports.run = function(creep) {
             var spawn = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (i) => i.structureType == STRUCTURE_SPAWN
             });
-
-            if (spawn.recycleCreep(creep) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(spawn, {
-                    sualizePathStyle: {
-                        stroke: global.colorRepair,
-                        opacity: global.pathOpacity
-                    },
-                    reusePath:3
+            if (!spawn) {
+                var spawns = Game.rooms[creep.memory.roomName].find(FIND_STRUCTURES, {
+                    filter: (i) => i.structureType == STRUCTURE_SPAWN
                 });
-                creep.say(global.sayWhat);
+                var spawn = spawns[0];
+            }
+            if (spawn) {
+                if (spawn.recycleCreep(creep) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(spawn, {
+                        sualizePathStyle: {
+                            stroke: global.colorRepair,
+                            opacity: global.pathOpacity
+                        },
+                        reusePath:3
+                    });
+                    creep.say(global.sayWhat);
+                }
             }
         }
     }

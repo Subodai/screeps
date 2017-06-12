@@ -6,7 +6,6 @@ module.exports.run = function(debug = false) {
     var spawner = require('spawn.creep');
     var msg = '';
     var notify = false;
-
     // Loop through the rooms
     for(var room in Game.rooms) {
         var theRoom = Game.rooms[room];
@@ -18,12 +17,12 @@ module.exports.run = function(debug = false) {
             filter: (i) => !(global.friends.indexOf(i.owner.username) > -1)
         });
         if (hostiles.length > 0 && theRoom.memory.mode == 'normal') {
-            notify = true;
+            //notify = true;
             msg += "\n" + Game.time + ' Room ' + room + ' put into guard mode spawning guards' + "\n";
             theRoom.memory.mode = 'guard';
         }
         if (hostiles.length == 0 && theRoom.memory.mode == 'guard') {
-            notify = true;
+            //notify = true;
             msg += "\n" + Game.time + ' Room ' + room + ' no longer in guard mode' + "\n";
             theRoom.memory.mode = 'normal';
         }
@@ -32,6 +31,7 @@ module.exports.run = function(debug = false) {
             console.log('We are still in guard mode');
         }
         if(theRoom.controller && theRoom.controller.my) {
+
             var list = _.filter(Game.creeps, (creep) => !creep.memory.dying && creep.memory.roomName == room);
             if ((list.length <= 2 && miners == 0) && !theRoom.memory.emergency){
                 notify = true;

@@ -77,7 +77,7 @@ module.exports.enabled = function (room, debug = false) {
     }
 
     // If we are below 1/5th of room energy storage capacity, return false
-    if (_storage.store[RESOURCE_ENERGY] <= 200000) {
+    if (_storage.store[RESOURCE_ENERGY] <= 50000) {
         // Flick the charging switch to true
         _room.memory.charging = true;
     }
@@ -146,7 +146,7 @@ module.exports.run = function(creep) {
         // Is there any?
         if (target) {
             // If it's at least 1 3rd full
-            if (target.store[RESOURCE_ENERGY] > target.storeCapacity/5) {
+            if (target.store[RESOURCE_ENERGY] > 50000) {
                 // Withdraw or move to it
                 if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     // No lets move to the source we want
