@@ -189,7 +189,7 @@ module.exports.run = function (creep, debug = false) {
             // Do we have a sourceId?
             if (sourceId == false) {
                 if (debug) { console.log('Creep[' + creep.name + '] Miner cannot find source!!'); }
-                Game.notify(Game.time + ' Miner Creep unable to assign a source');
+                // Game.notify(Game.time + ' Miner Creep unable to assign a source');
             }
         }
 
