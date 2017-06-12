@@ -69,7 +69,7 @@ module.exports.enabled = function (room, debug = false) {
         // Do we have the room?
         if (_room) {
             // Is there a creep in this room?
-            var creeps = _.filter(Game.creeps, (creep) => creep.memory.remoteRoom == _room.name && creep.memory.flagName == _flag.name && !creep.memory.dying);
+            var creeps = _.filter(Game.creeps, (creep) => creep.memory.reserveRoom == _room.name && creep.memory.flagName == _flag.name && !creep.memory.dying);
             // Make sure we match
             if (creeps.length == 0 && (_room.controller.reservation == 'undefined' || _room.controller.reservation.ticksToEnd < this.expiry*3)) {
                 return true;
@@ -101,15 +101,15 @@ module.exports.run = function (creep, debug = false) {
             var _room = Game.rooms[_flag.pos.roomName];
             if (_room) {
                 // ok we have presence, check for creeps
-                var creeps = _.filter(Game.creeps, (creep) => creep.memory.remoteRoom == _room.name && creep.memory.flagName == _flag.name && !creep.memory.dying)
+                var creeps = _.filter(Game.creeps, (creep) => creep.memory.reserveRoom == _room.name && creep.memory.flagName == _flag.name && !creep.memory.dying)
                 if (creeps.length == 0) {
                     creep.memory.flagName = _flag.name;
-                    creep.memory.remoteRoom = _flag.pos.roomName;
+                    creep.memory.reserveRoom = _flag.pos.roomName;
                     return;
                 }
             } else {
                 creep.memory.flagName = _flag.name;
-                creep.memory.remoteRoom = _flag.pos.roomName;
+                creep.memory.reserveRoom = _flag.pos.roomName;
                 return;
             }
         }
