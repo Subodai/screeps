@@ -9,3 +9,5 @@ global.sayGet       = 'GET';
 global.sayPut       = 'PUT';
 global.sayWhat      = '!!';
 global.sayRepair    = 'SAP';
+global.sayMine      = 'd(^-^)b';
+global.sayBuild     = 'MAKE';

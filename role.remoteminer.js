@@ -5,30 +5,30 @@ module.exports.sType = 'specialist';
 /* Costs */
 module.exports.cost = {
     1 : 0,
-    2 : 550,
-    3 : 550,
-    4 : 550,
-    5 : 550,
-    6 : 550,
-    7 : 550,
-    8 : 550,
+    2 : 0,
+    3 : 750,
+    4 : 750,
+    5 : 750,
+    6 : 750,
+    7 : 750,
+    8 : 750,
 }
 /* Body Parts at each RCL */
 module.exports.body = {
     1 : [],
-    2 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
-    3 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
-    4 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
-    5 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
-    6 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
-    7 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
-    8 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
+    2 : [],
+    3 : [ WORK,WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE,MOVE,MOVE ],
+    4 : [ WORK,WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE,MOVE,MOVE ],
+    5 : [ WORK,WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE,MOVE,MOVE ],
+    6 : [ WORK,WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE,MOVE,MOVE ],
+    7 : [ WORK,WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE,MOVE,MOVE ],
+    8 : [ WORK,WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE,MOVE,MOVE ],
 }
 
 /* Spawn Roster */
 module.exports.roster = {
     1: 0,
-    2: 2,
+    2: 0,
     3: 2,
     4: 2,
     5: 2,
@@ -40,22 +40,34 @@ module.exports.roster = {
  * Individual check for a room to check if this creep type should be enabled or not
  */
 module.exports.enabled = function (room, debug = false) {
-    // Get the flags
-    var flags = _.filter(Game.flags, function(flag) {
-        return flag.color == global.flagColor['remote'];
-    });
+    // Get the flags for remote
+    var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['remote']);
+    // If there are no flags, just return false
     if (flags.length == 0) { return false; }
+    // If there are flags, lets loop
     for (var i in flags) {
-        var flag = flags[i];
-        var _room = Game.rooms[flag.room.name];
-        if (_room.memory.minersNeeded && _room.memory.minersNeeded > 0) {
-            // Now count the creeps
-            var list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.roomName == flag.room.name && !creep.memory.dying);
-            if (list.length < _room.memory.minersNeeded) {
-                return true;
+        // Grab the flag
+        var _flag = flags[i];
+        // Grab the room
+        var _room = Game.rooms[_flag.pos.roomName];
+        // If we have a room, lets check the requirements for it
+        if (_room) {
+            // Are there are minersNeeded here?
+            if (_room.memory.minersNeeded && _room.memory.minersNeeded > 0) {
+                // Now count the creeps with this role, assigned to this remoteRoom
+                var list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.remoteRoom == _flag.pos.roomName && !creep.memory.dying);
+                // If we have less than is necessary, we should spawn a new one
+                if (list.length < _room.memory.minersNeeded) {
+                    // Return true
+                    return true;
+                }
             }
+        } else {
+            // We have no knowledge of this room, which means we probably need creeps for it
+            return true;
         }
     }
+    // No need for any remote Miners as yet
     return false;
 }
 // Set a time for this creep to 'expire' at
@@ -64,22 +76,33 @@ module.exports.expiry = 200;
 module.exports.run = function (creep, debug = false) {
     // First have we been assigned a flag?
     if (!creep.memory.flagName) {
-        // Lets find a flag without a creep assigned
+        // Lets find a remote mining flag then
         var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['remote']);
         // If we found any
         if (flags.length > 0) {
+            // Loop through the flags
             for (var i in flags) {
+                // Get the flag
                 var flag = flags[i];
+                // Try to get the flag's room
                 var _room = Game.rooms[flag.pos.roomName];
-                // Does this room need miners
-                if (_room.memory.minersNeeded && _room.memory.minersNeeded > 0) {
-                    // Now count the creeps in that room
-                    var list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.roomName == flag.pos.roomName && !creep.memory.dying);
-                    if (list.length < _room.memory.minersNeeded) {
-                        // This room needs a creep!
-                        creep.memory.flagName = flag.name;
-                        creep.memory.roomName = flag.pos.roomName;
+                // If we got the flag's room,
+                if (_room) {
+                    // Does this room need miners
+                    if (_room.memory.minersNeeded && _room.memory.minersNeeded > 0) {
+                        // Now count the creeps in that room
+                        var list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.remoteRoom == flag.pos.roomName && !creep.memory.dying);
+                        // Does this room have enough miners?
+                        if (list.length < _room.memory.minersNeeded) {
+                            // This room needs a creep!
+                            creep.memory.flagName = flag.name;
+                            creep.memory.remoteRoom = flag.pos.roomName;
+                        }
                     }
+                } else {
+                    // This room doesn't seem to have visibility, we should probably send a remoteMiner over there
+                    creep.memory.flagName = flag.name;
+                    creep.memory.remoteRoom = flag.pos.roomName;
                 }
             }
         } else {
@@ -92,31 +115,32 @@ module.exports.run = function (creep, debug = false) {
         // No point spending more CPU just stop here
         return;
     }
+    // If we're still spawning, lets stop here
     if (creep.spawning) { return; }
     // Fatigue Check
     if (creep.fatigue > 0) {
         if (debug) { console.log('Creep[' + creep.name + '] Fatgiued ' + creep.fatigue); }
-        creep.say('Zzz');
+        creep.say(global.sayTired);
         return;
     }
 
     // Okay, health check
     var ticks = creep.ticksToLive;
     if (ticks <= 150 && !creep.memory.dying) {
-        if (debug) { console.log('Creep[' + creep.name + '] Miner Dying Making sure we spawn a new one'); }
+        if (debug) { console.log('Creep[' + creep.name + '] Remote Miner Dying Making sure we spawn a new one'); }
         // set dying to true and set the sourceId to null in room memory
         creep.memory.dying = true;
         var sourceId = creep.memory.assignedSource;
-        creep.room.memory.assignedSources[sourceId] = null;
+        Game.rooms[creep.memory.remoteRoom].memory.assignedSources[sourceId] = null;
     }
 
     // Alright if it's dying, output the timer
     if (creep.memory.dying) {
-        if (debug) { console.log('Creep[' + creep.name + '] Miner Dying, ticking down'); }
+        if (debug) { console.log('Creep[' + creep.name + '] Remote Miner Dying, ticking down'); }
         creep.say(ticks);
         // If it's less than 10 ticks, drop what we have
         if (ticks < 10) {
-            if (debug) { console.log('Creep[' + creep.name + '] Miner about to die'); }
+            if (debug) { console.log('Creep[' + creep.name + '] Remote Miner about to die'); }
             creep.say('!!' + ticks + '!!');
         }
     }
@@ -130,6 +154,7 @@ module.exports.run = function (creep, debug = false) {
             // We have arrived!
             creep.memory.arrived = true;
         } else {
+            // We have not arrived yet, we need to go to the flag's room
             var result = creep.moveTo(flag, {
                 visualizePathStyle : {
                     stroke: global.colourFlag,
@@ -168,6 +193,11 @@ module.exports.run = function (creep, debug = false) {
             }
         }
 
+        // @TODO Self Setup, build and repair routine for if we have energy
+        if(this.containerRoutine(creep)) {
+            return;
+        }
+
         // Are we full?
         if (creep.energy == creep.carryCapacity) {
             if (debug) { console.log('Creep[' + creep.name + '] Miner full, dropping!'); }
@@ -176,10 +206,12 @@ module.exports.run = function (creep, debug = false) {
             creep.memory.dropping = false;
         }
 
+
+
         // Are we dropping?
         if (creep.memory.dropping) {
             // This may need to change, depends if the drop costs fatigue or if dropping goes into a container
-            console.log(creep.drop(RESOURCE_ENERGY));
+            creep.drop(RESOURCE_ENERGY);
             creep.memory.dropping = false;
             creep.say('V');
 
@@ -220,12 +252,14 @@ module.exports.run = function (creep, debug = false) {
                         },
                         reusePath:5
                     });
+                    // @TODO Drop a road piece if we don't have one
+                    this.layRoad(creep);
                     // Moving make a say
-                    creep.say('>>')
+                    creep.say(global.sayMove)
                 } else {
                     // Mining say we're mining
                     if (!creep.memory.dying) {
-                        creep.say('d(^-^)b');
+                        creep.say(global.sayMine);
                     }
                 }
             } else {
@@ -235,6 +269,99 @@ module.exports.run = function (creep, debug = false) {
             }
         }
     }
+}
+
+module.exports.containerRoutine = function (creep) {
+    // @TODO Self Setup, build and repair routine for if we have energy
+    if (creep.carry.energy > 0) {
+        var container = false;
+        // We have energy, so we should be at our source, is there a container nearby?
+        var objects = creep.room.lookForAt(LOOK_STRUCTURES, creep.pos);
+        if (objects.length > 0) {
+            for (var i in objects) {
+                if (objects[i].structureType == STRUCTURE_CONTAINER) {
+                    var container = objects[i];
+                    break;
+                }
+            }
+        }
+        // If there is a container does it have max hitpoints?
+        if (container) {
+            if (container.hits < container.hitsMax) {
+                creep.repair(target);
+                creep.say(global.sayRepair);
+                return;
+            }
+        } else {
+            // No container, is there a build site?
+            var constructionSite = false;
+            // Get sites
+            var sites = creep.room.lookForAt(LOOK_CONSTRUCTION_SITES, creep.pos);
+            // If there are some
+            if (sites.length > 0) {
+                // Loop through
+                for (var i in sites) {
+                    // If this is a container constructionsite
+                    if (sites[i].structureType == STRUCTURE_CONTAINER) {
+                        // Set constructionSite to it
+                        var constructionSite = sites[i];
+                        break;
+                    }
+                }
+            }
+            // If we found a valid constructionsite
+            if (constructionSite) {
+                // Build it
+                creep.build(constructionSite);
+                creep.say(global.sayBuild);
+                return true;
+            } else {
+                // No constructionsite we should make one!
+                creep.room.createConstructionSite(creep.pos, STRUCTURE_CONTAINER);
+                return;
+            }
+        }
+    }
+}
+
+/**
+ * Road Layer remote Miner sub function
+ */
+module.exports.layRoad = function (creep) {
+    var road = false;
+    var objects = creep.room.lookForAt(LOOK_STRUCTURES, creep.pos);
+    if (objects.length > 0) {
+        for (var i in objects) {
+            if (objects[i].structureType == STRUCTURE_ROAD) {
+                var road = objects[i];
+                break;
+            }
+        }
+    }
+    // No road?
+    if (!road) {
+        // Check for construction site
+        var site = false;
+        // Get sites
+        var sites = creep.room.lookForAt(LOOK_CONSTRUCTION_SITES, creep.pos);
+        // If there are some
+        if (sites.length > 0) {
+            // Loop through
+            for (var i in sites) {
+                // If this is a road site
+                if (sites[i].structureType == STRUCTURE_ROAD) {
+                    // Set site to it
+                    var site = sites[i];
+                    break;
+                }
+            }
+        }
+        // If no site, make a road site
+        if (!site) {
+            creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
+        }
+    }
+    return;
 }
 
 /**

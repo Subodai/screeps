@@ -428,7 +428,27 @@ module.exports.run = function(creep) {
             creep.memory.idle++;
             creep.say('idle: ' + creep.memory.idle);
 
-            if (creep.memory.idle >= 100) {
+            if (creep.memory.idle >= 10) {
+                // Are we in our home room?
+                if (creep.room.roomName != creep.memory.roomName) {
+                    // lets go home
+                    var spawns = Game.rooms[creep.memory.roomName].find(FIND_STRUCTURES, {
+                        filter: (i) => i.structureType == STRUCTURE_SPAWN
+                    });
+                    var spawn = spawns[0];
+                    if (spawn) {
+                        creep.moveTo(spawn, {
+                            visualizePathStyle: {
+                                stroke: global.colourIdle,
+                                opacity: global.pathOpacity
+                            },
+                            reusePath:3
+                        });
+                        creep.say(global.sayMove);
+                    }
+                }
+
+
                 // console.log('Creep idle too long, switching to refiller');
                 // Game.notify(Game.time + ' Harvester Idle too long, switching to refiller');
                 // delete creep.memory.idle;

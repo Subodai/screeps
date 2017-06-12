@@ -57,19 +57,35 @@ module.exports.roster = {
 module.exports.enabled = function (room, debug = false) {
     // return false;
     // Get all reserve flags without an assigned creep
-    var flags = _.filter(Game.flags, function(flag) {
-        var _room = Game.rooms[flag.room.name];
-        // Make sure we match
-        if (flag.color == global.flagColor['reserver'] &&
-            !flag.memory.assignedCreep &&
-            _room.controller.reservation.ticksToEnd < this.expiry*2) {
-            return true;
+    var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['reserve']);
+    // No flags, no spawns
+    if (flags.length == 0) { return false; }
+    // Loop through the flags
+    for (var i in flags) {
+        // Get the flag
+        var _flag = flags[i];
+        // Get the room
+        var _room = Game.rooms[_flag.pos.roomName];
+        // Do we have the room?
+        if (_room) {
+            // Is there a creep in this room?
+            var creeps = _.filter(Game.creeps, (creep) => creep.memory.remoteRoom == _room.name && creep.memory.flagName == _flag.name && !creep.memory.dying);
+            // Make sure we match
+            if (creeps.length == 0 && (_room.controller.reservation == 'undefined' || _room.controller.reservation.ticksToEnd < this.expiry*3)) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            return false;
+            // Has this flag been assigned a creep?
+            if (!_flag.memory.assignedCreep) {
+                return true;
+            } else {
+                // it has a creep we don't need to spawn
+                return false;
+            }
         }
-    });
-    // If we don't have any return a false
-    return (flags.length > 0);
+    }
 }
 
 module.exports.expiry = 50;
@@ -79,17 +95,23 @@ module.exports.run = function (creep, debug = false) {
     // First, have we been assigned a flag?
     if (!creep.memory.flagName) {
         // Lets find a flag without a creep assigned
-        var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['reserve'] && !flag.memory.assignedCreep);
-        // If we found any
-        if (flags.length > 0) {
-            // Get the first one
-            var flag = flags[0];
-            flag.memory.assignedCreep = creep.id;
-            creep.memory.flagName = flag.name;
-            creep.memory.roomName = flag.pos.roomName;
-        } else {
-            console.log('Something went wrong, ' + this.role + ' creep ' + creep.name + ' cannot find a valid flag');
-            return;
+        var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['reserve']);
+        for (var i in flags) {
+            var _flag = flags[i];
+            var _room = Game.rooms[_flag.pos.roomName];
+            if (_room) {
+                // ok we have presence, check for creeps
+                var creeps = _.filter(Game.creeps, (creep) => creep.memory.remoteRoom == _room.name && creep.memory.flagName == _flag.name && !creep.memory.dying)
+                if (creeps.length == 0) {
+                    creep.memory.flagName = _flag.name;
+                    creep.memory.remoteRoom = _flag.pos.roomName;
+                    return;
+                }
+            } else {
+                creep.memory.flagName = _flag.name;
+                creep.memory.remoteRoom = _flag.pos.roomName;
+                return;
+            }
         }
     }
     // Are we spawning? if so, do nothing else
@@ -106,8 +128,6 @@ module.exports.run = function (creep, debug = false) {
     if (ticks <= this.expiry && !creep.memory.dying) {
         // Creep is dying, flag for a replacement
         creep.memory.dying = true;
-        var flag = Game.flags[creep.memory.flagName];
-        delete flag.memory.assignedCreep;
     }
     // Alright, did we already make it to the room with the flag?
     if (!creep.memory.arrived) {
@@ -142,10 +162,52 @@ module.exports.run = function (creep, debug = false) {
                         opacity: global.pathOpacity
                     }
                 });
+                this.layRoad(creep);
+                creep.say(global.sayMove);
             } else {
                 creep.signController(creep.room.controller, 'Room Reserved by Subodai');
                 creep.say('MINE');
             }
         }
     }
+}
+
+/**
+ * Road Layer remote Miner sub function
+ */
+module.exports.layRoad = function (creep) {
+    var road = false;
+    var objects = creep.room.lookForAt(LOOK_STRUCTURES, creep.pos);
+    if (objects.length > 0) {
+        for (var i in objects) {
+            if (objects[i].structureType == STRUCTURE_ROAD) {
+                var road = objects[i];
+                break;
+            }
+        }
+    }
+    // No road?
+    if (!road) {
+        // Check for construction site
+        var site = false;
+        // Get sites
+        var sites = creep.room.lookForAt(LOOK_CONSTRUCTION_SITES, creep.pos);
+        // If there are some
+        if (sites.length > 0) {
+            // Loop through
+            for (var i in sites) {
+                // If this is a road site
+                if (sites[i].structureType == STRUCTURE_ROAD) {
+                    // Set site to it
+                    var site = sites[i];
+                    break;
+                }
+            }
+        }
+        // If no site, make a road site
+        if (!site) {
+            creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
+        }
+    }
+    return;
 }

@@ -43,4 +43,5 @@ module.exports.loop = function () {
     if (Game.cpu.getUsed() > 200) {
         Game.notify(msg);
     }
+    Memory.stats.cpu.used = Game.cpu.getUsed();
 }

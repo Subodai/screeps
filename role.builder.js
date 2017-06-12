@@ -144,8 +144,8 @@ module.exports.run = function(creep) {
             if (spawn) {
                 if (spawn.recycleCreep(creep) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(spawn, {
-                        sualizePathStyle: {
-                            stroke: global.colorRepair,
+                        visualizePathStyle: {
+                            stroke: global.colourRepair,
                             opacity: global.pathOpacity
                         },
                         reusePath:3
