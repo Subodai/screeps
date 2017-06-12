@@ -273,7 +273,7 @@ module.exports.run = function (creep, debug = false) {
 
 module.exports.containerRoutine = function (creep) {
     // @TODO Self Setup, build and repair routine for if we have energy
-    if (creep.carry.energy > 0) {
+    if (creep.carry.energy >= creep.carryCapacity) {
         var container = false;
         // We have energy, so we should be at our source, is there a container nearby?
         var objects = creep.room.lookForAt(LOOK_STRUCTURES, creep.pos);
@@ -288,7 +288,7 @@ module.exports.containerRoutine = function (creep) {
         // If there is a container does it have max hitpoints?
         if (container) {
             if (container.hits < container.hitsMax) {
-                creep.repair(target);
+                creep.repair(container);
                 creep.say(global.sayRepair);
                 return;
             }
