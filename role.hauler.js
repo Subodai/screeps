@@ -7,11 +7,11 @@ module.exports.cost = {
     1 : 300,
     2 : 400,
     3 : 600,
-    4 : 1100,
-    5 : 1100,
-    6 : 1100,
-    7 : 1100,
-    8 : 1100,
+    4 : 1250,
+    5 : 1250,
+    6 : 1250,
+    7 : 1250,
+    8 : 1250,
 }
 
 /* Body parts */
@@ -36,35 +36,35 @@ module.exports.body = {
         CARRY,CARRY,CARRY,CARRY,CARRY,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         CARRY,CARRY,CARRY,CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     5 : [
         WORK,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         CARRY,CARRY,CARRY,CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     6 : [
         WORK,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         CARRY,CARRY,CARRY,CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     7 : [
         WORK,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         CARRY,CARRY,CARRY,CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     8 : [
         WORK,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         CARRY,CARRY,CARRY,CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
 }
 /* Spawn Roster */
@@ -165,11 +165,11 @@ module.exports.run = function(creep) {
     // Are we seeking?
     if (creep.memory.seek) {
         // Are we in the room yet?
-        if (creep.room.roomName != creep.memory.remoteRoom) {
+        if (creep.room.name != creep.memory.remoteRoom) {
             // No get the position of the flag we have in memory and go there
             const _flag = Game.flags[creep.memory.flagName];
             // Lets head to the flag
-            creep.moveTo(flag, {
+            creep.moveTo(_flag, {
                 visualizePathStyle: {
                     stroke: global.colourPickup,
                     opacity: global.pathOpacity
@@ -231,7 +231,7 @@ module.exports.run = function(creep) {
     // Alright now the code for if we're not seeking
     if (!creep.memory.seek) {
         // We need to be heading home are we in our home room yet?
-        if (creep.room.roomName != creep.memory.roomName) {
+        if (creep.room.name != creep.memory.roomName) {
             // We're not in the room yet, we need to seek the room's controller
             const spawns = Game.rooms[creep.memory.roomName].find(FIND_STRUCTURES, {
                 filter: (i) => i.structureType == STRUCTURE_SPAWN
@@ -308,7 +308,7 @@ module.exports.run = function(creep) {
  */
 module.exports.roadRoutine = function (creep) {
     var road = false;
-    const objects = creep.room.lookForAt(LOOK_STRUCTURE, creep.pos);
+    const objects = creep.room.lookForAt(LOOK_STRUCTURES, creep.pos);
     if (objects.length > 0) {
         for (var i in objects) {
             if (objects[i].structureType == STRUCTURE_ROAD) {

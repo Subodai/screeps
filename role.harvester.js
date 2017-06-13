@@ -430,7 +430,7 @@ module.exports.run = function(creep) {
 
             if (creep.memory.idle >= 10) {
                 // Are we in our home room?
-                if (creep.room.roomName != creep.memory.roomName) {
+                if (creep.room.name != creep.memory.roomName) {
                     // lets go home
                     var spawns = Game.rooms[creep.memory.roomName].find(FIND_STRUCTURES, {
                         filter: (i) => i.structureType == STRUCTURE_SPAWN
