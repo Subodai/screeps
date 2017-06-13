@@ -10,7 +10,7 @@ global.roles = [
     'scout',
     'reserve',
     'remoteminer',
-    // 'hauler',
+    'hauler',
     'janitor',
 ];
 

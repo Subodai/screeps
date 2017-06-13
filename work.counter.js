@@ -56,7 +56,7 @@ module.exports.run = function(debug = false) {
 
         msg += ' [' + room + ':' + theRoom.energyAvailable + ']';
     }
-    console.log('Counter used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
+    // console.log('Counter used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
     if (notify) { Game.notify(msg); }
     return msg;
 }
