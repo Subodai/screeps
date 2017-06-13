@@ -126,7 +126,7 @@ module.exports.run = function (creep, debug = false) {
 
     // Okay, health check
     var ticks = creep.ticksToLive;
-    if (ticks <= 150 && !creep.memory.dying) {
+    if (ticks <= 200 && !creep.memory.dying) {
         if (debug) { console.log('Creep[' + creep.name + '] Remote Miner Dying Making sure we spawn a new one'); }
         // set dying to true and set the sourceId to null in room memory
         creep.memory.dying = true;
@@ -271,6 +271,7 @@ module.exports.run = function (creep, debug = false) {
             } else {
                 if (debug) { console.log('Creep[' + creep.name + '] Miner cannot find source!!'); }
                 creep.say('WTF?');
+                creep.suicide();
                 // Game.notify(Game.time + ' Miner Creep unable to assign a source');
             }
         }
