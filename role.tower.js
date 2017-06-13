@@ -107,7 +107,7 @@ module.exports.run = function (tower, debug = false) {
         if (tower.energy >= 400) {
             // Nope okay, lets try a road
             var targets = tower.room.find(FIND_STRUCTURES, {
-                filter: (i) => i.structureType == STRUCTURE_ROAD && i.hits < i.hitsMax
+                filter: (i) => i.structureType == STRUCTURE_ROAD && i.hits < i.hitsMax/2
             });
 
             // So did we find a target?
