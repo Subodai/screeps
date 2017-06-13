@@ -10,6 +10,7 @@ global.roles = [
     'scout',
     'reserve',
     'remoteminer',
+    // 'hauler',
     'janitor',
 ];
 
@@ -39,3 +40,5 @@ global.resourceList = [
     RESOURCE_LEMERGIUM,
     RESOURCE_ENERGY
 ];
+
+global.seedRemoteRoads = false;
