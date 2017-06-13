@@ -30,6 +30,11 @@ module.exports.run = function(debug = false) {
                 if (debug) { console.log('Spawner used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU'); }
                 _spawned = true;
             }
+            // If we spawned Stop other spawns from spawning.. hopefully preventing wastefull spawns
+            // This will slow down reaction times of things, but necessary to stop all the wasteful spawns
+            if (_spawned) {
+                return true;
+            }
         }
     }
 }
