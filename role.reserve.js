@@ -70,7 +70,7 @@ module.exports.enabled = function (room, debug = false) {
         const _room = Game.rooms[_flag.pos.roomName];
         if (_room) {
             // Do we need a creep?
-            if (creeps.length == 0 && (_room.controller.reservation == 'undefined' || _room.controller.reservation.ticksToEnd < this.expiry*3)) {
+            if (creeps.length == 0 && (!_room.controller.reservation || _room.controller.reservation.ticksToEnd < this.expiry*3)) {
                 const spawn = true;
             }
         } else {
