@@ -203,7 +203,7 @@ module.exports.run = function(creep) {
             } else {
                 // lets try a container
                 const container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (i) => i.structureType == STRUCTURE_CONTAINER && structure.store[RESOURCE_ENERGY] >= creep.carryCapacity/2
+                    filter: (i) => i.structureType == STRUCTURE_CONTAINER && i.store[RESOURCE_ENERGY] >= creep.carryCapacity/2
                 });
                 // Did we find one?
                 if (container) {
