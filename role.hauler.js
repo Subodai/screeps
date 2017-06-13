@@ -269,7 +269,7 @@ module.exports.run = function(creep) {
                         // attempt to transfer
                         if (creep.transfer(target, i) == ERR_NOT_IN_RANGE) {
                             // Lets go to it
-                            creep.moveTo(spawn, {
+                            creep.moveTo(target, {
                                 visualizePathStyle: {
                                     stroke: global.colourDropoff,
                                     opacity: global.pathOpacity
