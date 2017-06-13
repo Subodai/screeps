@@ -173,14 +173,20 @@ module.exports.run = function (creep, debug = false) {
             if (debug) { console.log('Creep[' + creep.name + '] Miner without assigned Source, assigning'); }
             // Okay lets get the room memory for assigned sources
             var sourceId = false;
-            var sources = creep.room.find(FIND_SOURCES);
-            var assigned = creep.room.memory.assignedSources;
+            var _room = Game.rooms[creep.memory.remoteRoom];
+            // If we don't have the room, we're not there yet.. remove the arrived flag and return
+            if (!_room) {
+                delete creep.memory.arrived;
+                return;
+            }
+            var sources = _room.find(FIND_SOURCES);
+            var assigned = _room.memory.assignedSources;
             // Can't loop through sources to just to an i = loop to get them
             for (var i=0;i<=sources.length-1;i++) {
                 var source = sources[i];
                 if (assigned[source.id] == null) {
                     sourceId = source.id;
-                    creep.room.memory.assignedSources[sourceId] = creep.id;
+                    _room.memory.assignedSources[sourceId] = creep.id;
                     creep.memory.assignedSource = sourceId;
                     // Make sure we break out so we don't break the next source too
                     break;
