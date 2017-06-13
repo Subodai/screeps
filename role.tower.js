@@ -151,6 +151,7 @@ module.exports.visuals = function (items, room, debug = false) {
             font:0.5,
             align:'left',
             stroke:'rgba(0,0,0,0.5)',
+            opacity:0.6,
         });;
     }
 }
