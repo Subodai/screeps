@@ -57,20 +57,26 @@ module.exports.roster = {
 module.exports.enabled = function (room, debug = false) {
     // return false;
     // Get all reserve flags without an assigned creep
-    var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['reserve']);
+    const flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['reserve']);
     // No flags, no spawns
     if (flags.length == 0) { return false; }
-    var spawn = false;
+    const spawn = false;
     // Loop through the flags
     for (var i in flags) {
         // Get the flag
-        var _flag = flags[i];
+        const _flag = flags[i];
         // Is there a creep with this flag in it's memory?
-        var creeps = _.filter(Game.creeps, (creep) => creep.memory.reserveRoom == _flag.pos.roomName && creep.memory.flagName == _flag.name && !creep.memory.dying);
-        // Do we need a creep?
-        if (creeps.length == 0 && (_room.controller.reservation == 'undefined' || _room.controller.reservation.ticksToEnd < this.expiry*3)) {
-            var spawn = true;
+        const creeps = _.filter(Game.creeps, (creep) => creep.memory.reserveRoom == _flag.pos.roomName && creep.memory.flagName == _flag.name && !creep.memory.dying);
+        const _room = Game.rooms[_flag.pos.roomName];
+        if (_room) {
+            // Do we need a creep?
+            if (creeps.length == 0 && (_room.controller.reservation == 'undefined' || _room.controller.reservation.ticksToEnd < this.expiry*3)) {
+                const spawn = true;
+            }
+        } else {
+            const spawn = true;
         }
+
     }
     return spawn;
 }
