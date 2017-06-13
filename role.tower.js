@@ -143,10 +143,15 @@ module.exports.visuals = function (items, room, debug = false) {
         var _color = '#' + this.tohex(r) + this.tohex(g) + this.tohex(b);
         _room.visual.circle(item.pos, {
             fill: _color,
-            radius:0.45,
+            radius:0.35,
             opacity:0.05,
             stroke:_color
-        });
+        }).text(percent + '%', item.pos, {
+            color:_color,
+            font:0.5,
+            align:'left',
+            stroke:'rgba(0,0,0,0.5)',
+        });;
     }
 }
 

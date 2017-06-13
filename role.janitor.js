@@ -106,7 +106,12 @@ module.exports.visuals = function (items, room, debug = false) {
             radius:0.35,
             opacity:0.05,
             stroke:_color
-        });
+        }).text(percent + '%', item.pos, {
+            color:_color,
+            font:0.5,
+            align:'left',
+            stroke:'rgba(0,0,0,0.5)',
+        });;
     }
 }
 

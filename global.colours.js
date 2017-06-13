@@ -42,3 +42,19 @@ global.flagSecondaryColor = {
     'BROWN': COLOR_BROWN,
     'GREY': COLOR_GREY,
 }
+
+global.roleColour = {
+    'guard':       '#cc0000',
+    'miner':       '#996600',
+    'harvester':   '#ffff00',
+    'upgrader':    '#009900',
+    'builder':     '#99ccff',
+    'mover':       '#FFFFFF',
+    'extractor':   '#663300',
+    'supergrader': '#ff6600',
+    'scout':       '#FFFFFF',
+    'reserve':     '#660066',
+    'remoteminer': '#ff66ff',
+    'hauler':      '#006600',
+    'janitor':     '#006699',
+}
