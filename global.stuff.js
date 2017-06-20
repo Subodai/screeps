@@ -4,7 +4,7 @@ global.roles = [
     'harvester',
     'upgrader',
     'builder',
-    'mover',
+    // 'mover',
     'extractor',
     'supergrader',
     'scout',
@@ -30,7 +30,7 @@ global.settings = {
     emptyContainers: false,
 }
 
-global.rampartMax = 30000;
+global.rampartMax = 10000;
 global.wallMax = 30000;
 global.towerRepair = false;
 

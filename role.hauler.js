@@ -94,7 +94,7 @@ module.exports.enabled = function (room, debug = false) {
         if (_room) {
             // How many sources are in the room, we only need 1 per source
             const sources = _room.find(FIND_SOURCES);
-            const req = sources.length*2;
+            const req = sources.length;
             const list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.remoteRoom == _flag.pos.roomName && !creep.memory.dying);
             const got = list.length;
             if (got < req) { return true; }
@@ -127,7 +127,7 @@ module.exports.run = function(creep) {
             // Do we have the room?
             if (_room) {
                 const sources = _room.find(FIND_SOURCES);
-                const req = sources.length*2;
+                const req = sources.length;
                 const list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.remoteRoom == _flag.pos.roomName && !creep.memory.dying);
                 const got = list.length;
                 if (got < req) {

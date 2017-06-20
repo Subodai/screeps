@@ -134,7 +134,7 @@ module.exports.run = function (creep, debug = false) {
                     }
                 });
             } else {
-                creep.signController(creep.room.controller, 'Room Claimed by Subodai');
+                creep.signController(creep.room.controller, 'Room Claimed by Subodai - [Ypsilon Pact]');
                 creep.say('MINE');
                 creep.memory.role = 'upgrader';
             }

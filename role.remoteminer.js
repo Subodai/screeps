@@ -63,8 +63,12 @@ module.exports.enabled = function (room, debug = false) {
                 }
             }
         } else {
-            // We have no knowledge of this room, which means we probably need creeps for it
-            return true;
+            var list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.remoteRoom == _flag.pos.roomName && !creep.memory.dying);
+            // If we have less than is necessary, we should spawn a new one
+            if (list.length < 2) {
+                // Return true
+                return true;
+            }
         }
     }
     // No need for any remote Miners as yet

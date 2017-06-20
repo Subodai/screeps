@@ -60,7 +60,7 @@ module.exports.enabled = function (room, debug = false) {
     const flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['reserve']);
     // No flags, no spawns
     if (flags.length == 0) { return false; }
-    const spawn = false;
+    var spawn = false;
     // Loop through the flags
     for (var i in flags) {
         // Get the flag
@@ -70,15 +70,30 @@ module.exports.enabled = function (room, debug = false) {
         const _room = Game.rooms[_flag.pos.roomName];
         if (_room) {
             // Do we need a creep?
-            if (creeps.length == 0 && (!_room.controller.reservation || _room.controller.reservation.ticksToEnd < this.expiry*3)) {
-                const spawn = true;
+            // Does it have a reservation
+            if (_room.controller.reservation) {
+                if (_room.controller.ticksToEnd) {
+                    if (_room.controller.ticksToEnd < this.expiry*3) {
+                       var spawn = true;
+                    } else {
+                        var spawn = false;
+                    }
+                } else {
+                    var spawn = true;
+                }
+            } else {
+                var spawn = true;
             }
         } else {
-            const spawn = true;
+            var spawn = true;
+        }
+
+        if (spawn && creeps.length == 0) {
+            return true;
         }
 
     }
-    return spawn;
+    return false;
 }
 
 module.exports.expiry = 50;
@@ -158,7 +173,7 @@ module.exports.run = function (creep, debug = false) {
                 this.layRoad(creep);
                 creep.say(global.sayMove);
             } else {
-                creep.signController(creep.room.controller, 'Room Reserved by Subodai');
+                creep.signController(creep.room.controller, 'Room Reserved by Subodai - [Ypsilon Pact]');
                 creep.say('MINE');
             }
         }

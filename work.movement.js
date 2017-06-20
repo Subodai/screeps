@@ -16,14 +16,17 @@ module.exports.run = function(debug = false) {
         var _role = require('role.' + role);
         // Now for each of the creeps
         for(var name in Game.creeps) {
+            const a = Game.cpu.getUsed();
             // Make a creep
             var creep = Game.creeps[name];
             // If this creep's role is the one we are checking
             if(creep.memory.role == _role.role) {
                 // Run it
                 _role.run(creep);
-                this.colour(creep);
+                const cost = Game.cpu.getUsed() - a;
+                this.colour(creep, cost);
             }
+
         }
         if (debug) {
             console.log(role + ' Move used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU');
@@ -31,13 +34,13 @@ module.exports.run = function(debug = false) {
     }
 }
 
-module.exports.colour = function (creep) {
+module.exports.colour = function (creep, cost) {
     creep.room.visual.circle(creep.pos, {
         fill: global.roleColour[creep.memory.role],
         radius: 0.4,
         opacity: 0.1,
         stroke: global.roleColour[creep.memory.role],
-    }).text("<---== " + creep.memory.role, creep.pos, {
+    }).text("<--= " + creep.memory.role + ' ' + cost.toFixed(2), creep.pos, {
         color:global.roleColour[creep.memory.role],
         font:0.5,
         align:'left',

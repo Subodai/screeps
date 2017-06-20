@@ -41,7 +41,8 @@ module.exports.loop = function () {
     msg += ' {' + Game.cpu.getUsed().toFixed(3) + '}';
     console.log(msg);
     if (Game.cpu.getUsed() > 200) {
-        Game.notify(msg);
+        // This isn't required anymore
+        // Game.notify(msg);
     }
     Memory.stats.cpu.used = Game.cpu.getUsed();
 }
