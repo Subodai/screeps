@@ -4,20 +4,30 @@ var towerRunner = require('role.tower');
  */
 module.exports.run = function (debug = false) {
     // Loop through all spawns
-    for (var spawn in Game.spawns) {
-        // Make spawn object
-        var _spawn = Game.spawns[spawn];
+    for (const i in Game.rooms) {
+        const _room = Game.rooms[i];
         // Find our towers
-        var towers = _spawn.room.find(FIND_MY_STRUCTURES, {
+        const towers = _room.find(FIND_MY_STRUCTURES, {
             filter: (i) => i.structureType == STRUCTURE_TOWER && i.energy > 0
         });
         // Do we even have any?
         if(towers.length > 0) {
             // Loop through them all
-            for (var i=0;i<=towers.length-1;i++) {
-                var tower = towers[i];
+            for (let i in towers) {
+                const a = Game.cpu.getUsed();
+                const tower = towers[i];
                 towerRunner.run(tower, debug);
+                const cost = Game.cpu.getUsed() - a;
+                this.colour(tower,cost);
             }
         }
     }
+}
+module.exports.colour = function (tower, cost) {
+    tower.room.visual.text(tower.energy + ' : ' + cost.toFixed(2), tower.pos, {
+        color:'#ffffff',
+        font:0.5,
+        align:'center',
+        stroke:'rgba(0,0,0,0.5)',
+    });
 }

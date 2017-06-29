@@ -79,6 +79,8 @@ module.exports.roster = {
     8: 2,
 }
 
+module.exports.multiplier = 1;
+
 module.exports.enabled = function (room, debug = false) {
     // Get the flags
     var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['remote']);
@@ -94,7 +96,7 @@ module.exports.enabled = function (room, debug = false) {
         if (_room) {
             // How many sources are in the room, we only need 1 per source
             const sources = _room.find(FIND_SOURCES);
-            const req = sources.length;
+            const req = sources.length*this.multiplier;
             const list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.remoteRoom == _flag.pos.roomName && !creep.memory.dying);
             const got = list.length;
             if (got < req) { return true; }
@@ -127,7 +129,7 @@ module.exports.run = function(creep) {
             // Do we have the room?
             if (_room) {
                 const sources = _room.find(FIND_SOURCES);
-                const req = sources.length;
+                const req = sources.length*this.multiplier;
                 const list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.remoteRoom == _flag.pos.roomName && !creep.memory.dying);
                 const got = list.length;
                 if (got < req) {

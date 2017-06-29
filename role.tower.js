@@ -4,9 +4,7 @@
 module.exports.run = function (tower, debug = false) {
 
     // If we have less than 10 energy, just don't bother
-    if (tower.energy < 10) {
-        return;
-    }
+    if (tower.energy < 10) { return; }
 
     // First let's check for hostiles as they are the priority
     var hostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
@@ -25,6 +23,17 @@ module.exports.run = function (tower, debug = false) {
         // Don't do anything else
         return;
     }
+
+    // Check for any injured creeps
+    const injured = tower.pos.findClosestByRange(FIND_MY_CREEPS, {
+        filter: (i) => i.hits < i.hitsMax
+    });
+
+    if (injured) {
+        tower.heal(injured);
+        return;
+    }
+
     if (global.towerRepair == true) {
         // Always ensure that 1 hit ramparts get a quick zap
         if (tower.energy >= 100) {

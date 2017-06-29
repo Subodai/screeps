@@ -29,7 +29,7 @@ module.exports.loop = function () {
         extractor.setup();
     }
     // Only need these once every 5 ticks
-    if (Game.time % 5 == 0) {
+    if (Game.time % 10 == 0) {
         // Setup rooms before we run the spawner
         counter.setupRoomRoles(debug);
         msg += counter.run(debug);

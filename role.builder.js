@@ -59,8 +59,8 @@ module.exports.body = {
 module.exports.roster = {
     1: 3,
     2: 3,
-    3: 2,
-    4: 2,
+    3: 3,
+    4: 3,
     5: 1,
     6: 1,
     7: 1,
@@ -131,6 +131,7 @@ module.exports.run = function(creep) {
                 creep.say('MAKE');
             }
         } else {
+            creep.memory.role = 'janitor';
             // No targets.. head back to the room spawn
             var spawn = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (i) => i.structureType == STRUCTURE_SPAWN
@@ -221,7 +222,16 @@ module.exports.run = function(creep) {
             return;
         }
 
-        var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+        var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
+            filter: function (i) {
+                if (i.energy > 0 || i.ticksToRegeneration < 10) {
+                    const space = global.getSpaceAtSource(i,creep);
+                    return space;
+                } else {
+                    return false;
+                }
+            }
+        });
         if (source) {
             // Can we harvest this?
             if (creep.harvest(source) == ERR_NOT_IN_RANGE) {

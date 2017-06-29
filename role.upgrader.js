@@ -64,13 +64,13 @@ module.exports.body = {
 /* Spawn Roster */
 module.exports.roster = {
     1: 2,
-    2: 2,
+    2: 4,
     3: 2,
     4: 3,
     5: 3,
     6: 3,
-    7: 3,
-    8: 3,
+    7: 2,
+    8: 1,
 }
 module.exports.enabled = function (room, debug = false) {
     var _room = Game.rooms[room];
@@ -103,12 +103,12 @@ module.exports.run = function(creep) {
         creep.memory.dying = true;
     }
 
-    if (creep.room.memory.emergency) {
-        delete creep.memory.upgrading;
-        delete creep.memory.idle;
-        creep.memory.role = 'harvester';
-        return
-    }
+    // if (creep.room.memory.emergency) {
+    //     delete creep.memory.upgrading;
+    //     delete creep.memory.idle;
+    //     creep.memory.role = 'harvester';
+    //     return
+    // }
 
     if(creep.memory.upgrading && creep.carry.energy == 0) {
         creep.memory.upgrading = false;
@@ -176,7 +176,16 @@ module.exports.run = function(creep) {
             return;
         }
 
-        var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+        var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
+            filter: function (i) {
+                if (i.energy > 0 || i.ticksToRegeneration < 10) {
+                    const space = global.getSpaceAtSource(i,creep);
+                    return space;
+                } else {
+                    return false;
+                }
+            }
+        });
         if (source) {
             // Can we harvest this?
             if (creep.harvest(source) == ERR_NOT_IN_RANGE) {

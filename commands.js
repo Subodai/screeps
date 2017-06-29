@@ -18,3 +18,8 @@ costs = [
     7: 300 + (50 * 100), // 5300
     8: 300 + (60 * 200), // 12300
 ]
+
+console.log(Game.cpu.getUsed());
+let test=require('test'); // include a module of yours of non-trivial size.
+console.log(Game.cpu.getUsed());
+delete test;

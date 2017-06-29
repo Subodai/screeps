@@ -5,7 +5,7 @@ module.exports.sType = 'normal';
 /* Costs */
 module.exports.cost = {
     1 : 300,
-    2 : 300,
+    2 : 400,
     3 : 500,
     4 : 1000,
     5 : 1000,
@@ -22,8 +22,9 @@ module.exports.body = {
         MOVE,MOVE
     ],
     2 : [
+        WORK,
         CARRY,CARRY,CARRY,
-        MOVE,MOVE,MOVE
+        MOVE,MOVE,MOVE,MOVE
     ],
     3 : [
         CARRY,CARRY,CARRY,CARRY,CARRY,
@@ -62,12 +63,12 @@ module.exports.body = {
 }
 /* Spawn Roster */
 module.exports.roster = {
-    1: 3,
+    1: 2,
     2: 3,
     3: 3,
     4: 3,
     5: 2,
-    6: 2,
+    6: 3,
     7: 3,
     8: 3,
 }
@@ -114,8 +115,82 @@ module.exports.run = function(creep) {
 
     // If we're not delivering, check if we can harvest, if not and we have half energy, go and deliver
     if (!creep.memory.delivering) {
+        var resource = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
+            filter: (resource) => resource.amount >= creep.carryCapacity
+        });
+        if (resource) {
+            creep.memory.idle = 0;
+            if (creep.pickup(resource) == ERR_NOT_IN_RANGE) {
+                if (_.sum(creep.carry) <= (creep.carryCapacity/2)) {
+                    creep.moveTo(resource,{
+                        visualizePathStyle: {
+                            stroke: global.colourResPickup,
+                            opacity: global.pathOpacity
+                        },
+                        reusePath:3
+                    });
+                    creep.say('>>');
+                } else {
+                    creep.memory.delivering = true;
+                }
+            } else {
+                creep.say('^^');
+            }
+            return;
+        }
+
+        // Prioritise non-standard resources
+        var container = false;
+        if (!resource) {
+            // Loop through a preset list of resources
+            for (var i in global.resourceList) {
+                // Grab the item from the list
+                var _resource = global.resourceList[i];
+                // If we haven't got a container yet
+                if(!container) {
+                    // Try to find one
+                    var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                        filter: (structure) => structure.structureType == STRUCTURE_CONTAINER && structure.store[_resource] >= creep.carryCapacity/10
+                    });
+                    // Set the pickup to be this resource for later
+                    var pickup = _resource;
+                }
+            }
+        }
+        // Did we find a container?
+        if (container) {
+            // Can we withdraw right now?
+            if (creep.withdraw(container, pickup) == ERR_NOT_IN_RANGE) {
+                // Reset idle state
+                creep.memory.idle = 0;
+                // No do we have half our energy?
+                if (_.sum(creep.carry) <= (creep.carryCapacity/2)) {
+                    // No lets move to the source we want
+                    creep.moveTo(container, {
+                        visualizePathStyle: {
+                            stroke: global.colourPickup,
+                            opacity: global.pathOpacity
+                        },
+                        reusePath:5
+                    });
+                } else {
+                    // We're full enough, let's switch to deliver mode
+                    creep.memory.delivering = true;
+                    // SAY!
+                    creep.say('PUT');
+                }
+            } else {
+                // Say pickup
+                creep.say('^^');
+            }
+            // We did a thing, return out the loop
+            return;
+        }
+
+        var box = false;
+
         // If we're in emergency mode, we need to start emptying the storage buffers
-        if (creep.room.memory.emergency) {
+        if (!resource && !container && (creep.room.memory.emergency || creep.room.memory.war)) {
             // console.log('Emergency Mode, Empty Storage');
             creep.memory.idle = 0;
             // We are in emergency mode, get energy from terminal first, then storage
@@ -150,89 +225,31 @@ module.exports.run = function(creep) {
             }
         }
 
-        var resource = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
-            filter: (resource) => resource.amount >= creep.carryCapacity
-        });
-        if (resource) {
-            creep.memory.idle = 0;
-            if (creep.pickup(resource) == ERR_NOT_IN_RANGE) {
-                if (_.sum(creep.carry) <= (creep.carryCapacity/2)) {
-                    creep.moveTo(resource,{
-                        visualizePathStyle: {
-                            stroke: global.colourResPickup,
-                            opacity: global.pathOpacity
-                        },
-                        reusePath:3
-                    });
-                    creep.say('>>');
-                } else {
-                    creep.memory.delivering = true;
-                }
-            } else {
-                creep.say('^^');
-            }
-            return;
-        }
-
-        // Prioritise non-standard resources
-        var container = false;
-        // Loop through a preset list of resources
-        for (var i in global.resourceList) {
-            // Grab the item from the list
-            var _resource = global.resourceList[i];
-            // If we haven't got a container yet
-            if(!container) {
-                // Try to find one
-                var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (structure) => structure.structureType == STRUCTURE_CONTAINER && structure.store[_resource] >= creep.carryCapacity/10
-                });
-                // Set the pickup to be this resource for later
-                var pickup = _resource;
-            }
-        }
-        // Did we find a container?
-        if (container) {
-            // Can we withdraw right now?
-            if (creep.withdraw(container, pickup) == ERR_NOT_IN_RANGE) {
-                // Reset idle state
-                creep.memory.idle = 0;
-                // No do we have half our energy?
-                if (_.sum(creep.carry) <= (creep.carryCapacity/2)) {
-                    // No lets move to the source we want
-                    creep.moveTo(container, {
-                        visualizePathStyle: {
-                            stroke: global.colourPickup,
-                            opacity: global.pathOpacity
-                        },
-                        reusePath:5
-                    });
-                } else {
-                    // We're full enough, let's switch to deliver mode
-                    creep.memory.delivering = true;
-                    // SAY!
-                    creep.say('PUT');
-                }
-            } else {
-                // Say pickup
-                creep.say('^^');
-            }
-            // We did a thing, return out the loop
-            return;
-        }
-
         var hasWork = false;
-        for (var part in creep.body) {
+        if (!box) {
+            for (var part in creep.body) {
 
-            if (creep.body[part].type == WORK) {
-                hasWork = true;
-                break;
+                if (creep.body[part].type == WORK) {
+                    hasWork = true;
+                    break;
+                }
             }
         }
+
         // Can we work?
         if (hasWork) {
 
             // If we got here, we didn't find a suitable container, are there any active sources?
-            var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+            var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
+                filter: function (i) {
+                    if (i.energy > 0 || i.ticksToRegeneration < 10) {
+                        const space = global.getSpaceAtSource(i,creep);
+                        return space;
+                    } else {
+                        return false;
+                    }
+                }
+            });
             // Did we find a source?
             if (source) {
                 // Can we harvest this?
@@ -255,8 +272,8 @@ module.exports.run = function(creep) {
                         creep.memory.delivering = true;
                     }
                 }
+                return;
             }
-            return;
         }
     }
 
@@ -366,7 +383,11 @@ module.exports.run = function(creep) {
                         var target = storage;
                     }
                 } else {
-                    var target = storage;
+                    if (creep.carry.energy > 0) {
+                        var target = storage;
+                    } else {
+                        var target = terminal;
+                    }
                 }
             } else {
                 // Do we have energy?
