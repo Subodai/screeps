@@ -16,14 +16,14 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
         }
         // Get dropped resources in the room
         var resources = this.room.find(FIND_DROPPED_RESOURCES, {
-            filter: (i) => i.resourceType == RESOURCE_ENERGY && i.amount > this.carryCapacity
+            filter: (i) => i.resourceType == RESOURCE_ENERGY && i.amount > (this.carryCapacity - _.sum(this.carry))
         });
         // Get Containers in the room
         var containers = this.room.find(FIND_STRUCTURES, {
-            filter: (i) => i.structureType == STRUCTURE_CONTAINER && i.store[RESOURCE_ENERGY] > this.carryCapacity
+            filter: (i) => i.structureType == STRUCTURE_CONTAINER && i.store[RESOURCE_ENERGY] > (this.carryCapacity - _.sum(this.carry))
         });
         // False some things
-        let resource = container = false;
+        var resource = container = false;
         // If we have resources
         if (resources.length > 0) {
             // Sort the resources
@@ -31,7 +31,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
                 return this.pos.getRangeTo(a) - this.pos.getRangeTo(b);
             });
             // Now get the nearest one
-            let resource = resources[i];
+            var resource = resources[i];
         }
         // if we have containers
         if (containers.length > 0) {
@@ -39,7 +39,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
             containers.sort(function(a,b) {
                 return this.pos.getRangeTo(a) - this.pos.getRangeTo(b);
             });
-            let container = containers[i];
+            var container = containers[i];
         }
         // If we have both we need to pick the closest one
         if (resource && container) {
@@ -60,7 +60,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
         // We do! let's grab it
         const target = Game.getObjectById(this.memory.energyPickup);
         if (options == {}) {
-            let options = {
+            var options = {
                 visualizePathStyle: {
                     stroke: global.colourPickupRes,
                     opacity: global.pathOpacity
