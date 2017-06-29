@@ -4,7 +4,7 @@
  */
 Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false, options = {}) {
     // First, are we full?
-    if (this.carry.energy == this.carryCapacity) {
+    if (_.sum(this.carry) == this.carryCapacity) {
         // Clear our pickup target
         delete this.memory.energyPickup;
         return ERR_FULL;
