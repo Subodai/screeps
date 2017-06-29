@@ -11,6 +11,14 @@ module.exports.run = function(spawn, role, debug = false) {
     } else {
         var _level = _room.controller.level;
     }
+
+    // If we don't have enough energy for this level of creep, we've likely recently levelled up the controller, so try to spawn the previous level
+    while (_room.energyCapacityAvailable < _role.cost[_level]) {
+        // reduce the level
+        _level--;
+        console.log('Reducing creep level  to ' + _level + ' as not enough capacity yet');
+    }
+    
     // CONTINUE FROM HERE
     if (debug) { console.log('Running ' + role + ' spawner'); }
     if (debug) { console.log('Checking for viable ' + role + ' Creep Spawns in ' + _spawn.room); }

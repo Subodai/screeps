@@ -159,7 +159,7 @@ module.exports.run = function(creep) {
     else {
 
         var resource = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
-            filter: (i) => i.resourceType == RESOURCE_ENERGY
+            filter: (i) => i.resourceType == RESOURCE_ENERGY && i.amount > creep.carryCapacity
         });
 
         if (resource) {

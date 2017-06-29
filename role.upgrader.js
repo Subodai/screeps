@@ -64,8 +64,8 @@ module.exports.body = {
 /* Spawn Roster */
 module.exports.roster = {
     1: 2,
-    2: 4,
-    3: 2,
+    2: 6,
+    3: 6,
     4: 3,
     5: 3,
     6: 3,
