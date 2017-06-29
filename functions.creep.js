@@ -24,22 +24,23 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
         });
         // False some things
         var resource = container = false;
+        var thisCreep = this;
         // If we have resources
         if (resources.length > 0) {
             // Sort the resources
             resources.sort(function(a,b) {
-                return this.pos.getRangeTo(a) - this.pos.getRangeTo(b);
+                return thisCreep.pos.getRangeTo(a) - thisCreep.pos.getRangeTo(b);
             });
             // Now get the nearest one
-            var resource = resources[i];
+            var resource = resources[0];
         }
         // if we have containers
         if (containers.length > 0) {
             // Sort the containers
             containers.sort(function(a,b) {
-                return this.pos.getRangeTo(a) - this.pos.getRangeTo(b);
+                return thisCreep.pos.getRangeTo(a) - thisCreep.pos.getRangeTo(b);
             });
-            var container = containers[i];
+            var container = containers[0];
         }
         // If we have both we need to pick the closest one
         if (resource && container) {
