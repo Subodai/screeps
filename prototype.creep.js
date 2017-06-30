@@ -249,21 +249,21 @@ Creep.prototype.findSpaceAtSource = function (source) {
     }
     var spaces = 0;
     const n  = new RoomPosition(source.pos.x,   source.pos.y-1, source.pos.roomName);
-    if (this.checkEmptyCoord(n,  this)) { spaces++; }
+    if (this.checkEmptyAtPos(n,  this)) { spaces++; }
     const ne = new RoomPosition(source.pos.x+1, source.pos.y-1, source.pos.roomName);
-    if (this.checkEmptyCoord(ne, this)) { spaces++; }
+    if (this.checkEmptyAtPos(ne, this)) { spaces++; }
     const e  = new RoomPosition(source.pos.x+1, source.pos.y,   source.pos.roomName);
-    if (this.checkEmptyCoord(e,  this)) { spaces++; }
+    if (this.checkEmptyAtPos(e,  this)) { spaces++; }
     const se = new RoomPosition(source.pos.x+1, source.pos.y+1, source.pos.roomName);
-    if (this.checkEmptyCoord(se, this)) { spaces++; }
+    if (this.checkEmptyAtPos(se, this)) { spaces++; }
     const s  = new RoomPosition(source.pos.x,   source.pos.y+1, source.pos.roomName);
-    if (this.checkEmptyCoord(s,  this)) { spaces++; }
+    if (this.checkEmptyAtPos(s,  this)) { spaces++; }
     const sw = new RoomPosition(source.pos.x-1, source.pos.y+1, source.pos.roomName);
-    if (this.checkEmptyCoord(sw, this)) { spaces++; }
+    if (this.checkEmptyAtPos(sw, this)) { spaces++; }
     const w  = new RoomPosition(source.pos.x-1, source.pos.y,   source.pos.roomName);
-    if (this.checkEmptyCoord(w,  this)) { spaces++; }
+    if (this.checkEmptyAtPos(w,  this)) { spaces++; }
     const nw = new RoomPosition(source.pos.x-1, source.pos.y-1, source.pos.roomName);
-    if (this.checkEmptyCoord(nw, this)) { spaces++; }
+    if (this.checkEmptyAtPos(nw, this)) { spaces++; }
     // Set our memory
     source.memory.lastSpaceCheck = Game.time;
     source.memory.spaces = spaces;
@@ -278,7 +278,7 @@ Creep.prototype.findSpaceAtSource = function (source) {
     }
 }
 
-Creep.prototype.checkEmptyAt = function (pos) {
+Creep.prototype.checkEmptyAtPos = function (pos) {
     const terrain = Game.map.getTerrainAt(pos);
     if (terrain == 'wall') {
         return false;
