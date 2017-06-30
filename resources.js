@@ -69,6 +69,7 @@ function summarize_room_internal(room) {
     const controller_level = room.controller.level;
     const controller_progress = room.controller.progress;
     const controller_needed = room.controller.progressTotal;
+    const controller_required = controller_needed - controller_progress;
     const controller_downgrade = room.controller.ticksToDowngrade;
     const controller_blocked = room.controller.upgradeBlocked;
     const controller_safemode = room.controller.safeMode ? room.controller.safeMode : 0;
@@ -159,6 +160,7 @@ function summarize_room_internal(room) {
         controller_level,
         controller_progress,
         controller_needed,
+        controller_required,
         controller_downgrade,
         controller_blocked,
         controller_safemode,
