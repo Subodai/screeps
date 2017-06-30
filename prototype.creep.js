@@ -88,7 +88,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
     }
     // Do we have a target?
     if (this.memory.energyPickup) {
-        DBG && console.log('Found Energy source in creeps memeory ' + this.memory.energyPickup);
+        DBG && console.log('Found Energy source in creeps memory ' + this.memory.energyPickup);
         // We do! let's grab it
         const target = Game.getObjectById(this.memory.energyPickup);
         if (options == {}) {
