@@ -76,7 +76,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
                 const source = this.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
                     filter: function (i) {
                         if (i.energy > 0 || i.ticksToRegeneration < 10) {
-                            const space = this.findSpaceAtSource(i);
+                            const space = thisCreep.findSpaceAtSource(i);
                             return space;
                         } else {
                             return false;
