@@ -69,6 +69,22 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
             DGB && console.log('Stored container ' + container.id + ' in creep memory');
             this.memory.energyPickup = container.id;
         }
+        // Nothing found? lets try finding available sources
+        if (!this.memory.energyPickup) {
+            // Can this creep work?
+            if (this.canWork()) {
+                const source = this.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
+                    filter: function (i) {
+                        if (i.energy > 0 || i.ticksToRegeneration < 10) {
+                            const space = this.findSpaceAtSource(i);
+                            return space;
+                        } else {
+                            return false;
+                        }
+                    }
+                })
+            }
+        }
     }
     // Do we have a target?
     if (this.memory.energyPickup) {
@@ -169,12 +185,14 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
             this.moveTo(target, options);
             // Say!
             this.say(global.sayMove);
+            return OK;
         }
     }
 }
 
 
 Creep.prototype.deliverEnergy = function () {
+    DGB && console.log('Creep attempting to delivery energy');
     // First of all are we empty?
     if (_.sum(creep.carry) == 0) {
         delete this.memory.deliveryTarget;
@@ -183,5 +201,96 @@ Creep.prototype.deliverEnergy = function () {
 
     if (creep.carry.energy == 0) {
 
+    }
+}
+
+/**
+ * Check if a creep can work and store it in it's memory
+ */
+Creep.prototype.canWork = function () {
+    // Has this creep already been flagged as a worker? and at full health (if it's been hit we should check it's parts again)
+    if (!this.memory.canWork && this.hits == this.hitsMax) {
+        // If we got hit, clear the memory
+        if (this.hits != this.hitsMax) { delete this.memory.canWork; }
+        // Check the body parts
+        for (const i in this.body) {
+            // Is this a work part?
+            if (this.body[i].type == WORK && this.body[i].hits > 0) {
+                // YES set flag and break
+                this.memory.canWork = 'yes';
+                break;
+            }
+        }
+        // Is it set at this point?
+        if (!this.memory.canWork) {
+            // Set it to no
+            this.memory.canWork = 'no';
+        }
+    }
+    // Can this creep work?
+    return this.memory.canWork == 'yes';
+}
+
+
+Creep.prototype.findSpaceAtSource = function (source) {
+    // Make sure to initialise the source's last check memory
+    if (!source.memory.lastSpaceCheck) {
+        source.memory.lastSpaceCheck = 0;
+    }
+    // If we checked the space this tick and there's no space left, we don't need to check again we just need to decrement the spaces
+    if (source.memory.lastSpaceCheck == Game.time) {
+        if (source.memory.spaces == 0) {
+            return false
+        } else {
+            // Decrement the spaces left
+            source.memory.spaces = source.memory.spaces -1;
+            return true;
+        }
+    }
+    var spaces = 0;
+    const n  = new RoomPosition(source.pos.x,   source.pos.y-1, source.pos.roomName);
+    if (this.checkEmptyCoord(n,  this)) { spaces++; }
+    const ne = new RoomPosition(source.pos.x+1, source.pos.y-1, source.pos.roomName);
+    if (this.checkEmptyCoord(ne, this)) { spaces++; }
+    const e  = new RoomPosition(source.pos.x+1, source.pos.y,   source.pos.roomName);
+    if (this.checkEmptyCoord(e,  this)) { spaces++; }
+    const se = new RoomPosition(source.pos.x+1, source.pos.y+1, source.pos.roomName);
+    if (this.checkEmptyCoord(se, this)) { spaces++; }
+    const s  = new RoomPosition(source.pos.x,   source.pos.y+1, source.pos.roomName);
+    if (this.checkEmptyCoord(s,  this)) { spaces++; }
+    const sw = new RoomPosition(source.pos.x-1, source.pos.y+1, source.pos.roomName);
+    if (this.checkEmptyCoord(sw, this)) { spaces++; }
+    const w  = new RoomPosition(source.pos.x-1, source.pos.y,   source.pos.roomName);
+    if (this.checkEmptyCoord(w,  this)) { spaces++; }
+    const nw = new RoomPosition(source.pos.x-1, source.pos.y-1, source.pos.roomName);
+    if (this.checkEmptyCoord(nw, this)) { spaces++; }
+    // Set our memory
+    source.memory.lastSpaceCheck = Game.time;
+    source.memory.spaces = spaces;
+    // If it's 0 there's no space
+    if (source.memory.spaces == 0) {
+        return false;
+    } else {
+        // If it's not 0, there is a space, lets take one off our count and return true
+        // Decrement the spaces left
+        source.memory.spaces = source.memory.spaces -1;
+        return true;
+    }
+}
+
+Creep.prototype.checkEmptyAt = function (pos) {
+    const terrain = Game.map.getTerrainAt(pos);
+    if (terrain == 'wall') {
+        return false;
+    } else {
+        let creeps = pos.lookFor(LOOK_CREEPS);
+        if (creeps.length == 0) {
+            return true;
+        } else {
+            // is this, the creep we're trying to find a space for
+            if (creeps[0] == this) {
+                return true;
+            }
+        }
     }
 }
