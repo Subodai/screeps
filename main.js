@@ -4,6 +4,18 @@ require('global.colours'); // Colours various variables
 require('global.speech');  // Colours various variables
 require('global.friends'); // The global friend list
 
+// Get the prototypes
+var protoypes = [
+    require('prototype.structures'),
+    require('prototype.sources'),
+    require('prototype.creep'),
+];
+// var i = protoypes.length;
+// while(i--) {
+//     protoypes[i]();
+// }
+
+
 var spawner   = require('work.spawn');
 var movement  = require('work.movement');
 var cleaner   = require('work.cleaner');
