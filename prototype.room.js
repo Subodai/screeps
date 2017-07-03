@@ -159,7 +159,7 @@ Room.prototype.clearWalls = function() {
 }
 
 Room.prototype.toggleNotifications = function() {
-    return (!this.memory.notifications) ? this.memory.enableNotifications() : this.memory.disableNotifications();
+    return (!this.memory.notifications) ? this.enableNotifications() : this.disableNotifications();
 }
 
 /**
