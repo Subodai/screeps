@@ -9,7 +9,7 @@ module.exports.cost = {
     1 : 0,
     2 : 0,
     3 : 0,
-    4 : 0,
+    4 : 700,
     5 : 1400,
     6 : 1400,
     7 : 1400,
@@ -20,7 +20,10 @@ module.exports.body = {
     1 : [],
     2 : [],
     3 : [],
-    4 : [],
+    4 : [
+        MOVE,MOVE,      // 2 MOVE = 100
+        CLAIM     // 2 CLAIM = 1200
+    ],
     5 : [
         MOVE,MOVE,      // 2 MOVE = 100
         CLAIM,CLAIM,    // 2 CLAIM = 1200
@@ -47,11 +50,11 @@ module.exports.roster = {
     1: 0,
     2: 0,
     3: 0,
-    4: 0,
-    5: 1,
-    6: 1,
-    7: 1,
-    8: 1,
+    4: 4,
+    5: 4,
+    6: 4,
+    7: 4,
+    8: 4,
 }
 
 module.exports.enabled = function (room, debug = false) {

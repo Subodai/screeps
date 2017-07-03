@@ -27,7 +27,7 @@ global.flagColor = {
     'remote': COLOR_YELLOW,
     'defend': COLOR_ORANGE,
     'avoid': COLOR_BROWN,
-    '??': COLOR_GREY,
+    'buildsite': COLOR_GREY,
 }
 
 global.flagSecondaryColor = {
@@ -41,6 +41,19 @@ global.flagSecondaryColor = {
     'ORANGE': COLOR_ORANGE,
     'BROWN': COLOR_BROWN,
     'GREY': COLOR_GREY,
+}
+
+global.buildColor = {
+    'tower': COLOR_RED,
+    'road': COLOR_GREY,
+    'extension': COLOR_YELLOW,
+    'spawn': COLOR_WHITE,
+    'wall': COLOR_BROWN,
+    'rampart': COLOR_GREEN,
+    'storage': COLOR_BLUE,
+    'terminal': COLOR_CYAN,
+    'lab': COLOR_PURPLE,
+    'extractor': COLOR_ORANGE,
 }
 
 global.roleColour = {

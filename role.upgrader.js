@@ -66,7 +66,7 @@ module.exports.roster = {
     1: 2,
     2: 4,
     3: 4,
-    4: 4,
+    4: 3,
     5: 3,
     6: 3,
     7: 2,
@@ -120,6 +120,15 @@ module.exports.run = function(creep) {
     }
 
     if(creep.memory.upgrading) {
+        // if (Game.rooms[creep.memory.roomName].controller.sign != 'Room Claimed by Subodai - [Ypsilon Pact]') {
+        //     if (creep.pos.getRangeTo(Game.rooms[creep.memory.roomName].controller) > 1) {
+        //         creep.moveTo(Game.rooms[creep.memory.roomName].controller);
+        //         return;
+        //     } else {
+        //         creep.signController(creep.room.controller, 'Room Claimed by Subodai - [Ypsilon Pact]');
+        //         return;
+        //     }
+        // }
         if(creep.upgradeController(Game.rooms[creep.memory.roomName].controller) == ERR_NOT_IN_RANGE) {
             creep.moveTo(Game.rooms[creep.memory.roomName].controller, {
                 visualizePathStyle: {

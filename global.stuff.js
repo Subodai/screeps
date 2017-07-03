@@ -31,7 +31,7 @@ global.settings = {
 }
 
 global.rampartMax = 10000;
-global.wallMax = 10000000;
+global.wallMax = 100000;
 global.towerRepair = false;
 
 global.resourceList = [
@@ -52,14 +52,12 @@ global.resourceList = [
 
 global.seedRemoteRoads = false;
 
-global.clearSites = function () {
-    for (let i in Game.rooms) {
-        let _room = Game.rooms[i];
-        let sites = _room.find(FIND_CONSTRUCTION_SITES);
-        for (let s in sites) {
-            let site = sites[s];
-            site.remove();
-        }
+global.clearSites = function (roomName) {
+    let _room = Game.rooms[roomName];
+    let sites = _room.find(FIND_CONSTRUCTION_SITES);
+    for (let s in sites) {
+        let site = sites[s];
+        site.remove();
     }
 }
 
@@ -123,3 +121,15 @@ global.checkEmptyCoord = function (pos, creep) {
         }
     }
 }
+
+global.toggleWar = function (roomName) {
+    const _room = Game.rooms[roomName];
+    if (_room.memory.war) {
+        delete _room.memory.war;
+        Game.flags['stage'].remove();
+        Game.flags['attack'].remove();
+    } else {
+        _room.memory.war = true;
+    }
+}
+

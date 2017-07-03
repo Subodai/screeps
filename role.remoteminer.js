@@ -29,9 +29,9 @@ module.exports.body = {
 module.exports.roster = {
     1: 0,
     2: 0,
-    3: 2,
-    4: 2,
-    5: 2,
+    3: 8,
+    4: 8,
+    5: 10,
     6: 2,
     7: 2,
     8: 2,
@@ -153,20 +153,24 @@ module.exports.run = function (creep, debug = false) {
     if (!creep.memory.arrived) {
         // We didn't, alright lets go get the flag's position and head to it!
         var flag = Game.flags[creep.memory.flagName];
-        // If our POS is not the flags
-        if (creep.pos.roomName == flag.pos.roomName) {
-            // We have arrived!
-            creep.memory.arrived = true;
+        if (flag) {
+            // If our POS is not the flags
+            if (creep.pos.roomName == flag.pos.roomName) {
+                // We have arrived!
+                creep.memory.arrived = true;
+            } else {
+                // We have not arrived yet, we need to go to the flag's room
+                var result = creep.moveTo(flag, {
+                    visualizePathStyle : {
+                        stroke: global.colourFlag,
+                        opacity: global.pathOpacity
+                    },
+                    reusePath:1
+                });
+                return;
+            }
         } else {
-            // We have not arrived yet, we need to go to the flag's room
-            var result = creep.moveTo(flag, {
-                visualizePathStyle : {
-                    stroke: global.colourFlag,
-                    opacity: global.pathOpacity
-                },
-                reusePath:1
-            });
-            return;
+            creep.suicide();
         }
     }
     // no need to run the rest of this code until the creep has arrived in the right room

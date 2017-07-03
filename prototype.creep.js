@@ -38,7 +38,15 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
             DBG && console.log('[' + this.name + '] Found ' + resources.length + ' resource piles');
             // Sort the resources
             resources.sort(function(a,b) {
-                return thisCreep.pos.getRangeTo(a) - thisCreep.pos.getRangeTo(b);
+                const aPerMove = a.amount / thisCreep.pos.getRangeTo(a);
+                const bPerMove = b.amount / thisCreep.pos.getRangeTo(b);
+                if (aPerMove > bPerMove) {
+                    return -1;
+                } else if (bPerMove > aPerMove) {
+                    return 1;
+                }
+                return 0;
+                // return (a.amount / thisCreep.pos.getRangeTo(a)) - (b.amoumt / thisCreep.pos.getRangeTo(b));
             });
             // Now get the nearest one
             var resource = resources[0];
@@ -48,7 +56,15 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
             DBG && console.log('[' + this.name + '] Found ' + containers.length + ' containers');
             // Sort the containers
             containers.sort(function(a,b) {
-                return thisCreep.pos.getRangeTo(a) - thisCreep.pos.getRangeTo(b);
+                const aPerMove = a.store[RESOURCE_ENERGY] / thisCreep.pos.getRangeTo(a);
+                const bPerMove = b.store[RESOURCE_ENERGY] / thisCreep.pos.getRangeTo(b);
+                if (aPerMove > bPerMove) {
+                    return -1;
+                } else if (bPerMove > aPerMove) {
+                    return 1;
+                }
+                return 0;
+                // return thisCreep.pos.getRangeTo(a) - thisCreep.pos.getRangeTo(b);
             });
             var container = containers[0];
         }
@@ -73,6 +89,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
         if (!this.memory.energyPickup) {
             // Can this creep work?
             if (this.canWork()) {
+                DBG && console.log('[' + this.name + '] Can work finding sources');
                 const source = this.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
                     filter: function (i) {
                         if (i.energy > 0 || i.ticksToRegeneration < 10) {
@@ -82,7 +99,11 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
                             return false;
                         }
                     }
-                })
+                });
+                if (source) {
+                    DBG && console.log('[' + this.name + '] Stored Source ' + container.id + ' in creep memory');
+                    this.memory.energyPickup = source.id;
+                }
             }
         }
     }
@@ -157,7 +178,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
             if (this.pos.getRangeTo(target) <= 1) {
                 DBG && console.log('[' + this.name + '] Target should be in range, attempting harvest');
                 // Alright lets try harvesting it
-                if (this.harvest(source) == ERR_NOT_IN_RANGE) {
+                if (this.harvest(target) == ERR_NOT_IN_RANGE) {
                     DBG && console.log('[' + this.name + '] Harvest failed');
                     var pickupSuccess = false;
                 }
@@ -165,6 +186,10 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
                 DBG && console.log('[' + this.name + '] Target not in range');
                 var pickupSuccess = false;
             }
+        } else {
+            // Something went wrong, or what we wanted to pickup has disapeared...
+            delete this.memory.energyPickup;
+            return ERR_INVALID_TARGET;
         }
         // Did we successfully pick up the thing
         if (pickupSuccess) {

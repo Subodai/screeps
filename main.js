@@ -8,6 +8,7 @@ require('global.friends'); // The global friend list
 var protoypes = [
     require('prototype.structures'),
     require('prototype.sources'),
+    require('prototype.room'),
     require('prototype.creep'),
 ];
 // var i = protoypes.length;

@@ -7,7 +7,7 @@ module.exports.cost = {
     1 : 300,
     2 : 400,
     3 : 600,
-    4 : 1250,
+    4 : 600,
     5 : 1250,
     6 : 1250,
     7 : 1250,
@@ -34,9 +34,7 @@ module.exports.body = {
     4 : [
         WORK,
         CARRY,CARRY,CARRY,CARRY,CARRY,
-        CARRY,CARRY,CARRY,CARRY,CARRY,
-        CARRY,CARRY,CARRY,CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+        MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     5 : [
         WORK,
@@ -71,9 +69,9 @@ module.exports.body = {
 module.exports.roster = {
     1: 2,
     2: 2,
-    3: 2,
-    4: 2,
-    5: 2,
+    3: 10,
+    4: 10,
+    5: 20,
     6: 2,
     7: 2,
     8: 2,
