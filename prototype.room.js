@@ -7,7 +7,7 @@ const DBG = false;
  * Removes flag from flag list
  * Flag colour list defined in global.colours
  */
-Room.prototype.processBuildFlags = function() {
+Room.prototype.processBuildFlags = function () {
     // Get the buildsites in this room
     const sitecount = this.find(FIND_CONSTRUCTION_SITES);
     // If we have more than 1 site, don't add any more
@@ -139,7 +139,7 @@ Room.prototype.processBuildFlags = function() {
 /**
  * Clear all buildsites in a room
  */
-Room.prototype.clearSites = function() {
+Room.prototype.clearSites = function () {
     let sites = this.find(FIND_CONSTRUCTION_SITES);
     for (let s in sites) {
         sites[s].remove();
@@ -149,7 +149,7 @@ Room.prototype.clearSites = function() {
 /**
  * Fast way to remove all walls in a room
  */
-Room.prototype.clearWalls = function() {
+Room.prototype.clearWalls = function () {
     let walls = this.find(FIND_STRUCTURES, {
         filter: (i) => i.structureType == STRUCTRURE_WALL
     });
@@ -158,14 +158,14 @@ Room.prototype.clearWalls = function() {
     }
 }
 
-Room.prototype.toggleNotifications = function() {
+Room.prototype.toggleNotifications = function () {
     return (!this.memory.notifications) ? this.enableNotifications() : this.disableNotifications();
 }
 
 /**
  * Fast way to turn off damage notifications in a room
  */
-Room.prototype.disableNotifications = function() {
+Room.prototype.disableNotifications = function () {
     let structures = this.find(FIND_STRUCTURES);
     for (let i in structures) {
         structures[i].notifyWhenAttacked(false);
@@ -177,11 +177,22 @@ Room.prototype.disableNotifications = function() {
 /**
  * Fast way to turn on notifications in a room
  */
-Room.prototype.enableNotifications = function() {
+Room.prototype.enableNotifications = function () {
     let structures = this.find(FIND_STRUCTURES);
     for (let i in structures) {
         structures[i].notifyWhenAttacked(true);
     }
     console.log('[' + this.name + '] Damage Notifications Enabled');
     this.memory.notifications = true;
+}
+
+/*
+ * Toggle a room into war
+ */
+Room.prototype.toggleWar = function () {
+    if (!this.memory.war) {
+        this.memory.war = true;
+    } else {
+        this.memory.war = false;
+    }
 }

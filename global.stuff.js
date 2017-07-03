@@ -39,6 +39,9 @@ global.resourceList = [
     RESOURCE_CATALYST,
     RESOURCE_HYDROGEN,
     RESOURCE_LEMERGIUM,
+    RESOURCE_UTRIUM,
+    RESOURCE_KEANIUM,
+    RESOURCE_OXYGEN,
 
     // Compounds (from invaders)
     RESOURCE_UTRIUM_HYDRIDE,
@@ -52,38 +55,6 @@ global.resourceList = [
 
 global.seedRemoteRoads = false;
 
-global.clearSites = function (roomName) {
-    let _room = Game.rooms[roomName];
-    let sites = _room.find(FIND_CONSTRUCTION_SITES);
-    for (let s in sites) {
-        let site = sites[s];
-        site.remove();
-    }
-}
-
-global.clearWalls = function (roomName) {
-
-    let _room = Game.rooms[roomName];
-    let walls = _room.find(FIND_STRUCTURES, {
-        filter: (i) => i.structureType == STRUCTURE_WALL
-    });
-    for (let w in walls) {
-        let wall = walls[w];
-        wall.destroy();
-    }
-
-}
-
-global.clearNotifications = function (roomName) {
-
-    let _room = Game.rooms[roomName];
-    let structures = _room.find(FIND_STRUCTURES);
-    for (let i in structures) {
-        let item = structures[i];
-        console.log(item.id + ':' + item.notifyWhenAttacked(false));
-    }
-
-}
 
 global.getSpaceAtSource = function (source, creep) {
     const n  = new RoomPosition(source.pos.x,   source.pos.y-1, source.pos.roomName);
@@ -121,15 +92,3 @@ global.checkEmptyCoord = function (pos, creep) {
         }
     }
 }
-
-global.toggleWar = function (roomName) {
-    const _room = Game.rooms[roomName];
-    if (_room.memory.war) {
-        delete _room.memory.war;
-        Game.flags['stage'].remove();
-        Game.flags['attack'].remove();
-    } else {
-        _room.memory.war = true;
-    }
-}
-
