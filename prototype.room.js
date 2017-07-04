@@ -49,6 +49,7 @@ Room.prototype.processBuildFlags = function () {
         }
 
         var structure = global.buildColor[flag.secondaryColor];
+        DBG && console.log('[' + this.name + '] ' + 'Attempting to build:' + structure);
         var result = this.createConstructionSite(_pos, structure);
         // If there's an error with this build site, remove it's flag so we don't try again later
         if (result == ERR_INVALID_TARGET || result == ERR_INVALID_ARGS) {
