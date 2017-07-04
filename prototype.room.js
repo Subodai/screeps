@@ -21,9 +21,9 @@ Room.prototype.processBuildFlags = function () {
         DBG && console.log('[' + this.name + '] ' + 'No Buildsites found');
         return OK;
     }
-    var i = 0;
-    // lets start tring to make a buildsite
-    do {
+
+    // Loop through the flags
+    for (var i in flags) {
         var flag = flags[i];
         if (!flag) {
             console.log('[' + this.name + '] looped too long or flag broke, forced break from buildsite loop');
@@ -55,18 +55,18 @@ Room.prototype.processBuildFlags = function () {
             flag.remove()
             // feedback
             DBG && console.log('[' + this.name + '] ' + structure + ' Buildsite created');
+            return OK;
         }
         // If we're full, just break the loop by changing the result to OK
         if (result == ERR_FULL) {
             result = OK;
+            return OK;
         }
         // Is the room not high enough level yet? (We can try something else in the list instead)
         if (result == ERR_RCL_NOT_ENOUGH) {
             DBG && console.log('[' + this.name + '] Skipped trying to place ' + structure + ' Because RCL');
         }
-        // increment
-        i++;
-    } while (result != OK);
+    }
 
     return OK;
 }
