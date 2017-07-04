@@ -16,7 +16,7 @@ Room.prototype.processBuildFlags = function () {
         return OK;
     }
     // Get the buildsite flags in this room
-    const flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['buildsite'] && flag.pos.roomName == this.name);
+    var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['buildsite'] && flag.pos.roomName == this.name);
     if (flags.length == 0) {
         DBG && console.log('[' + this.name + '] ' + 'No Buildsites found');
         return OK;
