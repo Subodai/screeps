@@ -57,8 +57,8 @@ module.exports.body = {
 }
 /* Spawn Roster */
 module.exports.roster = {
-    1: 6,
-    2: 6,
+    1: 3,
+    2: 3,
     3: 3,
     4: 3,
     5: 1,
@@ -103,6 +103,7 @@ module.exports.run = function(creep) {
         creep.say('GET');
     }
     if(!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
+        delete creep.memory.energyPickup;
         creep.memory.building = true;
         creep.say('CREATE');
     }
@@ -158,6 +159,7 @@ module.exports.run = function(creep) {
     }
     else {
         if (creep.getNearbyEnergy() == ERR_FULL) {
+            delete creep.memory.energyPickup;
             creep.memory.building = true;
             return;
         }

@@ -130,7 +130,7 @@ module.exports.run = function (creep, debug = false) {
         creep.say(global.sayTired);
         return;
     }
-    if (creep.memory.idle >= 10) {
+    if (creep.memory.idle >= 100) {
         // No targets.. head back to the room spawn
         var spawn = creep.pos.findClosestByRange(FIND_STRUCTURES, {
             filter: (i) => i.structureType == STRUCTURE_SPAWN
@@ -152,7 +152,7 @@ module.exports.run = function (creep, debug = false) {
     var target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
         filter: (i) => !(global.friends.indexOf(i.owner.username) > -1)
     });
-    var target = false;
+    // var target = false;
     if (target) {
         creep.memory.idle = 0;
         if (creep.attack(target) == ERR_NOT_IN_RANGE) {

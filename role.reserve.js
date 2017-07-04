@@ -22,7 +22,7 @@ module.exports.body = {
     3 : [],
     4 : [
         MOVE,MOVE,      // 2 MOVE = 100
-        CLAIM     // 2 CLAIM = 1200
+        CLAIM           // 2 CLAIM = 1200
     ],
     5 : [
         MOVE,MOVE,      // 2 MOVE = 100

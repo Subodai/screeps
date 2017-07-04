@@ -11,14 +11,14 @@ Room.prototype.processBuildFlags = function () {
     // Get the buildsites in this room
     const sitecount = this.find(FIND_CONSTRUCTION_SITES);
     // If we have more than 1 site, don't add any more
-    if (sitecount > 1) {
-        DBG && console.log('Already too many buildsites');
+    if (sitecount.length > 1) {
+        DBG && console.log('[' + this.name + '] ' + 'Already too many buildsites');
         return OK;
     }
     // Get the buildsite flags in this room
-    const flag = _.first(_.filter(Game.flags, (flag) => flag.color = global.flagColor['buildsite'] && flag.pos.roomName == this.name));
+    const flag = _.first(_.filter(Game.flags, (flag) => flag.color == global.flagColor['buildsite'] && flag.pos.roomName == this.name));
     if (!flag) {
-        DBG && console.log('No Buildsites found');
+        DBG && console.log('[' + this.name + '] ' + 'No Buildsites found');
         return OK;
     }
     // Get the first flag and check it's secondary colour
@@ -27,7 +27,7 @@ Room.prototype.processBuildFlags = function () {
     var sites = this.lookForAt(LOOK_CONSTRUCTION_SITES, _pos);
     // Already something here... remove the flag
     if (sites.length > 0) {
-        DBG && console.log('Already a buildsite there');
+        DBG && console.log('[' + this.name + '] ' + 'Already a buildsite there');
         flag.remove();
         return OK;
     }
@@ -36,7 +36,7 @@ Room.prototype.processBuildFlags = function () {
     if (flag.secondaryColor == global.buildColor['road']) {
         var type = 'Road';
         if (this.createConstructionSite(_pos, STRUCTURE_ROAD) == OK) {
-            DBG && console.log(type + ' Buildsite created');
+            DBG && console.log('[' + this.name + '] ' + type + ' Buildsite created');
             flag.remove();
             return OK;
         }
@@ -46,7 +46,7 @@ Room.prototype.processBuildFlags = function () {
     if (flag.secondaryColor == global.buildColor['tower']) {
         var type = 'Tower';
         if (this.createConstructionSite(_pos, STRUCTURE_TOWER) == OK) {
-            DBG && console.log(type + ' Buildsite created');
+            DBG && console.log('[' + this.name + '] ' + type + ' Buildsite created');
             flag.remove();
             return OK;
         }
@@ -56,7 +56,7 @@ Room.prototype.processBuildFlags = function () {
     if (flag.secondaryColor == global.buildColor['extension']) {
         var type = 'Extension';
         if (this.createConstructionSite(_pos, STRUCTURE_EXTENSION) == OK) {
-            DBG && console.log(type + ' Buildsite created');
+            DBG && console.log('[' + this.name + '] ' + type + ' Buildsite created');
             flag.remove();
             return OK;
         }
@@ -66,7 +66,7 @@ Room.prototype.processBuildFlags = function () {
     if (flag.secondaryColor == global.buildColor['spawn']) {
         var type = 'Spawn';
         if (this.createConstructionSite(_pos, STRUCTURE_SPAWN) == OK) {
-            DBG && console.log(type + ' Buildsite created');
+            DBG && console.log('[' + this.name + '] ' + type + ' Buildsite created');
             flag.remove();
             return OK;
         }
@@ -76,7 +76,7 @@ Room.prototype.processBuildFlags = function () {
     if (flag.secondaryColor == global.buildColor['wall']) {
         var type = 'Wall';
         if (this.createConstructionSite(_pos, STRUCTURE_WALL) == OK) {
-            DBG && console.log(type + ' Buildsite created');
+            DBG && console.log('[' + this.name + '] ' + type + ' Buildsite created');
             flag.remove();
             return OK;
         }
@@ -86,7 +86,7 @@ Room.prototype.processBuildFlags = function () {
     if (flag.secondaryColor == global.buildColor['rampart']) {
         var type = 'Rampart';
         if (this.createConstructionSite(_pos, STRUCTURE_RAMPART) == OK) {
-            DBG && console.log(type + ' Buildsite created');
+            DBG && console.log('[' + this.name + '] ' + type + ' Buildsite created');
             flag.remove();
             return OK;
         }
@@ -96,7 +96,7 @@ Room.prototype.processBuildFlags = function () {
     if (flag.secondaryColor == global.buildColor['storage']) {
         var type = 'Storage';
         if (this.createConstructionSite(_pos, STRUCTURE_STORAGE) == OK) {
-            DBG && console.log(type + ' Buildsite created');
+            DBG && console.log('[' + this.name + '] ' + type + ' Buildsite created');
             flag.remove();
             return OK;
         }
@@ -106,7 +106,7 @@ Room.prototype.processBuildFlags = function () {
     if (flag.secondaryColor == global.buildColor['terminal']) {
         var type = 'Terminal';
         if (this.createConstructionSite(_pos, STRUCTURE_TERMINAL) == OK) {
-            DBG && console.log(type + ' Buildsite created');
+            DBG && console.log('[' + this.name + '] ' + type + ' Buildsite created');
             flag.remove();
             return OK;
         }
@@ -116,7 +116,7 @@ Room.prototype.processBuildFlags = function () {
     if (flag.secondaryColor == global.buildColor['lab']) {
         var type = 'Lab';
         if (this.createConstructionSite(_pos, STRUCTURE_LAB) == OK) {
-            DBG && console.log(type + ' Buildsite created');
+            DBG && console.log('[' + this.name + '] ' + type + ' Buildsite created');
             flag.remove();
             return OK;
         }
@@ -126,14 +126,14 @@ Room.prototype.processBuildFlags = function () {
     if (flag.secondaryColor == global.buildColor['extractor']) {
         var type = 'Extractor';
         if (this.createConstructionSite(_pos, STRUCTURE_EXTRACTOR) == OK) {
-            DBG && console.log(type + ' Buildsite created');
+            DBG && console.log('[' + this.name + '] ' + type + ' Buildsite created');
             flag.remove();
             return OK;
         }
     }
 
     // If we got to here somethign went wrong
-    DBG && console.log('Could not place build ' + type + ' At ' + JSON.stringify(_pos));
+    DBG && console.log('[' + this.name + '] ' + 'Could not place build ' + type + ' At ' + JSON.stringify(_pos));
 }
 
 /**
@@ -151,7 +151,7 @@ Room.prototype.clearSites = function () {
  */
 Room.prototype.clearWalls = function () {
     let walls = this.find(FIND_STRUCTURES, {
-        filter: (i) => i.structureType == STRUCTRURE_WALL
+        filter: (i) => i.structureType == STRUCTURE_WALL
     });
     for (let w in walls) {
         walls[w].destroy();

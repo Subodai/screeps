@@ -29,9 +29,9 @@ module.exports.body = {
 module.exports.roster = {
     1: 0,
     2: 0,
-    3: 8,
-    4: 8,
-    5: 10,
+    3: 4,
+    4: 4,
+    5: 4,
     6: 2,
     7: 2,
     8: 2,
