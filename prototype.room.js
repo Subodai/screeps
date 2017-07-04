@@ -26,7 +26,8 @@ Room.prototype.processBuildFlags = function () {
     do {
         var flag = flags[i];
         if (!flag) {
-            console.log('looped too long or flag broke, forced break from buildsite loop');
+            console.log('[' + this.name + '] looped too long or flag broke, forced break from buildsite loop');
+            console.log(JSON.stringify(flags));
             break;
         }
         // Get the first flag and check it's secondary colour
