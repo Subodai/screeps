@@ -68,18 +68,8 @@ module.exports.roster = {
 }
 
 module.exports.enabled = function (room, debug = false) {
-    var items = 0;
-    // Loop around all rooms for build sites
-    for (var i in Game.rooms) {
-        var count = Game.rooms[i].find(FIND_CONSTRUCTION_SITES);
-        items += count.length;
-    }
-    // No buildsites = false
-    if (items == 0) {
-        return false;
-    }
-    // otherwise return true
-    return true;
+    var mySites = _.filter(Game.constructionSites, (site) => site.my);
+    return (mySites.length > 0);
 }
 /**
  * Builder Role

@@ -8,12 +8,15 @@ const DBG = true;
  * Flag colour list defined in global.colours
  */
 Room.prototype.processBuildFlags = function () {
+    // If we have 100 (or more?) buildsites, ignore this entirely
+    if (_.filter(Game.constructionSites, (site) => site.my).length >= 100) { return OK; }
+
     DBG && console.log('[' + this.name + '] ' + 'Checking for buildsites');
     // Get the buildsites in this room
     const sitecount = this.find(FIND_CONSTRUCTION_SITES);
     // If we have more than 1 site, don't add any more
     if (sitecount.length > 1) {
-        DBG && console.log('[' + this.name + '] ' + 'Already too many buildsites');
+        DBG && console.log('[' + this.name + '] ' + 'Already too many buildsites in this room');
         return OK;
     }
 
@@ -49,6 +52,7 @@ Room.prototype.processBuildFlags = function () {
         var result = this.createConstructionSite(_pos, structure);
         // If there's an error with this build site, remove it's flag so we don't try again later
         if (result == ERR_INVALID_TARGET || result == ERR_INVALID_ARGS) {
+            DBG && console.log('[' + this.name + '] ' + 'Invalid flag, removing');
             // Remove the flag, we'll skip over to the next one instead
             // flag.remove();
         }
@@ -62,6 +66,7 @@ Room.prototype.processBuildFlags = function () {
         }
         // If we're full, just break the loop by changing the result to OK
         if (result == ERR_FULL) {
+            DBG && console.log('Cannot make any more buildsites right now');
             result = OK;
             return OK;
         }
