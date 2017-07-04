@@ -1,5 +1,5 @@
 // Debug flag
-const DBG = false;
+const DBG = true;
 
 /**
  * Processes the build flags setup in a room
@@ -16,124 +16,57 @@ Room.prototype.processBuildFlags = function () {
         return OK;
     }
     // Get the buildsite flags in this room
-    const flag = _.first(_.filter(Game.flags, (flag) => flag.color == global.flagColor['buildsite'] && flag.pos.roomName == this.name));
-    if (!flag) {
+    const flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['buildsite'] && flag.pos.roomName == this.name);
+    if (!flags.length == 0) {
         DBG && console.log('[' + this.name + '] ' + 'No Buildsites found');
         return OK;
     }
-    // Get the first flag and check it's secondary colour
-    const _pos = flag.pos;
-    // Check for existing buildsite here
-    var sites = this.lookForAt(LOOK_CONSTRUCTION_SITES, _pos);
-    // Already something here... remove the flag
-    if (sites.length > 0) {
-        DBG && console.log('[' + this.name + '] ' + 'Already a buildsite there');
-        flag.remove();
-        return OK;
-    }
-    var type = 'Unknown';
-    // Okay, we're here, what is it?
-    if (flag.secondaryColor == global.buildColor['road']) {
-        var type = 'Road';
-        if (this.createConstructionSite(_pos, STRUCTURE_ROAD) == OK) {
-            DBG && console.log('[' + this.name + '] ' + type + ' Buildsite created');
+    var i = 0;
+    // lets start tring to make a buildsite
+    do {
+        var flag = flags[i];
+        if (!flag) {
+            console.log('looped too long or flag broke, forced break from buildsite loop');
+            break;
+        }
+        // Get the first flag and check it's secondary colour
+        var _pos = flag.pos;
+        // Check for existing buildsite here
+        var sites = this.lookForAt(LOOK_CONSTRUCTION_SITES, _pos);
+        // Already something here... remove the flag
+        if (sites.length > 0) {
+            DBG && console.log('[' + this.name + '] ' + 'Already a buildsite there');
             flag.remove();
             return OK;
         }
-    }
 
-    // Okay, we're here, what is it?
-    if (flag.secondaryColor == global.buildColor['tower']) {
-        var type = 'Tower';
-        if (this.createConstructionSite(_pos, STRUCTURE_TOWER) == OK) {
-            DBG && console.log('[' + this.name + '] ' + type + ' Buildsite created');
+        var structure = global.buildColor[flag.secondaryColor];
+        var result = this.createConstructionSite(_pos, structure);
+        // If there's an error with this build site, remove it's flag so we don't try again later
+        if (result == ERR_INVALID_TARGET || result == ERR_INVALID_ARGS) {
+            // Remove the flag, we'll skip over to the next one instead
             flag.remove();
-            return OK;
         }
-    }
-
-    // Okay, we're here, what is it?
-    if (flag.secondaryColor == global.buildColor['extension']) {
-        var type = 'Extension';
-        if (this.createConstructionSite(_pos, STRUCTURE_EXTENSION) == OK) {
-            DBG && console.log('[' + this.name + '] ' + type + ' Buildsite created');
-            flag.remove();
-            return OK;
+        // If it workes lets feedback and remove the flag
+        if (result == OK) {
+            // Clear the flag
+            flag.remove()
+            // feedback
+            DBG && console.log('[' + this.name + '] ' + structure + ' Buildsite created');
         }
-    }
-
-    // Okay, we're here, what is it?
-    if (flag.secondaryColor == global.buildColor['spawn']) {
-        var type = 'Spawn';
-        if (this.createConstructionSite(_pos, STRUCTURE_SPAWN) == OK) {
-            DBG && console.log('[' + this.name + '] ' + type + ' Buildsite created');
-            flag.remove();
-            return OK;
+        // If we're full, just break the loop by changing the result to OK
+        if (result == ERR_FULL) {
+            result = OK;
         }
-    }
-
-    // Okay, we're here, what is it?
-    if (flag.secondaryColor == global.buildColor['wall']) {
-        var type = 'Wall';
-        if (this.createConstructionSite(_pos, STRUCTURE_WALL) == OK) {
-            DBG && console.log('[' + this.name + '] ' + type + ' Buildsite created');
-            flag.remove();
-            return OK;
+        // Is the room not high enough level yet? (We can try something else in the list instead)
+        if (result == ERR_RCL_NOT_ENOUGH) {
+            DBG && console.log('[' + this.name + '] Skipped trying to place ' + structure + ' Because RCL');
         }
-    }
+        // increment
+        i++;
+    } while (result != OK);
 
-    // Okay, we're here, what is it?
-    if (flag.secondaryColor == global.buildColor['rampart']) {
-        var type = 'Rampart';
-        if (this.createConstructionSite(_pos, STRUCTURE_RAMPART) == OK) {
-            DBG && console.log('[' + this.name + '] ' + type + ' Buildsite created');
-            flag.remove();
-            return OK;
-        }
-    }
-
-    // Okay, we're here, what is it?
-    if (flag.secondaryColor == global.buildColor['storage']) {
-        var type = 'Storage';
-        if (this.createConstructionSite(_pos, STRUCTURE_STORAGE) == OK) {
-            DBG && console.log('[' + this.name + '] ' + type + ' Buildsite created');
-            flag.remove();
-            return OK;
-        }
-    }
-
-    // Okay, we're here, what is it?
-    if (flag.secondaryColor == global.buildColor['terminal']) {
-        var type = 'Terminal';
-        if (this.createConstructionSite(_pos, STRUCTURE_TERMINAL) == OK) {
-            DBG && console.log('[' + this.name + '] ' + type + ' Buildsite created');
-            flag.remove();
-            return OK;
-        }
-    }
-
-    // Okay, we're here, what is it?
-    if (flag.secondaryColor == global.buildColor['lab']) {
-        var type = 'Lab';
-        if (this.createConstructionSite(_pos, STRUCTURE_LAB) == OK) {
-            DBG && console.log('[' + this.name + '] ' + type + ' Buildsite created');
-            flag.remove();
-            return OK;
-        }
-    }
-
-    // Okay, we're here, what is it?
-    if (flag.secondaryColor == global.buildColor['extractor']) {
-        var type = 'Extractor';
-        if (this.createConstructionSite(_pos, STRUCTURE_EXTRACTOR) == OK) {
-            DBG && console.log('[' + this.name + '] ' + type + ' Buildsite created');
-            flag.remove();
-            return OK;
-        }
-    }
-
-    // If we got to here somethign went wrong
-    DBG && console.log('[' + this.name + '] ' + 'Could not place build ' + type + ' At ' + JSON.stringify(_pos));
+    return OK;
 }
 
 /**

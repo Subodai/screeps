@@ -44,16 +44,16 @@ global.flagSecondaryColor = {
 }
 
 global.buildColor = {
-    'tower': COLOR_RED,
-    'road': COLOR_GREY,
-    'extension': COLOR_YELLOW,
-    'spawn': COLOR_WHITE,
-    'wall': COLOR_BROWN,
-    'rampart': COLOR_GREEN,
-    'storage': COLOR_BLUE,
-    'terminal': COLOR_CYAN,
-    'lab': COLOR_PURPLE,
-    'extractor': COLOR_ORANGE,
+    COLOR_RED:STRUCTURE_TOWER,
+    COLOR_GREY:STRUCTURE_ROAD,
+    COLOR_YELLOW:STRUCTURE_EXTENSION,
+    COLOR_WHITE:STRUCTURE_SPAWN,
+    COLOR_BROWN:STRUCTURE_WALL,
+    COLOR_GREEN:STRUCTURE_RAMPART,
+    COLOR_BLUE:STRUCTURE_STORAGE,
+    COLOR_CYAN:STRUCTURE_TERMINAL,
+    COLOR_PURPLE:STRUCTURE_LAB,
+    COLOR_ORANGE:STRUCTURE_EXTRACTOR,
 }
 
 global.roleColour = {
