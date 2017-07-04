@@ -24,7 +24,7 @@ Room.prototype.processBuildFlags = function () {
         DBG && console.log('[' + this.name + '] ' + 'No Buildsites found');
         return OK;
     }
-
+    DBG && console.log('[' + this.name + '] ' + 'Found ' + flags.length + ' Build sites');
     // Loop through the flags
     for (var i in flags) {
         var flag = flags[i];
