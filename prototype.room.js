@@ -27,6 +27,7 @@ Room.prototype.processBuildFlags = function () {
         var flag = flags[i];
         if (!flag) {
             console.log('[' + this.name + '] looped too long or flag broke, forced break from buildsite loop');
+            console.log(JSON.stringify(flag));
             console.log(JSON.stringify(flags));
             break;
         }
@@ -46,7 +47,7 @@ Room.prototype.processBuildFlags = function () {
         // If there's an error with this build site, remove it's flag so we don't try again later
         if (result == ERR_INVALID_TARGET || result == ERR_INVALID_ARGS) {
             // Remove the flag, we'll skip over to the next one instead
-            flag.remove();
+            // flag.remove();
         }
         // If it workes lets feedback and remove the flag
         if (result == OK) {
