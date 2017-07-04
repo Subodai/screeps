@@ -19,7 +19,7 @@ global.pathOpacity   = .3;
 
 global.flagColor = {
     'reserve': COLOR_PURPLE,
-    'claim': COLOR_WHITE,
+    'claim': COLOR_GREY,
     'invade': COLOR_RED,
     'friendly': COLOR_BLUE,
     'suspicious': COLOR_CYAN,
@@ -27,7 +27,7 @@ global.flagColor = {
     'remote': COLOR_YELLOW,
     'defend': COLOR_ORANGE,
     'avoid': COLOR_BROWN,
-    'buildsite': COLOR_GREY,
+    'buildsite': COLOR_WHITE,
 }
 
 global.flagSecondaryColor = {
@@ -44,16 +44,16 @@ global.flagSecondaryColor = {
 }
 
 global.buildColor = {
-    1:STRUCTURE_TOWER, // COLOR_RED
-    9:STRUCTURE_ROAD, // COLOR_GREY
-    6:STRUCTURE_EXTENSION, // COLOR_YELLOW
-    10:STRUCTURE_SPAWN, // COLOR_WHITE
-    8:STRUCTURE_WALL, // COLOR_BROWN
-    5:STRUCTURE_RAMPART, // COLOR_GREEN
-    3:STRUCTURE_STORAGE, // COLOR_BLUE
-    4:STRUCTURE_TERMINAL, // COLOR_CYAN
-    2:STRUCTURE_LAB, // COLOR_PURPLE
-    7:STRUCTURE_EXTRACTOR, // COLOR_ORANGE
+    1:STRUCTURE_TOWER,      // COLOR_RED
+    10:STRUCTURE_ROAD,      // COLOR_WHITE
+    6:STRUCTURE_EXTENSION,  // COLOR_YELLOW
+    9:STRUCTURE_SPAWN,      // COLOR_GREY
+    8:STRUCTURE_WALL,       // COLOR_BROWN
+    5:STRUCTURE_RAMPART,    // COLOR_GREEN
+    3:STRUCTURE_STORAGE,    // COLOR_BLUE
+    4:STRUCTURE_TERMINAL,   // COLOR_CYAN
+    2:STRUCTURE_LAB,        // COLOR_PURPLE
+    7:STRUCTURE_EXTRACTOR,  // COLOR_ORANGE
 }
 
 global.roleColour = {
