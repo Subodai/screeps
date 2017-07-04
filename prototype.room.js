@@ -1,5 +1,5 @@
 // Debug flag
-const DBG = true;
+const DBG = false;
 
 /**
  * Processes the build flags setup in a room
@@ -55,7 +55,7 @@ Room.prototype.processBuildFlags = function () {
         if (result == ERR_INVALID_TARGET || result == ERR_INVALID_ARGS) {
             DBG && console.log('[' + this.name + '] ' + 'Invalid flag, removing');
             // Remove the flag, we'll skip over to the next one instead
-            // flag.remove();
+            flag.remove();
         }
         // If it workes lets feedback and remove the flag
         if (result == OK) {
