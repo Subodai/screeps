@@ -29,7 +29,7 @@ Room.prototype.processBuildFlags = function () {
     for (var i in flags) {
         var flag = flags[i];
         if (!flag) {
-            console.log('[' + this.name + '] looped too long or flag broke, forced break from buildsite loop');
+            DBG && console.log('[' + this.name + '] looped too long or flag broke, forced break from buildsite loop');
             // console.log(JSON.stringify(flag));
             // console.log(JSON.stringify(flags));
             break;
