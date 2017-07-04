@@ -8,6 +8,7 @@ const DBG = true;
  * Flag colour list defined in global.colours
  */
 Room.prototype.processBuildFlags = function () {
+    DBG && console.log('[' + this.name + '] ' + 'Checking for buildsites');
     // Get the buildsites in this room
     const sitecount = this.find(FIND_CONSTRUCTION_SITES);
     // If we have more than 1 site, don't add any more
@@ -15,8 +16,10 @@ Room.prototype.processBuildFlags = function () {
         DBG && console.log('[' + this.name + '] ' + 'Already too many buildsites');
         return OK;
     }
+
     // Get the buildsite flags in this room
-    var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['buildsite'] && flag.pos.roomName == this.name);
+    const flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['buildsite'] && flag.pos.roomName == this.name);
+    // If there's no flags, no point carrying on
     if (flags.length == 0) {
         DBG && console.log('[' + this.name + '] ' + 'No Buildsites found');
         return OK;
@@ -27,8 +30,8 @@ Room.prototype.processBuildFlags = function () {
         var flag = flags[i];
         if (!flag) {
             console.log('[' + this.name + '] looped too long or flag broke, forced break from buildsite loop');
-            console.log(JSON.stringify(flag));
-            console.log(JSON.stringify(flags));
+            // console.log(JSON.stringify(flag));
+            // console.log(JSON.stringify(flags));
             break;
         }
         // Get the first flag and check it's secondary colour
