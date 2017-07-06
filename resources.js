@@ -202,6 +202,60 @@ function summarize_room_internal(room) {
     return retval;
 } // summarize_room
 
+function summarize_remote_room(room) {
+    if (_.isString(room)) {
+        room = Game.rooms[room];
+    }
+    if (room == null) {
+        return null;
+    }
+    const containers = room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_CONTAINER });
+    const num_containers = containers == null ? 0 : containers.length;
+    const container_energy = _.sum(containers, c => c.store.energy);
+    const sources = room.find(FIND_SOURCES);
+    const num_sources = sources == null ? 0 : sources.length;
+    const source_energy = _.sum(sources, s => s.energy);
+    const minerals = room.find(FIND_MINERALS);
+    const mineral = minerals && minerals.length > 0 ? minerals[0] : null;
+    const mineral_type = mineral ? mineral.mineralType : "";
+    const mineral_amount = mineral ? mineral.mineralAmount : 0;
+    const extractors = room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_EXTRACTOR });
+    const num_extractors = extractors.length;
+    const creeps = _.filter(Game.creeps, c => c.pos.roomName == room.name && c.my);
+    const num_creeps = creeps ? creeps.length : 0;
+    const enemy_creeps = room.find(FIND_HOSTILE_CREEPS);
+    const creep_energy = _.sum(Game.creeps, c => c.pos.roomName == room.name ? c.carry.energy : 0);
+    const num_enemies = enemy_creeps ? enemy_creeps.length : 0;
+    const const_sites = room.find(FIND_CONSTRUCTION_SITES);
+    const my_const_sites = room.find(FIND_CONSTRUCTION_SITES, { filter: cs => cs.my });
+    const num_construction_sites = const_sites.length;
+    const num_my_construction_sites = my_const_sites.length;
+    const ground_resources = room.find(FIND_DROPPED_RESOURCES);
+    const reduced_resources = _.reduce(ground_resources, (acc, res) => { acc[res.resourceType] = _.get(acc, [res.resourceType], 0) + res.amount; return acc; }, {});
+    const creep_counts = _.countBy(creeps, c => c.memory.role);
+
+    let retval = {
+        room_name: room.name, // In case this gets taken out of context
+        num_sources,
+        source_energy,
+        mineral_type,
+        mineral_amount,
+        num_extractors,
+        num_containers,
+        container_energy,
+        num_creeps,
+        creep_counts,
+        creep_energy,
+        num_enemies,
+        num_construction_sites,
+        num_my_construction_sites,
+        ground_resources: reduced_resources,
+    };
+
+    // console.log('Room ' + room.name + ': ' + JSON.stringify(retval));
+    return retval;
+}
+
 function summarize_rooms() {
     const now = Game.time;
 
@@ -213,8 +267,19 @@ function summarize_rooms() {
     let retval = {};
 
     for (let r in Game.rooms) {
-        let summary = summarize_room_internal(Game.rooms[r]);
-        retval[r] = summary;
+        let _room = Game.rooms[r];
+        if (_room == null) {
+            let summary = null;
+        }
+        // If this is a remote room, as in, we don't own it, run the remote room summarize
+        if (_room.controller == null || !_room.controller.my) {
+            let summary = summarize_remote_room(Game.rooms[r]);
+            retval[r+'_remote'] = summary;
+        } else {
+            let summary = summarize_room_internal(Game.rooms[r]);
+            retval[r] = summary;
+        }
+
     }
 
     global.summarized_room_timestamp = now;
