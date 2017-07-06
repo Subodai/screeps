@@ -23,3 +23,9 @@ console.log(Game.cpu.getUsed());
 let test=require('test'); // include a module of yours of non-trivial size.
 console.log(Game.cpu.getUsed());
 delete test;
+
+
+Game.rooms['E37S94'].toggleWar();
+Game.rooms['E38S95'].toggleWar();
+Game.rooms['E38S96'].toggleWar();
+Game.rooms['E39S95'].toggleWar();

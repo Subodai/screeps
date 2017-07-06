@@ -3,5 +3,6 @@
  * sure your creeps and rooms are not hostile to them
  */
 global.friends = [
-'Issacar'
+'Issacar',
+'Source Keeper',
 ];

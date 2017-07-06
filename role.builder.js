@@ -59,8 +59,8 @@ module.exports.body = {
 module.exports.roster = {
     1: 3,
     2: 3,
-    3: 3,
-    4: 3,
+    3: 2,
+    4: 2,
     5: 1,
     6: 1,
     7: 1,
@@ -105,7 +105,9 @@ module.exports.run = function(creep) {
         if(site == null) {
             for (var _site in Game.constructionSites) {
                 var site = Game.getObjectById(_site);
-                break;
+                if (site.my) {
+                    break;
+                }
             }
             // console.log(JSON.stringify(site));
         }
@@ -122,7 +124,7 @@ module.exports.run = function(creep) {
                 creep.say('MAKE');
             }
         } else {
-            creep.memory.role = 'janitor';
+            // creep.memory.role = 'janitor';
             // No targets.. head back to the room spawn
             var spawn = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (i) => i.structureType == STRUCTURE_SPAWN

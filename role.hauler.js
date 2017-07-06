@@ -77,7 +77,7 @@ module.exports.roster = {
     8: 2,
 }
 
-module.exports.multiplier = 1;
+module.exports.multiplier = 2;
 
 module.exports.enabled = function (room, debug = false) {
     // Get the flags

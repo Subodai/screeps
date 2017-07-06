@@ -6,8 +6,8 @@ module.exports.sType = 'specialist';
 module.exports.cost = {
     1 : 260,
     2 : 260,
-    3 : 260,
-    4 : 260,
+    3 : 380,
+    4 : 510,
     5 : 260,
     6 : 260,
     7 : 410,
@@ -34,12 +34,14 @@ module.exports.body = {
         ATTACK,ATTACK,          // 2 Attacks = 160 = 60h/t
     ],
     3 : [
-        MOVE,MOVE,              // 1 Moves = 100
-        ATTACK,ATTACK,          // 2 Attacks = 160 = 60h/t
+        TOUGH,TOUGH,                                // 2 Toughs = 20
+        MOVE,MOVE,MOVE,MOVE,                        // 4 Moves = 200
+        ATTACK,ATTACK,                              // 2 Attacks = 160 = 60h/t
     ],
     4 : [
-        MOVE,MOVE,              // 1 Moves = 100
-        ATTACK,ATTACK,          // 2 Attacks = 160 = 60h/t
+        TOUGH,TOUGH,                            // 2 Toughs = 20
+        MOVE,MOVE,MOVE,MOVE,MOVE,               // 5 Moves = 250
+        ATTACK,ATTACK,ATTACK,                   // 3 Attacks = 240 = 150h/t
     ],
     5 : [
         MOVE,MOVE,              // 1 Moves = 100
@@ -157,7 +159,10 @@ module.exports.run = function (creep, debug = false) {
         creep.memory.idle = 0;
         if (creep.attack(target) == ERR_NOT_IN_RANGE) {
             creep.moveTo(target, {
-                reusePath:0
+                visualizePathStyle : {
+                    stroke: '#FF0000',
+                    opacity: global.pathOpacity
+                },reusePath:0
             });
             creep.say(global.sayMove);
             return;
@@ -171,15 +176,25 @@ module.exports.run = function (creep, debug = false) {
         });
         if (!target) {
             var target = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
+                filter: (i) => !(global.friends.indexOf(i.owner.username) > -1) && i.structureType == STRUCTURE_SPAWN
+            });
+        }
+        if (!target) {
+            var target = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
                 filter: (i) => !(global.friends.indexOf(i.owner.username) > -1) && i.structureType != STRUCTURE_CONTROLLER
             });
         }
+        //var target = false;
         if (target) {
             creep.memory.idle = 0;
             if (creep.attack(target) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(target, {
-                    reusePath:0
-                });
+                        visualizePathStyle : {
+                            stroke: '#FF0000',
+                            opacity: global.pathOpacity
+                        },
+                        reusePath:0
+                    });
                 creep.say(global.sayMove);
                 return;
             } else {
