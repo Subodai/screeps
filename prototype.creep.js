@@ -174,6 +174,13 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
                 delete this.memory.energyPickup;
                 return ERR_INVALID_TARGET;
             }
+            // Check for space
+            if (!this.findSpaceAtSource(target)) {
+                DBG && console.log('[' + this.name + '] Source no longer has space, clearing memory');
+                // no clear the memory
+                delete this.memory.energyPickup;
+                return ERR_INVALID_TARGET;
+            }
             // Only bother trying to pick up if we're within 1 range
             if (this.pos.getRangeTo(target) <= 1) {
                 DBG && console.log('[' + this.name + '] Target should be in range, attempting harvest');
