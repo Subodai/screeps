@@ -223,7 +223,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
 }
 
 
-Creep.prototype.deliverEnergy = function () {
+Creep.prototype.deliverEnergy = function() {
     DBG && console.log('[' + this.name + '] Creep attempting to delivery energy');
     // First of all are we empty?
     if (_.sum(creep.carry) == 0) {
@@ -239,7 +239,7 @@ Creep.prototype.deliverEnergy = function () {
 /**
  * Check if a creep can work and store it in it's memory
  */
-Creep.prototype.canWork = function () {
+Creep.prototype.canWork = function() {
     // Has this creep already been flagged as a worker? and at full health (if it's been hit we should check it's parts again)
     if (!this.memory.canWork && this.hits == this.hitsMax) {
         // If we got hit, clear the memory
@@ -264,7 +264,7 @@ Creep.prototype.canWork = function () {
 }
 
 
-Creep.prototype.findSpaceAtSource = function (source) {
+Creep.prototype.findSpaceAtSource = function(source) {
     // Make sure to initialise the source's last check memory
     if (!source.memory.lastSpaceCheck) {
         source.memory.lastSpaceCheck = 0;
@@ -310,7 +310,7 @@ Creep.prototype.findSpaceAtSource = function (source) {
     }
 }
 
-Creep.prototype.checkEmptyAtPos = function (pos) {
+Creep.prototype.checkEmptyAtPos = function(pos) {
     const terrain = Game.map.getTerrainAt(pos);
     if (terrain == 'wall') {
         return false;
@@ -325,4 +325,52 @@ Creep.prototype.checkEmptyAtPos = function (pos) {
             }
         }
     }
+}
+
+Creep.prototype.roadCheck = function(work = false) {
+    var road = site = flag = false;
+    let obj = this.room.lookForAt(LOOK_STRUCTURES, this.pos);
+    if (obj.length > 0) {
+        for (let i in obj) {
+            if (obj[i].structureType == STRUCTURE_ROAD) {
+                road = obj[i];
+                break;
+            }
+        }
+    }
+    if (road && work && this.carry.energy > 0) {
+        if (road.hits < road.hitsMax) {
+            this.repair(road);
+            this.say(global.sayRepair);
+            return;
+        }
+    }
+    // No road?
+    if (!road) {
+        // Check for construction sites
+        let sites = creep.room.lookForAt(LOOK_CONSTRUCTION_SITES, this.pos);
+        if (sites.length > 0) {
+            if (sites[0].structureType == STRUCTURE_ROAD) {
+                site = sites[0];
+            }
+        }
+    }
+    if (site && work && this.carry.energy > 0) {
+        this.build(site);
+        this.say(global.sayBuild);
+        return;
+    }
+    // No site?
+    if (!site) {
+        // Check for flag
+        let flags = creep.room.lookForAt(LOOK_FLAGS, this.pos);
+        if (flags.legnth > 0) {
+            flag = flags[0];
+        }
+    }
+    if (!flag && global.seedRemoteRoads === true) { this.pos.createFlag();}
+}
+
+Creep.prototype.containerCheck = function() {
+
 }
