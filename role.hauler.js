@@ -299,52 +299,6 @@ module.exports.run = function(creep) {
 
     // If we moved and we have energy we should run a repair/build/seed on any road we're standing on
     if (moved && creep.carry.energy > 0) {
-        this.roadRoutine(creep);
-    }
-}
-
-/**
- * Road repair/build/seed subroutine
- */
-module.exports.roadRoutine = function (creep) {
-    var road = false;
-    const objects = creep.room.lookForAt(LOOK_STRUCTURES, creep.pos);
-    if (objects.length > 0) {
-        for (var i in objects) {
-            if (objects[i].structureType == STRUCTURE_ROAD) {
-                var road = objects[i];
-                break;
-            }
-        }
-    }
-    // Is there a road here?
-    if (road) {
-        if (road.hits < road.hitsMax) {
-            creep.repair(road);
-            creep.say(global.sayRepair);
-            return;
-        }
-    } else {
-        // is there a constructionsite, if so we could build it on the way past
-        var constructionSite = false;
-        const sites = creep.room.lookForAt(LOOK_CONSTRUCTION_SITES, creep.pos);
-        if (sites.length > 0) {
-            for (var i in sites) {
-                if (sites[i].structureType == STRUCTURE_ROAD) {
-                    var constructionSite = sites[i];
-                    break;
-                }
-            }
-        }
-        // Is there a construction site?
-        if (constructionSite) {
-            creep.build(constructionSite);
-            creep.say(global.sayBuild);
-        } else {
-            // Add remote road seeding?
-            if (global.seedRemoteRoads === true) {
-                creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
-            }
-        }
+        creep.roadCheck(true);
     }
 }
