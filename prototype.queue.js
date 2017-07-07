@@ -7,8 +7,10 @@
 
 // let creep = {
 //    role:'builder',
-//    roomName:'E39S95',
-//    cost:1000
+//    home:'E39S95',
+//    cost:1000,
+//    level:1,
+//    body:[WORK,CARRY,MOVE],
 // };
 
 // Add to queue
@@ -147,7 +149,7 @@ Queue.prototype = {
             // Did we find a spawn to use?
             if (spawn) {
                 this.DBG && console.log('Spawning Creep from Queue in ' + spawn.room.name);
-                if (this.spawnCreep(spawn.name, creep.role)) {
+                if (spawn.makeCreep(creep.role, creep.body, creep.level, creep.home)) {
                     this.remove(creep);
                     return this.save();
                 }
