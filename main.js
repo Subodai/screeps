@@ -25,11 +25,14 @@ var towers    = require('work.towers');
 var counter   = require('work.counter');
 var screepsplus     = require('screepsplus');
 
+// Load the new Queue
+const q = require('prototype.queue');
+global.Queue = new q.Queue();
+
 /**
  * Main game loop, call all other functions from here
  */
 module.exports.loop = function () {
-    var msg = Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '}';
     var debug = false;
     // Only need these once every 10 ticks
     if (Game.time % 10 == 0) {
@@ -46,17 +49,12 @@ module.exports.loop = function () {
     if (Game.time % 10 == 0) {
         // Setup rooms before we run the spawner
         counter.setupRoomRoles(debug);
-        msg += counter.run(debug);
+        console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '}' + counter.run(debug) + ' {' + Game.cpu.getUsed().toFixed(3) + '}');
         spawner.run(debug);
     }
     movement.run(debug);
     towers.run(debug);
+
     screepsplus.collect_stats();
-    msg += ' {' + Game.cpu.getUsed().toFixed(3) + '}';
-    console.log(msg);
-    if (Game.cpu.getUsed() > 200) {
-        // This isn't required anymore
-        // Game.notify(msg);
-    }
     Memory.stats.cpu.used = Game.cpu.getUsed();
 }
