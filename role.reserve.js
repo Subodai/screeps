@@ -155,7 +155,8 @@ module.exports.run = function (creep, debug = false) {
                 visualizePathStyle : {
                     stroke: global.colourFlag,
                     opacity: global.pathOpacity
-                }
+                },
+                reusePath:40
             });
             return;
         }

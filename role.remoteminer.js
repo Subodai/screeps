@@ -165,7 +165,7 @@ module.exports.run = function (creep, debug = false) {
                         stroke: global.colourFlag,
                         opacity: global.pathOpacity
                     },
-                    reusePath:1
+                    reusePath:40
                 });
                 return;
             }
