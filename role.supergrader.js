@@ -141,54 +141,10 @@ module.exports.run = function(creep) {
             creep.say(global.sayUpgrade);
         }
     } else {
-        // Prioritise the room storage
-        var target = creep.room.storage;
-        // Is there any?
-        if (target) {
-            // If it's at least 1 3rd full
-            if (target.store[RESOURCE_ENERGY] > 10000) {
-                // Withdraw or move to it
-                if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    // No lets move to the source we want
-                    creep.moveTo(target, {
-                        visualizePathStyle: {
-                            stroke: global.colourPickup,
-                            opacity: global.pathOpacity
-                        },
-                        reusePath:5
-                    });
-                    creep.say(global.sayMove);
-                } else {
-                    creep.say(global.sayWithdraw);
-                    creep.memory.upgrading = true;
-                }
-                return;
-            }
-        }
-
-        var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (i) => i.structureType == STRUCTURE_CONTAINER && i.store[RESOURCE_ENERGY] > 100
-        });
-
-        if(container) {
-            // Can we harvest right now?
-            if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(container, {
-                    visualizePathStyle: {
-                        stroke: global.colourPickup,
-                        opacity: global.pathOpacity
-                    },
-                    reusePath:5
-                });
-                creep.say(global.sayMove);
-            } else {
-                creep.say(global.sayWithdraw);
-                creep.memory.upgrading = true;
-            }
+        if (creep.getNearbyEnergy(true) == ERR_FULL) {
+            delete creep.memory.energyPickup;
+            creep.memory.upgrading = true;
             return;
         }
-
-        // If we got here.. there's a problem
-        creep.say(global.sayOhno);
     }
 }
