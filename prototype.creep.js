@@ -356,7 +356,7 @@ Creep.prototype.roadCheck = function(work = false) {
     // No road?
     if (!road) {
         // Check for construction sites
-        let sites = creep.room.lookForAt(LOOK_CONSTRUCTION_SITES, this.pos);
+        let sites = this.room.lookForAt(LOOK_CONSTRUCTION_SITES, this.pos);
         if (sites.length > 0) {
             if (sites[0].structureType == STRUCTURE_ROAD) {
                 site = sites[0];
@@ -371,7 +371,7 @@ Creep.prototype.roadCheck = function(work = false) {
     // No site?
     if (!site) {
         // Check for flag
-        let flags = creep.room.lookForAt(LOOK_FLAGS, this.pos);
+        let flags = this.room.lookForAt(LOOK_FLAGS, this.pos);
         if (flags.legnth > 0) {
             flag = flags[0];
         }
