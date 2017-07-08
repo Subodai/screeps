@@ -1,4 +1,3 @@
-// - DEV
 // Main imports these should be cached
 require('global.stuff');   // Settings and stuff
 require('global.colours'); // Colours various variables
