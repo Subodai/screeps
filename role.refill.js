@@ -61,7 +61,7 @@ module.exports.roster = {
 }
 module.exports.enabled = function (room, debug = false) {
     const _room = Game.rooms[room];
-    if (!_room.controller) {
+    if (_room.controller) {
         if(_room.controller.level >= 4 && _room.storage) {
             return true;
         }
