@@ -16,6 +16,14 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
         delete this.memory.energyPickup;
         return ERR_FULL;
     }
+    // Storage override
+    if (!this.memory.energyPickup) {
+        if (useStorage && this.room.storage) {
+            if (this.room.storage.store[RESOURCE_ENERGY] > 1000) {
+                this.memory.energyPickup = this.room.storage.id;
+            }
+        }
+    }
     if (!this.memory.energyPickup) {
         DBG && console.log('[' + this.name + '] Creep has no memory, finding stuff to pickup');
         // If this is an emergency we should be going for the terminal, then storage
@@ -224,7 +232,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
 
 
 Creep.prototype.deliverEnergy = function() {
-    DBG && console.log('[' + this.name + '] Creep attempting to delivery energy');
+    DBG && console.log('[' + this.name + '] Creep attempting to deliver energy');
     // First of all are we empty?
     if (_.sum(creep.carry) == 0) {
         delete this.memory.deliveryTarget;
