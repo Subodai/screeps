@@ -73,12 +73,14 @@ module.exports.roster = {
     8: 4,
 }
 
+module.exports.multiplier = 2;
+
 module.exports.enabled = function (room, debug = false) {
     const _room = Game.rooms[room];
     if (_room.controller) {
         if (_room.memory.minersNeeded && _room.memory.minersNeeded > 0) {
             var list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.roomName == room && !creep.memory.dying);
-            if (list.length < _room.memory.minersNeeded) {
+            if (list.length < _room.memory.minersNeeded*this.multiplier) {
                 return true;
             }
         }
