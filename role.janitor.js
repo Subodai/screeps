@@ -400,100 +400,10 @@ module.exports.run = function(creep) {
         }
     }
     else {
-
-        var resource = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
-            filter: (i) => i.resourceType == RESOURCE_ENERGY
-        });
-
-        if (resource) {
-            if (creep.pickup(resource) == ERR_NOT_IN_RANGE) {
-                if (creep.carry.energy <= (creep.carryCapacity/2)) {
-                    creep.moveTo(resource,{
-                        visualizePathStyle: {
-                            stroke: global.colourPickupRes,
-                            opacity: global.pathOpacity
-                        },
-                        reusePath:3
-                    });
-                    creep.say(global.sayMove);
-                } else {
-                    creep.memory.sapping = true;
-                }
-            } else {
-                creep.say(global.sayWithdraw);
-            }
+        if (creep.getNearbyEnergy(true) == ERR_FULL) {
+            delete creep.memory.energyPickup;
+            creep.memory.sapping = true;
             return;
-        }
-
-        var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (i) => i.structureType == STRUCTURE_CONTAINER && i.store[RESOURCE_ENERGY] > 100
-        });
-
-        if(container) {
-           // Can we harvest right now?
-            if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(container, {
-                    visualizePathStyle: {
-                        stroke: global.colourPickup,
-                        opacity: global.pathOpacity
-                    },
-                    reusePath:3
-                });
-                creep.say(global.sayMove);
-            } else {
-                creep.say(global.sayWithdraw);
-                creep.memory.sapping = true;
-            }
-            return;
-        }
-
-        // Don't use room storage or harvest resources yet
-
-
-        // var target = creep.room.storage;
-        // if (target && target.store[RESOURCE_ENERGY] > 100) {
-        //     if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-        //         // No lets move to the source we want
-        //         creep.moveTo(target, {
-        //             visualizePathStyle: {
-        //                 stroke: global.colourPickup,
-        //                 opacity: global.pathOpacity
-        //             }
-        //         });
-        //         creep.say(global.sayMove);
-        //     } else {
-        //         creep.say(global.sayWithdraw);
-        //         creep.memory.sapping = true;
-        //     }
-        //     return;
-        // }
-        var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
-            filter: function (i) {
-                if (i.energy > 0 || i.ticksToRegeneration < 10) {
-                    const space = global.getSpaceAtSource(i,creep);
-                    return space;
-                } else {
-                    return false;
-                }
-            }
-        });
-        if (source) {
-            // Can we harvest this?
-            if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(source, {
-                    visualizePathStyle: {
-                        stroke: global.colourPickup,
-                        opacity: global.pathOpacity
-                    },
-                    reusePath:3
-                });
-                creep.say(global.sayMove);
-            } else {
-                creep.say(global.sayGet);
-                if (creep.carry.energy == creep.carryCapacity) {
-                    creep.memory.sapping = true;
-                }
-            }
         }
     }
 }

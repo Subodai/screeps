@@ -140,82 +140,10 @@ module.exports.run = function(creep) {
             creep.say('(>.<)');
         }
     } else {
-        if (creep.getNearbyEnergy() == ERR_FULL) {
+        if (creep.getNearbyEnergy(true) == ERR_FULL) {
+            delete creep.memory.energyPickup;
             creep.memory.upgrading = true;
             return;
         }
-        // var resource = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES,{
-        //     filter: (i) => i.resourceType == RESOURCE_ENERGY
-        // });
-
-        // if (resource) {
-        //     if (creep.pickup(resource) == ERR_NOT_IN_RANGE) {
-        //         if (creep.carry.energy <= (creep.carryCapacity/2)) {
-        //             creep.moveTo(resource,{
-        //                 visualizePathStyle: {
-        //                     stroke: global.colourResPickup,
-        //                     opacity: global.pathOpacity
-        //                 },
-        //                 reusePath:5
-        //             });
-        //             creep.say('>>');
-        //         } else {
-        //             creep.memory.upgrading = true;
-        //         }
-        //     } else {
-        //         creep.say('^^');
-        //     }
-        //     return;
-        // }
-
-        // var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-        //     filter: (structure) => structure.structureType == STRUCTURE_CONTAINER && structure.store[RESOURCE_ENERGY] > 100
-        // });
-
-        // if(container) {
-        //     // Can we harvest right now?
-        //     if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-        //         creep.moveTo(container, {
-        //             visualizePathStyle: {
-        //                 stroke: global.colourPickup,
-        //                 opacity: global.pathOpacity
-        //             },
-        //             reusePath:5
-        //         });
-        //         creep.say('>>');
-        //     } else {
-        //         creep.say('^^');
-        //     }
-        //     return;
-        // }
-
-        // var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
-        //     filter: function (i) {
-        //         if (i.energy > 0 || i.ticksToRegeneration < 10) {
-        //             const space = global.getSpaceAtSource(i,creep);
-        //             return space;
-        //         } else {
-        //             return false;
-        //         }
-        //     }
-        // });
-        // if (source) {
-        //     // Can we harvest this?
-        //     if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-        //         creep.moveTo(source, {
-        //             visualizePathStyle: {
-        //                 stroke: global.colourPickup,
-        //                 opacity: global.pathOpacity
-        //             },
-        //             reusePath:5
-        //         });
-        //         creep.say('>>');
-        //     } else {
-        //         creep.say('^^');
-        //         if (creep.carry.energy == creep.carryCapacity) {
-        //             creep.memory.upgrading = true;
-        //         }
-        //     }
-        // }
     }
 }
