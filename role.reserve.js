@@ -9,7 +9,7 @@ module.exports.cost = {
     1 : 0,
     2 : 0,
     3 : 0,
-    4 : 1400,
+    4 : 1300,
     5 : 1400,
     6 : 1400,
     7 : 1400,
@@ -23,7 +23,6 @@ module.exports.body = {
     4 : [
         MOVE,MOVE,      // 2 MOVE = 100
         CLAIM,CLAIM,    // 2 CLAIM = 1200
-        WORK            // 1 WORK = 100
     ],
     5 : [
         MOVE,MOVE,      // 2 MOVE = 100
