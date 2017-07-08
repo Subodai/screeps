@@ -64,11 +64,11 @@ module.exports.roster = {
     1: 2,
     2: 3,
     3: 3,
-    4: 3,
-    5: 2,
-    6: 3,
-    7: 3,
-    8: 3,
+    4: 6,
+    5: 4,
+    6: 4,
+    7: 4,
+    8: 4,
 }
 
 module.exports.enabled = function (room, debug = false) {
