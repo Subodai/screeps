@@ -668,5 +668,3 @@ Creep.prototype.findDamagedDefences = function() {
         }
     }
 }
-
-Creep.prototype.
