@@ -108,11 +108,9 @@ module.exports.run = function(creep) {
 
     // If we're not delivering, check if we can harvest, if not and we have half energy, go and deliver
     if (!creep.memory.delivering) {
-
         if (creep.getNearbyEnergy(true) == ERR_FULL) {
             delete creep.memory.energyPickup;
             creep.memory.delivering = true;
-            return;
         }
     }
 
