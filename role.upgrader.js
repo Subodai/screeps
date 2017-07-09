@@ -119,6 +119,13 @@ module.exports.run = function(creep) {
         creep.say('PUT');
     }
 
+    if (!creep.memory.upgrading) {
+        if (creep.getNearbyEnergy(true) == ERR_FULL) {
+            delete creep.memory.energyPickup;
+            creep.memory.upgrading = true;
+        }
+    }
+
     if(creep.memory.upgrading) {
         // if (Game.rooms[creep.memory.roomName].controller.sign != 'Room Claimed by Subodai - [Ypsilon Pact]') {
         //     if (creep.pos.getRangeTo(Game.rooms[creep.memory.roomName].controller) > 1) {
@@ -138,12 +145,6 @@ module.exports.run = function(creep) {
             });
         } else {
             creep.say('(>.<)');
-        }
-    } else {
-        if (creep.getNearbyEnergy(true) == ERR_FULL) {
-            delete creep.memory.energyPickup;
-            creep.memory.upgrading = true;
-            return;
         }
     }
 }

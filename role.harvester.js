@@ -130,7 +130,6 @@ module.exports.run = function(creep) {
         // Always pickup none
         if (creep.getNearbyEnergy() == ERR_FULL) {
             creep.memory.delivering = true;
-            return;
         }
     }
 
@@ -317,7 +316,7 @@ module.exports.run = function(creep) {
             creep.memory.idle++;
             creep.say('idle: ' + creep.memory.idle);
 
-            if (creep.memory.idle >= 10) {
+            if (creep.memory.idle >= 100) {
                 // Are we in our home room?
                 if (creep.room.name != creep.memory.roomName) {
                     // lets go home

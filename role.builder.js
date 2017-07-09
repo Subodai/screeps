@@ -98,6 +98,15 @@ module.exports.run = function(creep) {
         creep.say('CREATE');
     }
 
+
+    if (!creep.memory.building) {
+        if (creep.getNearbyEnergy(true) == ERR_FULL) {
+            delete creep.memory.energyPickup;
+            creep.memory.building = true;
+            return;
+        }
+    }
+
     if(creep.memory.building) {
         // Try to get sites in current room
         var site = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
@@ -147,13 +156,6 @@ module.exports.run = function(creep) {
                     creep.say(global.sayWhat);
                 }
             }
-        }
-    }
-    else {
-        if (creep.getNearbyEnergy(true) == ERR_FULL) {
-            delete creep.memory.energyPickup;
-            creep.memory.building = true;
-            return;
         }
     }
 }

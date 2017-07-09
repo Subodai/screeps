@@ -127,6 +127,13 @@ module.exports.run = function(creep) {
         creep.say(global.sayPut);
     }
 
+    if (!creep.memory.upgrading) {
+        if (creep.getNearbyEnergy(true) == ERR_FULL) {
+            delete creep.memory.energyPickup;
+            creep.memory.upgrading = true;
+        }
+    }
+
     if(creep.memory.upgrading) {
         if(creep.upgradeController(Game.rooms[creep.memory.roomName].controller) == ERR_NOT_IN_RANGE) {
             creep.moveTo(Game.rooms[creep.memory.roomName].controller, {
@@ -139,12 +146,6 @@ module.exports.run = function(creep) {
             creep.say(global.sayMove);
         } else {
             creep.say(global.sayUpgrade);
-        }
-    } else {
-        if (creep.getNearbyEnergy(true) == ERR_FULL) {
-            delete creep.memory.energyPickup;
-            creep.memory.upgrading = true;
-            return;
         }
     }
 }

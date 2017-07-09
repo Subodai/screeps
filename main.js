@@ -7,6 +7,7 @@ require('global.friends'); // The global friend list
 
 // Get the prototypes
 var protoypes = [
+    require('prototype.roomposition'),
     require('prototype.structures'),
     require('prototype.sources'),
     require('prototype.room'),
