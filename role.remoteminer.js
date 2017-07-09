@@ -208,7 +208,7 @@ module.exports.run = function (creep, debug = false) {
         }
 
         // @TODO Self Setup, build and repair routine for if we have energy
-        if(this.containerCheck()) {
+        if(creep.containerCheck()) {
             return;
         }
 
