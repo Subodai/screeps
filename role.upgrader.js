@@ -9,9 +9,9 @@ module.exports.cost = {
     3 : 800,
     4 : 1300,
     5 : 1550,
-    6 : 1300,
-    7 : 1300,
-    8 : 1300,
+    6 : 1550,
+    7 : 1550,
+    8 : 1550,
 }
 /* Body Parts at each RCL */
 module.exports.body = {
