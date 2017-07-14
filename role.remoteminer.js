@@ -32,9 +32,9 @@ module.exports.roster = {
     3: 6,
     4: 6,
     5: 6,
-    6: 2,
-    7: 2,
-    8: 2,
+    6: 6,
+    7: 6,
+    8: 6,
 }
 /**
  * Individual check for a room to check if this creep type should be enabled or not

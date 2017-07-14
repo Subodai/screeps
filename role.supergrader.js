@@ -68,7 +68,7 @@ module.exports.enabled = function (room, debug = false) {
     var _room = Game.rooms[room];
     var _storage = _room.storage;
     // No Storage, no supergraders
-    if (!_storage) { return false; }
+    if (!_storage || _room.controller.level < 5) { return false; }
 
     // If we go over 4/5 full on energy storage and we're not enabled in this room, turn it on!
     if (_storage.store[RESOURCE_ENERGY] >= 800000) {
@@ -82,7 +82,7 @@ module.exports.enabled = function (room, debug = false) {
         _room.memory.charging = true;
     }
 
-    if (_room.memory.charging) {
+    if (_room.memory.charging || _room.controller.level < 5) {
         return false;
     } else {
         return true;

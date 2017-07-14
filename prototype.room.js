@@ -9,7 +9,7 @@ const DBG = false;
  */
 Room.prototype.processBuildFlags = function () {
     // If we have 100 (or more?) buildsites, ignore this entirely
-    if (_.filter(Game.constructionSites, (site) => site.my).length >= 100) { return OK; }
+    if (_.filter(Game.constructionSites, (site) => site.my.length) >= 100) { return OK; }
 
     DBG && console.log('[' + this.name + '] ' + 'Checking for buildsites');
     // Get the buildsites in this room
@@ -90,6 +90,15 @@ Room.prototype.clearSites = function () {
     }
 }
 
+/**
+ * Clear all flags in a room
+ */
+Room.prototype.clearFlags = function () {
+    const flags = _.filter(Game.flags, (flag) => flag.pos.roomName == this.name);
+    for (let i in flags) {
+        flags[i].remove();
+    }
+}
 /**
  * Fast way to remove all walls in a room
  */

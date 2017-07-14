@@ -8,10 +8,10 @@ module.exports.cost = {
     2 : 260,
     3 : 380,
     4 : 510,
-    5 : 260,
-    6 : 260,
+    5 : 510,
+    6 : 510,
     7 : 410,
-    8 : 260,
+    8 : 410,
     /*
     2 : 380,
     3 : 480,
@@ -44,12 +44,14 @@ module.exports.body = {
         ATTACK,ATTACK,ATTACK,                   // 3 Attacks = 240 = 150h/t
     ],
     5 : [
-        MOVE,MOVE,              // 1 Moves = 100
-        ATTACK,ATTACK,          // 2 Attacks = 160 = 60h/t
+        TOUGH,TOUGH,                            // 2 Toughs = 20
+        MOVE,MOVE,MOVE,MOVE,MOVE,               // 5 Moves = 250
+        ATTACK,ATTACK,ATTACK,                   // 3 Attacks = 240 = 150h/t
     ],
     6 : [
-        MOVE,MOVE,              // 1 Moves = 100
-        ATTACK,ATTACK,          // 2 Attacks = 160 = 60h/t
+        TOUGH,TOUGH,                            // 2 Toughs = 20
+        MOVE,MOVE,MOVE,MOVE,MOVE,               // 5 Moves = 250
+        ATTACK,ATTACK,ATTACK,                   // 3 Attacks = 240 = 150h/t
     ],
     7 : [
         TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,  // 5 Toughs = 50
@@ -57,8 +59,9 @@ module.exports.body = {
         ATTACK,ATTACK,                              // 2 Attacks = 160 = 60h/t
     ],
     8 : [
-        MOVE,MOVE,              // 1 Moves = 100
-        ATTACK,ATTACK,          // 2 Attacks = 160 = 60h/t
+        TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,  // 5 Toughs = 50
+        MOVE,MOVE,MOVE,MOVE,                        // 4 Moves = 200
+        ATTACK,ATTACK,                              // 2 Attacks = 160 = 60h/t
     ],
     /*
     2 : [

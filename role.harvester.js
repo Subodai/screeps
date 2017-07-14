@@ -67,10 +67,10 @@ module.exports.roster = {
     2: 3,
     3: 3,
     4: 6,
-    5: 4,
-    6: 4,
-    7: 4,
-    8: 4,
+    5: 3,
+    6: 3,
+    7: 3,
+    8: 3,
 }
 
 module.exports.multiplier = 2;
