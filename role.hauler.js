@@ -151,6 +151,11 @@ module.exports.run = function(creep) {
         creep.memory.dying = true;
     }
 
+    if (!creep.canDo(CARRY)) {
+        console.log('[' +creep.name+'] Creep damaged seeking repair:' + JSON.stringify(creep.pos));
+        return;
+    }
+
     // Logic is as follows. If empty, head to remote room, if in remote room and empty, find resources as normal
     // if full, return to home room, if in home room drop resources off
     // If travelling with resources we should run a repair on the road we're on as we go

@@ -152,6 +152,11 @@ module.exports.run = function (creep, debug = false) {
         return;
     }
 
+    if (!creep.canDo(WORK)) {
+        console.log('[' +creep.name+'] Creep damaged seeking repair:' + JSON.stringify(creep.pos));
+        return;
+    }
+
     // Okay, health check
     var ticks = creep.ticksToLive;
     if (ticks <= 200 && !creep.memory.dying) {
