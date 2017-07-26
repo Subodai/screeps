@@ -108,6 +108,7 @@ module.exports.run = function(creep) {
     }
 
     if(creep.memory.building) {
+        delete creep.memory.energyPickup;
         // Try to get sites in current room
         var site = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
         // If that fails try all rooms

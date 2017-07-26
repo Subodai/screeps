@@ -53,8 +53,9 @@ global.resourceList = [
     RESOURCE_ENERGY
 ];
 
-global.seedRemoteRoads = false;
+global.seedRemoteRoads = true;
 
+global.cpuDesired = 5000;
 
 global.getSpaceAtSource = function (source, creep) {
     const n  = new RoomPosition(source.pos.x,   source.pos.y-1, source.pos.roomName);

@@ -34,13 +34,13 @@ module.exports.run = function(debug = false) {
         if(theRoom.controller && theRoom.controller.my) {
 
             var list = _.filter(Game.creeps, (creep) => !creep.memory.dying && creep.memory.roomName == room);
-            if ((list.length <= 5 && miners == 0) && !theRoom.memory.emergency){
+            if ((list.length <= 3 && miners == 0) && !theRoom.memory.emergency){
                 notify = true;
                 msg += "\n" + Game.time + ' Room '+ room + ' In Emergency Mode!!' + "\n";
                 console.log('Emergency Activated');
                 theRoom.memory.emergency = true;
             }
-            if ((list.length >= 10 || miners > 0) && theRoom.memory.emergency) {
+            if ((list.length > 5 || miners > 0) && theRoom.memory.emergency) {
                 notify = true;
                 msg += "\n" + Game.time + ' Room ' + room + ' No Longer in Emergency Mode' + "\n";
                 console.log('Emergency Deactivated');

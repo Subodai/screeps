@@ -116,6 +116,7 @@ module.exports.run = function(creep) {
 
     // Alright at this point if we're delivering it's time to move the Creep to a drop off
     if (creep.memory.delivering) {
+        delete creep.memory.energyPickup;
         // Do we have energy?
         if (creep.carry.energy > 0) {
             // We do, try to find a spawn or extension to fill
@@ -205,6 +206,13 @@ module.exports.run = function(creep) {
                 }
                 return;
             }
+        }
+
+        // Fallback for no targets to fill
+        if (!target) {
+            // If we don't have a target, put it back into the room storage
+            // this should syphon terminal energy into storage as a backup
+            var target = creep.room.storage;
         }
 
         // Did we find a target?

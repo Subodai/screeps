@@ -69,9 +69,9 @@ module.exports.roster = {
     3: 0,
     4: 0,
     5: 0,
-    6: 1,
-    7: 1,
-    8: 1,
+    6: 0,
+    7: 0,
+    8: 0,
 }
 // Set a time for this creep to 'expire' at
 module.exports.expiry = 200;
