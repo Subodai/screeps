@@ -89,8 +89,9 @@ module.exports.run = function(creep) {
     }
 
     // Functional check!
-    if (!this.canDo(WORK)) {
+    if (!creep.canDo(WORK)) {
         console.log('[' +creep.name+'] Creep damaged seeking repair');
+        return;
     }
 
     if(creep.memory.building && creep.carry.energy == 0) {
