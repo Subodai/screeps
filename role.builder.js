@@ -2,6 +2,17 @@
 module.exports.role = 'builder';
 /* sType */
 module.exports.sType = 'normal';
+/* Spawn Roster */
+module.exports.roster = {
+    1: 3,
+    2: 3,
+    3: 2,
+    4: 2,
+    5: 1,
+    6: 1,
+    7: 1,
+    8: 1,
+}
 /* Costs */
 module.exports.cost = {
     1 : 300,
@@ -13,6 +24,7 @@ module.exports.cost = {
     7 : 800,
     8 : 800,
 }
+/* Body parts */
 module.exports.body = {
     1 :  [
         WORK,WORK,
@@ -55,18 +67,6 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
 }
-/* Spawn Roster */
-module.exports.roster = {
-    1: 3,
-    2: 3,
-    3: 2,
-    4: 2,
-    5: 1,
-    6: 1,
-    7: 1,
-    8: 1,
-}
-
 module.exports.enabled = function (room, debug = false) {
     var mySites = _.filter(Game.constructionSites, (site) => site.my);
     return (mySites.length > 0);
@@ -88,10 +88,16 @@ module.exports.run = function(creep) {
         creep.memory.dying = true;
     }
 
+    // Functional check!
+    if (!this.canDo(WORK)) {
+        console.log('[' +creep.name+'] Creep damaged seeking repair');
+    }
+
     if(creep.memory.building && creep.carry.energy == 0) {
         creep.memory.building = false;
         creep.say('GET');
     }
+
     if(!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
         delete creep.memory.energyPickup;
         creep.memory.building = true;
