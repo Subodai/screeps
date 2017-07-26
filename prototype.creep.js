@@ -689,3 +689,30 @@ Creep.prototype.findDamagedDefences = function() {
         }
     }
 }
+
+Creep.prototype.canDo = function(BodyPart) {
+    // If this creep needs a bodypart it doesn't have to function properly, it needs to go home to repair or self repair
+    if (!this.getActiveBodyparts(BodyPart) > 0 || this.memory.repair) {
+        // Creep is damaged, say so!
+        this.say('DMGD');
+        // Do we have our own heal parts?
+        if (this.getActiveBodyparts(HEAL) > 0) {
+            // Heal ourselves
+            this.heal(this);
+        } else {
+            // Get position in centre of home room
+            let pos = new RoomPosition(25,25,this.memory.roomName);
+            // Move the creep
+            this.moveTo(pos, { reusePath:10 });
+        }
+        // Are we at max health?
+        if (this.hits >= this.hitsMax) {
+            delete this.memory.repair;
+            return true;
+        } else {
+            this.memory.repair = true;
+            return false;
+        }
+    }
+    return true;
+}
