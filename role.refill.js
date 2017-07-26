@@ -60,9 +60,13 @@ module.exports.roster = {
     8: 1,
 }
 module.exports.enabled = function (room, debug = false) {
-    if(room.controller.level >= 4 && room.storage) {
-        return true;
+    const _room = Game.rooms[room];
+    if (_room.controller) {
+        if(_room.controller.level >= 4 && _room.storage) {
+            return true;
+        }
     }
+    return false;
 }
 /**
  * Harvester Role
@@ -104,11 +108,9 @@ module.exports.run = function(creep) {
 
     // If we're not delivering, check if we can harvest, if not and we have half energy, go and deliver
     if (!creep.memory.delivering) {
-
         if (creep.getNearbyEnergy(true) == ERR_FULL) {
             delete creep.memory.energyPickup;
             creep.memory.delivering = true;
-            return;
         }
     }
 

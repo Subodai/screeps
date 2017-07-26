@@ -141,7 +141,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
                 return ERR_INVALID_TARGET;
             }
             // Only bother trying to pick up if we're within 1 range
-            if (this.pos.getRangeTo(target) <= 1) {
+            if (this.pos.inRangeTo(target,1)) {
                 DBG && console.log('[' + this.name + '] Target should be in range, attempting pickup');
                 // First attempt to pickitup
                 if (this.pickup(target) == ERR_NOT_IN_RANGE) {
@@ -163,7 +163,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
                 return ERR_INVALID_TARGET;
             }
             // Only bother trying to pick up if we're within 1 range
-            if (this.pos.getRangeTo(target) <= 1) {
+            if (this.pos.inRangeTo(target,1)) {
                 DBG && console.log('[' + this.name + '] Target should be in range, attempting withdraw');
                 // Lets attempt to withdraw
                 if (this.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
@@ -190,7 +190,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
                 return ERR_INVALID_TARGET;
             }
             // Only bother trying to pick up if we're within 1 range
-            if (this.pos.getRangeTo(target) <= 1) {
+            if (this.pos.inRangeTo(target,1)) {
                 DBG && console.log('[' + this.name + '] Target should be in range, attempting harvest');
                 // Alright lets try harvesting it
                 if (this.harvest(target) == ERR_NOT_IN_RANGE) {
@@ -230,7 +230,6 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
     }
 }
 
-
 Creep.prototype.deliverEnergy = function() {
     DBG && console.log('[' + this.name + '] Creep attempting to deliver energy');
     // First of all are we empty?
@@ -244,22 +243,14 @@ Creep.prototype.deliverEnergy = function() {
     }
 }
 
-/**
- * Check if a creep can work and store it in it's memory
- */
 Creep.prototype.canWork = function() {
     // Has this creep already been flagged as a worker? and at full health (if it's been hit we should check it's parts again)
     if (!this.memory.canWork && this.hits == this.hitsMax) {
         // If we got hit, clear the memory
         if (this.hits != this.hitsMax) { delete this.memory.canWork; }
-        // Check the body parts
-        for (const i in this.body) {
-            // Is this a work part?
-            if (this.body[i].type == WORK && this.body[i].hits > 0) {
-                // YES set flag and break
-                this.memory.canWork = 'yes';
-                break;
-            }
+        // Use the activeBodyparts method.. sigh
+        if (this.getActiveBodyparts(WORK) > 0) {
+            this.memory.canWork = 'yes';
         }
         // Is it set at this point?
         if (!this.memory.canWork) {
@@ -270,7 +261,6 @@ Creep.prototype.canWork = function() {
     // Can this creep work?
     return this.memory.canWork == 'yes';
 }
-
 
 Creep.prototype.findSpaceAtSource = function(source) {
     // Make sure to initialise the source's last check memory
@@ -336,11 +326,16 @@ Creep.prototype.checkEmptyAtPos = function(pos) {
 }
 
 Creep.prototype.roadCheck = function(work = false) {
-    var road = site = flag = false;
+    var road = false;
+    var site = false;
+    var flag = false;
+    // Don't lay roads no room edges
+    if (this.pos.isRoomEdge()) { return ;}
     let obj = this.room.lookForAt(LOOK_STRUCTURES, this.pos);
     if (obj.length > 0) {
         for (let i in obj) {
             if (obj[i].structureType == STRUCTURE_ROAD) {
+                this.DBG && console.log(this.name + ' Already road here');
                 road = obj[i];
                 break;
             }
@@ -348,37 +343,328 @@ Creep.prototype.roadCheck = function(work = false) {
     }
     if (road && work && this.carry.energy > 0) {
         if (road.hits < road.hitsMax) {
+            this.DBG && console.log(this.name + ' Repairing existing road');
             this.repair(road);
             this.say(global.sayRepair);
             return;
+        } else {
+            this.DBG && console.log(this.name + ' Road good to go');
+            return;
         }
+    }
+    if (road) {
+        this.DBG && console.log(this.name + ' Already road no action to perform');
+        return
     }
     // No road?
     if (!road) {
+        this.DBG && console.log(this.name + ' No road, looking for construction site');
         // Check for construction sites
-        let sites = creep.room.lookForAt(LOOK_CONSTRUCTION_SITES, this.pos);
+        let sites = this.room.lookForAt(LOOK_CONSTRUCTION_SITES, this.pos);
         if (sites.length > 0) {
+            this.DBG && console.log(this.name + ' Found construction site');
             if (sites[0].structureType == STRUCTURE_ROAD) {
                 site = sites[0];
             }
         }
     }
     if (site && work && this.carry.energy > 0) {
+        this.DBG && console.log(this.name + ' Building construction site');
         this.build(site);
         this.say(global.sayBuild);
         return;
     }
     // No site?
     if (!site) {
+        this.DBG && console.log(this.name + ' No site found look for flags');
         // Check for flag
-        let flags = creep.room.lookForAt(LOOK_FLAGS, this.pos);
-        if (flags.legnth > 0) {
+        let flags = this.room.lookForAt(LOOK_FLAGS, this.pos);
+        if (flags.length > 0) {
+            this.DBG && console.log(this.name + ' Found a flag');
             flag = flags[0];
         }
     }
-    if (!flag && global.seedRemoteRoads === true) { this.pos.createFlag();}
+    this.DBG && console.log(this.name + ' No Road, Site, or Flag.. attempting to place one');
+    this.DBG && console.log(JSON.stringify(this.pos));
+    if (!flag && global.seedRemoteRoads == true) {
+        this.DBG && console.log(this.name + 'Dropping a flag');
+        // Check for room edge here
+        this.pos.createFlag();
+        return;
+    }
 }
 
 Creep.prototype.containerCheck = function() {
+    // Check we have energy (and it's higher than 0.. because 0 probably means we got smacked and lost our carry)
+    if (this.carry.energy >= this.carryCapacity && this.carry.energy > 0) {
+        var container = false;
+        // Check for structures at our pos
+        let objects = this.pos.lookFor(LOOK_STRUCTURES);
+        if (objects.length > 0) {
+            for (let i in objects) {
+                if (objects[i].structureType == STRUCTURE_CONTAINER) {
+                    container = objects[i];
+                    break;
+                }
+            }
+        }
+        // Is there a container?
+        if (container) {
+            if (container.hits < container.hitsMax) {
+                this.repair(container);
+                this.say(global.sayRepair);
+                return;
+            }
+        } else {
+            var constructionSite = false;
+            // Get sites
+            let sites = this.pos.lookFor(LOOK_CONSTRUCTION_SITES);
+            // If there are some
+            if (sites.length > 0) {
+                // loop
+                for (let i in sites) {
+                    // is this site a container?
+                    if (sites[i].structureType == STRUCTURE_CONTAINER) {
+                        constructionSite = sites[i];
+                        break;
+                    }
+                }
+            }
+            // Did we find one?
+            if (constructionSite) {
+                this.build(constructionSite);
+                this.say(global.sayBuild);
+                return true;
+            } else {
+                this.pos.createConstructionSite(STRUCTURE_CONTAINER);
+                return;
+            }
+        }
+    }
+}
 
+Creep.prototype.repairStructures = function (options = {}) {
+    // First are we empty?
+    if (this.carry.energy == 0) {
+        DBG && console.log('[' + this.name + '] Empty Cannot Repair Structures');
+        // Clear repair target
+        delete this.memory.repairTarget;
+        delete this.memory.targetMaxHP;
+        return ERR_NOT_ENOUGH_ENERGY;
+    }
+    // Is their an item in memory, with full health already?
+    if (this.memory.repairTarget) {
+        let target = Game.getObjectById(this.memory.repairTarget);
+        // Have we already filled the items health to what we want?
+        if (target.hits >= this.memory.targetMaxHP) {
+            // Clear the target, time for a new one
+            delete this.memory.repairTarget;
+            delete this.memory.targetMaxHP;
+        }
+    }
+    // Do we have a repairTarget in memory?
+    if (!this.memory.repairTarget) {
+        DBG && console.log('[' + this.name + '] Has no repair target, looking for 1 hp ramparts and walls');
+        // Check for walls or ramparts with 1 hit first
+        var ts = this.room.find(FIND_STRUCTURES, {
+            filter: (i) => (i.structureType == STRUCTURE_RAMPART || i.structureType == STRUCTURE_WALL) && i.hits == 1 && i.room == this.room
+        });
+
+        if (ts.length > 0) {
+            DBG && console.log('[' + this.name + '] Found a 1 hp item, setting target');
+            ts.sort(function(a,b) {
+                return a.hits - b.hits;
+            });
+            this.memory.targetMaxHP = 1;
+            this.memory.repairTarget = ts[0].id;
+        }
+    }
+
+    // Next juice up walls and ramparts to 600
+    if (!this.memory.repairTarget) {
+        DBG && console.log('[' + this.name + '] Has no repair target, looking for < 600hp ramparts and walls');
+        if (ts.length == 0) {
+            var ts = this.room.find(FIND_STRUCTURES, {
+                filter: (i) => (i.structureType == STRUCTURE_RAMPART || i.structureType == STRUCTURE_WALL) && i.hits <= 600 && i.room == this.room
+            });
+            if (ts.length > 0) {
+                ts.sort(function(a,b) {
+                    return a.hits - b.hits;
+                });
+                this.memory.targetMaxHP = 600;
+                this.memory.repairTarget = ts[0].id;
+            }
+        }
+    }
+
+    // Next find damaged structures that aren't walls, ramparts or roads
+    if (!this.memory.repairTarget) {
+        DBG && console.log('[' + this.name + '] Has no repair target, looking for damaged structures');
+        this.findDamagedStructures();
+    }
+
+    // Next find Damaged Roads
+    if (!this.memory.repairTarget) {
+        DBG && console.log('[' + this.name + '] Has no repair target, looking for damaged roads');
+        this.findDamagedRoads();
+    }
+
+    // Next find Damaged defence items (wall, rampart)
+    if (!this.memory.repairTarget) {
+        DBG && console.log('[' + this.name + '] Has no repair target, looking for damaged defences');
+        this.findDamagedDefences();
+    }
+    // Do we have something to repair?
+    if (this.memory.repairTarget) {
+        DBG && console.log('[' + this.name + '] Has a repair target, checking close enough to repair');
+        let target = Game.getObjectById(this.memory.repairTarget);
+        if (options == {}) {
+            var options = {
+                visualizePathStyle: {
+                    stroke: global.colourRepair,
+                    opacity: global.pathOpacity
+                },
+                reusePath:this.pos.getRangeTo(target) // Use the range to the object we're after as the reusePath opt
+            };
+        }
+        // Make sure target is still valid
+        if (target.hits >= this.memory.targetMaxHP) {
+            DBG && console.log('[' + this.name + '] Repair target at target XP deleting target from memory');
+            delete this.memory.repairTarget;
+            delete this.memory.targetMaxHP;
+            return ERR_FULL;
+        }
+        if (this.pos.inRangeTo(target, 3)) {
+            DBG && console.log('[' + this.name + '] Target in range, attempting repair');
+            // attempt repair
+            if (this.repair(target) == ERR_NOT_IN_RANGE) {
+                DBG && console.log('[' + this.name + '] Repair Failed#');
+            }
+        } else {
+            this.moveTo(target,options);
+            this.say(global.sayMove);
+            return OK;
+        }
+    } else {
+        // Nothing to repair?
+        // No targets.. head back to the room spawn
+        var spawn = this.pos.findClosestByRange(FIND_STRUCTURES, {
+            filter: (i) => i.structureType == STRUCTURE_SPAWN
+        });
+        if (spawn) {
+            if (spawn.recycleCreep(this) == ERR_NOT_IN_RANGE) {
+                this.moveTo(spawn, {
+                    visualizePathStyle: {
+                        stroke: global.colorRepair,
+                        opacity: global.pathOpacity
+                    },
+                    reusePath:3
+                });
+                this.say(global.sayWhat);
+            }
+        }
+        return ERR_INVALID_TARGET;
+    }
+}
+
+Creep.prototype.findDamagedStructures = function() {
+    var ts = [];
+    for (let distance in [3,5,10,20]) {
+        var ts = this.pos.findInRange(FIND_STRUCTURES, distance, {
+            filter: (i) => (i.structureType != STRUCTURE_RAMPART && i.structureType != STRUCTURE_WALL && i.structureType != STRUCTURE_ROAD) && i.hits < i.hitsMax && i.room == this.room
+        });
+        if (ts.length>0) {break;}
+    }
+    if (ts.length == 0) {
+        var ts = this.room.find(FIND_STRUCTURES, {
+            filter: (i) => (i.structureType != STRUCTURE_RAMPART && i.structureType != STRUCTURE_WALL && i.structureType != STRUCTURE_ROAD) && i.hits < i.hitsMax && i.room == this.room
+        });
+    }
+    if (ts.length > 0) {
+        ts.sort(function(a,b) {
+            let aH = a.hitsMax - a.hits;
+            let bH = b.hitsMax - b.hits;
+            if (aH > bH) {
+                return -1;
+            } else if (bH > aH) {
+                return 1;
+            }
+            return 0;
+        });
+        this.memory.targetMaxHP = ts[0].hitsMax;
+        this.memory.repairTarget = ts[0].id;
+    }
+}
+
+Creep.prototype.findDamagedRoads = function() {
+    var ts = [];
+    for (let distance in [3,5,10,20]) {
+        var ts = this.pos.findInRange(FIND_STRUCTURES, distance, {
+            filter: (i) => i.structureType == STRUCTURE_ROAD && i.hits < i.hitsMax && i.room == this.room
+        });
+        if (ts.length>0){break;}
+    }
+    if (ts.length == 0) {
+        var ts = this.room.find(FIND_STRUCTURES, {
+            filter: (i) => i.structureType == STRUCTURE_ROAD && i.hits < i.hitsMax && i.room == this.room
+        });
+    }
+    if (ts.length > 0) {
+        ts.sort(function(a,b) {
+            let aH = a.hitsMax - a.hits;
+            let bH = b.hitsMax - b.hits;
+            if (aH > bH) {
+                return -1;
+            } else if (bH > aH) {
+                return 1;
+            }
+            return 0;
+        });
+        this.memory.targetMaxHP = ts[0].hitsMax;
+        this.memory.repairTarget = ts[0].id;
+    }
+}
+
+Creep.prototype.findDamagedDefences = function() {
+    var ts = [];
+    // Loop through the damage multipliers
+    for (let multiplier in [0.25,0.5,0.75,1]) {
+        // Loop through the distances
+        for (let distance in [3,5,10,20]) {
+            var ts = this.pos.findInRange(FIND_STRUCTURES, distance, {
+                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*multiplier)) ||
+                                (i.structureType == STRUCTURE_WALL && i.hits < (global.wallMax*multiplier))) && i.room == this.room
+            });
+            if (ts.length>0){break;}
+        }
+        if (ts.length == 0) {
+            var ts = this.room.find(FIND_STRUCTURES, {
+                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*multiplier)) ||
+                                (i.structureType == STRUCTURE_WALL && i.hits < (global.wallMax*multiplier))) && i.room == this.room
+            });
+        }
+        if (ts.length>0){
+            ts.sort(function(a,b) {
+                if (a.structureType == STRUCTURE_WALL)    { var aHitsMax = global.wallMax*multiplier; }
+                if (a.structureType == STRUCTURE_RAMPART) { var aHitsMax = global.rampartMax*multiplier; }
+                if (b.structureType == STRUCTURE_WALL)    { var bHitsMax = global.wallMax*multiplier; }
+                if (b.structureType == STRUCTURE_RAMPART) { var bHitsMax = global.rampartMax*multiplier; }
+                let aH = ahitsMax - a.hits;
+                let bH = bhitsMax - b.hits;
+                if (aH > bH) {
+                    return -1;
+                } else if (bH > aH) {
+                    return 1;
+                }
+                return 0;
+            });
+            if (ts[0].structureType == STRUCTURE_WALL) {
+                this.memory.targetMaxHP = global.wallMax*multiplier;
+            }
+            if (ts[0].structureType == STRCUTURE_RAMPART) {
+                this.memory.targetMaxHP = global.rampartMax*multiplier;
+            }
+            this.memory.repairTarget = ts[0].id;
+        }
+    }
 }

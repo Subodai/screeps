@@ -62,9 +62,9 @@ module.exports.roster = {
     3: 1,
     4: 1,
     5: 1,
-    6: 2,
-    7: 2,
-    8: 2,
+    6: 1,
+    7: 1,
+    8: 1,
 }
 
 module.exports.enabled = function (room, debug = false) {
@@ -151,259 +151,29 @@ module.exports.run = function(creep) {
         creep.memory.sapping = true;
         creep.say(global.sayPUT);
     }
-    // Are we sapping?
-    if(creep.memory.sapping) {
-        // Yep, okay.. first things first, any ramparts or walls on 1 energy?
-        var targets = creep.room.find(FIND_STRUCTURES, {
-            filter: (i) => (i.structureType == STRUCTURE_RAMPART || i.structureType == STRUCTURE_WALL) && i.hits == 1 && i.room == creep.room
-        });
 
-        // Next lets start pumping energy into the walls and ramparts to juicy em up in stages
-        if (targets.length == 0) {
-            var targets = creep.room.find(FIND_STRUCTURES, {
-                filter: (i) => (i.structureType == STRUCTURE_RAMPART || i.structureType == STRUCTURE_WALL) && i.hits <= 600 && i.room == creep.room
-            });
-        }
-
-        // Next lets worry about other non-road stuctures below max
-
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 3, {
-                filter: (i) => (i.structureType != STRUCTURE_RAMPART && i.structureType != STRUCTURE_WALL && i.structureType != STRUCTURE_ROAD) && i.hits < i.hitsMax && i.room == creep.room
-            });
-        }
-
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 5, {
-                filter: (i) => (i.structureType != STRUCTURE_RAMPART && i.structureType != STRUCTURE_WALL && i.structureType != STRUCTURE_ROAD) && i.hits < i.hitsMax && i.room == creep.room
-            });
-        }
-
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 10, {
-                filter: (i) => (i.structureType != STRUCTURE_RAMPART && i.structureType != STRUCTURE_WALL && i.structureType != STRUCTURE_ROAD) && i.hits < i.hitsMax && i.room == creep.room
-            });
-        }
-
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 20, {
-                filter: (i) => (i.structureType != STRUCTURE_RAMPART && i.structureType != STRUCTURE_WALL && i.structureType != STRUCTURE_ROAD) && i.hits < i.hitsMax && i.room == creep.room
-            });
-        }
-
-        // Next lets worry about other non-road stuctures below max
-        if (targets.length == 0) {
-            var targets = creep.room.find(FIND_STRUCTURES, {
-                filter: (i) => (i.structureType != STRUCTURE_RAMPART && i.structureType != STRUCTURE_WALL && i.structureType != STRUCTURE_ROAD) && i.hits < i.hitsMax && i.room == creep.room
-            });
-        }
-
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 3, {
-                filter: (i) => i.structureType == STRUCTURE_ROAD && i.hits < i.hitsMax && i.room == creep.room
-            });
-        }
-
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 5, {
-                filter: (i) => i.structureType == STRUCTURE_ROAD && i.hits < i.hitsMax && i.room == creep.room
-            });
-        }
-
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 10, {
-                filter: (i) => i.structureType == STRUCTURE_ROAD && i.hits < i.hitsMax && i.room == creep.room
-            });
-        }
-
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 20, {
-                filter: (i) => i.structureType == STRUCTURE_ROAD && i.hits < i.hitsMax && i.room == creep.room
-            });
-        }
-
-        // Next lets do roads
-        if (targets.length == 0) {
-            var targets = creep.room.find(FIND_STRUCTURES, {
-                filter: (i) => i.structureType == STRUCTURE_ROAD && i.hits < i.hitsMax && i.room == creep.room
-            });
-        }
-
-        // Next walls and ramparts below 1/4 of their max
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 3, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*0.25)) ||
-                               (i.structureType == STRUCTURE_WALL && i.hits < (global.wallMax*0.25))) && i.room == creep.room
-            });
-        }
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 5, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*0.25)) ||
-                               (i.structureType == STRUCTURE_WALL && i.hits < (global.wallMax*0.25))) && i.room == creep.room
-            });
-        }
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 10, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*0.25)) ||
-                               (i.structureType == STRUCTURE_WALL && i.hits < (global.wallMax*0.25))) && i.room == creep.room
-            });
-        }
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 20, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*0.25)) ||
-                               (i.structureType == STRUCTURE_WALL && i.hits < (global.wallMax*0.25))) && i.room == creep.room
-            });
-        }
-        if (targets.length == 0) {
-            var targets = creep.room.find(FIND_STRUCTURES, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*0.25)) ||
-                               (i.structureType == STRUCTURE_WALL && i.hits < (global.wallMax*0.25))) && i.room == creep.room
-            });
-        }
-
-        // Next walls and ramparts below 1/2 their max
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 3, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*0.5)) ||
-                               (i.structureType == STRUCTURE_WALL && i.hits < (global.wallMax*0.5))) && i.room == creep.room
-            });
-        }
-
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 5, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*0.5)) ||
-                               (i.structureType == STRUCTURE_WALL && i.hits < (global.wallMax*0.5))) && i.room == creep.room
-            });
-        }
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 10, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*0.5)) ||
-                               (i.structureType == STRUCTURE_WALL && i.hits < (global.wallMax*0.5))) && i.room == creep.room
-            });
-        }
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 20, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*0.5)) ||
-                               (i.structureType == STRUCTURE_WALL && i.hits < (global.wallMax*0.5))) && i.room == creep.room
-            });
-        }
-        if (targets.length == 0) {
-            var targets = creep.room.find(FIND_STRUCTURES, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*0.5)) ||
-                               (i.structureType == STRUCTURE_WALL && i.hits < (global.wallMax*0.5))) && i.room == creep.room
-            });
-        }
-
-        // Next walls and ramparts below 3/4 their max
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 3, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*0.75)) ||
-                               (i.structureType == STRUCTURE_WALL && i.hits < (global.wallMax*0.75))) && i.room == creep.room
-            });
-        }
-
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 5, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*0.75)) ||
-                               (i.structureType == STRUCTURE_WALL && i.hits < (global.wallMax*0.75))) && i.room == creep.room
-            });
-        }
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 10, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*0.75)) ||
-                               (i.structureType == STRUCTURE_WALL && i.hits < (global.wallMax*0.75))) && i.room == creep.room
-            });
-        }
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 20, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*0.75)) ||
-                               (i.structureType == STRUCTURE_WALL && i.hits < (global.wallMax*0.75))) && i.room == creep.room
-            });
-        }
-        if (targets.length == 0) {
-            var targets = creep.room.find(FIND_STRUCTURES, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*0.75)) ||
-                               (i.structureType == STRUCTURE_WALL && i.hits < (global.wallMax*0.75))) && i.room == creep.room
-            });
-        }
-
-        // Next walls and ramparts below their max
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 3, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < global.rampartMax) ||
-                               (i.structureType == STRUCTURE_WALL && i.hits < global.wallMax)) && i.room == creep.room
-            });
-        }
-
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 5, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < global.rampartMax) ||
-                               (i.structureType == STRUCTURE_WALL && i.hits < global.wallMax)) && i.room == creep.room
-            });
-        }
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 10, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < global.rampartMax) ||
-                               (i.structureType == STRUCTURE_WALL && i.hits < global.wallMax)) && i.room == creep.room
-            });
-        }
-        if (targets.length == 0) {
-            var targets = creep.pos.findInRange(FIND_STRUCTURES, 20, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < global.rampartMax) ||
-                               (i.structureType == STRUCTURE_WALL && i.hits < global.wallMax)) && i.room == creep.room
-            });
-        }
-        if (targets.length == 0) {
-            var targets = creep.room.find(FIND_STRUCTURES, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < global.rampartMax) ||
-                               (i.structureType == STRUCTURE_WALL && i.hits < global.wallMax)) && i.room == creep.room
-            });
-        }
-        // Do we have any targets?
-        if (targets.length > 0) {
-            this.visuals(targets, creep.room.name);
-            // Sort by hits (may need to check this)
-            targets.sort((a,b) => ((a.hits/a.hitsMax)*100) - ((b.hits/b.hitsMax)*100) );
-            // Get the first target on the list
-            var target = targets[0];
-            // Attempt to repair it
-            if (creep.repair(target) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target, {
-                    visualizePathStyle: {
-                        stroke: global.colorRepair,
-                        opacity: global.pathOpacity
-                    },
-                    reusePath:3
-                });
-                creep.say(global.sayMove);
-            } else {
-                creep.say(global.sayRepair);
-            }
-            return;
-        } else {
-            // No targets.. head back to the room spawn
-            var spawn = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (i) => i.structureType == STRUCTURE_SPAWN
-            });
-            if (spawn) {
-                if (spawn.recycleCreep(creep) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(spawn, {
-                        sualizePathStyle: {
-                            stroke: global.colorRepair,
-                            opacity: global.pathOpacity
-                        },
-                        reusePath:3
-                    });
-                    creep.say(global.sayWhat);
-                }
-            }
-        }
-    }
-    else {
+    if (!creep.memory.sapping) {
         if (creep.getNearbyEnergy(true) == ERR_FULL) {
             delete creep.memory.energyPickup;
             creep.memory.sapping = true;
-            return;
+        }
+    }
+
+    // Are we sapping?
+    if(creep.memory.sapping) {
+        let result = creep.repairStructures();
+        if (result == ERR_FULL) {
+            delete creep.memory.repairTarget;
+            delete creep.memory.targetmaxHP;
+            creep.repairStructures();
+        } else if (result == ERR_NOT_ENOUGH_ENERGY) {
+            delete creep.memory.repairTarget;
+            delete creep.memory.targetmaxHP;
+            creep.memory.sapping == false;
+        } else if (result == OK) {
+            // Nothing to do here
+        } else if (result == ERR_INVALID_TARGET) {
+            // Heading back to spawn
         }
     }
 }

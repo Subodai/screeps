@@ -7,11 +7,11 @@ module.exports.cost = {
     1 : 300,
     2 : 400,
     3 : 500,
-    4 : 500,
-    5 : 1000,
-    6 : 1000,
-    7 : 1000,
-    8 : 1000,
+    4 : 1300,
+    5 : 1800,
+    6 : 1800,
+    7 : 1800,
+    8 : 1800,
 }
 
 /* Body parts */
@@ -31,32 +31,34 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     4 : [
-        CARRY,CARRY,CARRY,CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE
+        CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     5 : [
-        CARRY,CARRY,CARRY,CARRY,CARRY,
-        CARRY,CARRY,CARRY,CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE,
-        MOVE,MOVE,MOVE,MOVE,MOVE
+        CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
     6 : [
-       CARRY,CARRY,CARRY,CARRY,CARRY,
-        CARRY,CARRY,CARRY,CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE,
-        MOVE,MOVE,MOVE,MOVE,MOVE
+        CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
     7 : [
-        CARRY,CARRY,CARRY,CARRY,CARRY,
-        CARRY,CARRY,CARRY,CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE,
-        MOVE,MOVE,MOVE,MOVE,MOVE
+        CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
     8 : [
-        CARRY,CARRY,CARRY,CARRY,CARRY,
-        CARRY,CARRY,CARRY,CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE,
-        MOVE,MOVE,MOVE,MOVE,MOVE
+        CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
 }
 /* Spawn Roster */
@@ -64,19 +66,21 @@ module.exports.roster = {
     1: 2,
     2: 3,
     3: 3,
-    4: 3,
-    5: 2,
+    4: 6,
+    5: 3,
     6: 3,
     7: 3,
     8: 3,
 }
 
+module.exports.multiplier = 2;
+
 module.exports.enabled = function (room, debug = false) {
-    var _room = Game.rooms[room];
+    const _room = Game.rooms[room];
     if (_room.controller) {
         if (_room.memory.minersNeeded && _room.memory.minersNeeded > 0) {
             var list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.roomName == room && !creep.memory.dying);
-            if (list.length < _room.memory.minersNeeded) {
+            if (list.length < _room.memory.minersNeeded*this.multiplier) {
                 return true;
             }
         }
@@ -126,7 +130,6 @@ module.exports.run = function(creep) {
         // Always pickup none
         if (creep.getNearbyEnergy() == ERR_FULL) {
             creep.memory.delivering = true;
-            return;
         }
     }
 
@@ -313,7 +316,7 @@ module.exports.run = function(creep) {
             creep.memory.idle++;
             creep.say('idle: ' + creep.memory.idle);
 
-            if (creep.memory.idle >= 10) {
+            if (creep.memory.idle >= 100) {
                 // Are we in our home room?
                 if (creep.room.name != creep.memory.roomName) {
                     // lets go home
