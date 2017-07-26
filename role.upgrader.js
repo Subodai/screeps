@@ -8,10 +8,10 @@ module.exports.cost = {
     2 : 550,
     3 : 800,
     4 : 1300,
-    5 : 1300,
-    6 : 1300,
-    7 : 1300,
-    8 : 1300,
+    5 : 1550,
+    6 : 1550,
+    7 : 1550,
+    8 : 1550,
 }
 /* Body Parts at each RCL */
 module.exports.body = {
@@ -39,26 +39,26 @@ module.exports.body = {
     5 : [
         WORK,WORK,WORK,WORK,WORK,
         WORK,WORK,WORK,WORK,WORK,
-        CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE
+        CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     6 : [
         WORK,WORK,WORK,WORK,WORK,
         WORK,WORK,WORK,WORK,WORK,
-        CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE
+        CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     7 : [
         WORK,WORK,WORK,WORK,WORK,
         WORK,WORK,WORK,WORK,WORK,
-        CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE
+        CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     8 : [
         WORK,WORK,WORK,WORK,WORK,
         WORK,WORK,WORK,WORK,WORK,
-        CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE
+        CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
 }
 /* Spawn Roster */
@@ -69,8 +69,8 @@ module.exports.roster = {
     4: 3,
     5: 3,
     6: 3,
-    7: 2,
-    8: 1,
+    7: 3,
+    8: 3,
 }
 module.exports.enabled = function (room, debug = false) {
     var _room = Game.rooms[room];
@@ -119,6 +119,13 @@ module.exports.run = function(creep) {
         creep.say('PUT');
     }
 
+    if (!creep.memory.upgrading) {
+        if (creep.getNearbyEnergy(true) == ERR_FULL) {
+            delete creep.memory.energyPickup;
+            creep.memory.upgrading = true;
+        }
+    }
+
     if(creep.memory.upgrading) {
         // if (Game.rooms[creep.memory.roomName].controller.sign != 'Room Claimed by Subodai - [Ypsilon Pact]') {
         //     if (creep.pos.getRangeTo(Game.rooms[creep.memory.roomName].controller) > 1) {
@@ -139,83 +146,5 @@ module.exports.run = function(creep) {
         } else {
             creep.say('(>.<)');
         }
-    } else {
-        if (creep.getNearbyEnergy() == ERR_FULL) {
-            creep.memory.upgrading = true;
-            return;
-        }
-        // var resource = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES,{
-        //     filter: (i) => i.resourceType == RESOURCE_ENERGY
-        // });
-
-        // if (resource) {
-        //     if (creep.pickup(resource) == ERR_NOT_IN_RANGE) {
-        //         if (creep.carry.energy <= (creep.carryCapacity/2)) {
-        //             creep.moveTo(resource,{
-        //                 visualizePathStyle: {
-        //                     stroke: global.colourResPickup,
-        //                     opacity: global.pathOpacity
-        //                 },
-        //                 reusePath:5
-        //             });
-        //             creep.say('>>');
-        //         } else {
-        //             creep.memory.upgrading = true;
-        //         }
-        //     } else {
-        //         creep.say('^^');
-        //     }
-        //     return;
-        // }
-
-        // var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-        //     filter: (structure) => structure.structureType == STRUCTURE_CONTAINER && structure.store[RESOURCE_ENERGY] > 100
-        // });
-
-        // if(container) {
-        //     // Can we harvest right now?
-        //     if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-        //         creep.moveTo(container, {
-        //             visualizePathStyle: {
-        //                 stroke: global.colourPickup,
-        //                 opacity: global.pathOpacity
-        //             },
-        //             reusePath:5
-        //         });
-        //         creep.say('>>');
-        //     } else {
-        //         creep.say('^^');
-        //     }
-        //     return;
-        // }
-
-        // var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
-        //     filter: function (i) {
-        //         if (i.energy > 0 || i.ticksToRegeneration < 10) {
-        //             const space = global.getSpaceAtSource(i,creep);
-        //             return space;
-        //         } else {
-        //             return false;
-        //         }
-        //     }
-        // });
-        // if (source) {
-        //     // Can we harvest this?
-        //     if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-        //         creep.moveTo(source, {
-        //             visualizePathStyle: {
-        //                 stroke: global.colourPickup,
-        //                 opacity: global.pathOpacity
-        //             },
-        //             reusePath:5
-        //         });
-        //         creep.say('>>');
-        //     } else {
-        //         creep.say('^^');
-        //         if (creep.carry.energy == creep.carryCapacity) {
-        //             creep.memory.upgrading = true;
-        //         }
-        //     }
-        // }
     }
 }

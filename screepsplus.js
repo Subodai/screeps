@@ -61,9 +61,10 @@ function collect_stats() {
     };
 
     Memory.stats.roomSummary = resources.summarize_rooms();
-    Memory.stats.spawnQueue = Memory.spawnQueue;
-    Memory.stats.spawnQueue.length = Memory.spawnQueue.creeps.length;
-
+    if (Memory.queue) {
+        Memory.stats.queue = Memory.queue;
+        Memory.stats.queue.length = Memory.queue.creeps.length;
+    }
 
     // Add callback functions which we can call to add additional
     // statistics to here, and have a way to register them.

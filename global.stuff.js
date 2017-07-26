@@ -1,17 +1,17 @@
 global.roles = [
     'guard',
     'miner',
-    'harvester',
-    'upgrader',
-    'builder',
-    // 'mover',
+    'refill',       // Always pulls from storage
+    'harvester',    // Sources and containers always, fill spawns until 4, then only storage
+    'upgrader',     // Sources until 4, storage after
+    'builder',      // Sources until 4, storage after
+    'janitor',      // Sources until 4, storage after
     'extractor',
-    'supergrader',
+    'supergrader',  // Storage always
     'scout',
     'reserve',
     'remoteminer',
     'hauler',
-    'janitor',
 ];
 
 global.settings = {

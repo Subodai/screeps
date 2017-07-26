@@ -237,7 +237,7 @@ module.exports.setup = function (debug = false) {
 
         if (!theRoom.memory.assignedExtractors) {
             var extractors = theRoom.find(FIND_MINERALS, {
-                filter: (i) => i.ticksToRegeneration = 0
+                filter: (i) => i.ticksToRegeneration == 0
             });
             var array = {};
             for (var i=0;i<=extractors.length-1;i++) {
@@ -258,7 +258,7 @@ module.exports.setup = function (debug = false) {
 
         // First get the extractors
         var extractors = theRoom.find(FIND_MINERALS, {
-            filter: (i) => i.ticksToRegeneration = 0
+            filter: (i) => i.ticksToRegeneration == 0
         });
         // Loop through the extractors
         for (var i=0;i<=extractors.length-1;i++) {

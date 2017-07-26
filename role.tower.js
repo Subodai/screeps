@@ -134,10 +134,10 @@ module.exports.run = function (tower, debug = false) {
 
 
 module.exports.visuals = function (items, room, debug = false) {
-    var _room = Game.rooms[room];
+    const _room = Game.rooms[room];
     // _room.visual.clear();
-    for (var i in items) {
-        var item = items[i];
+    for (let i in items) {
+        let item = items[i];
         if(item.structureType == STRUCTURE_RAMPART) {
             var percent = (item.hits/global.rampartMax)*100;
         } else if (item.structureType == STRUCTURE_WALL) {
@@ -146,10 +146,10 @@ module.exports.visuals = function (items, room, debug = false) {
             var percent = (item.hits/item.hitsMax)*100;
         }
 
-        var r = Math.round(255 - ((255/100)*(percent/100)*100));
-        var g = Math.round((255/100)*(percent/100)*100);
-        var b = 0;
-        var _color = '#' + this.tohex(r) + this.tohex(g) + this.tohex(b);
+        let r = Math.round(255 - ((255/100)*(percent/100)*100));
+        let g = Math.round((255/100)*(percent/100)*100);
+        let b = 0;
+        let _color = '#' + this.tohex(r) + this.tohex(g) + this.tohex(b);
         _room.visual.circle(item.pos, {
             fill: _color,
             radius:0.35,
@@ -168,10 +168,8 @@ module.exports.visuals = function (items, room, debug = false) {
 module.exports.tohex = function (d, padding) {
     var hex = Number(d).toString(16);
     padding = typeof (padding) === "undefined" || padding === null ? padding = 2 : padding;
-
     while (hex.length < padding) {
         hex = "0" + hex;
     }
-
     return hex;
 }

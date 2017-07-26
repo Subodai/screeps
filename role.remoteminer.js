@@ -32,9 +32,9 @@ module.exports.roster = {
     3: 6,
     4: 6,
     5: 6,
-    6: 2,
-    7: 2,
-    8: 2,
+    6: 6,
+    7: 6,
+    8: 6,
 }
 /**
  * Individual check for a room to check if this creep type should be enabled or not
@@ -165,7 +165,7 @@ module.exports.run = function (creep, debug = false) {
                         stroke: global.colourFlag,
                         opacity: global.pathOpacity
                     },
-                    reusePath:1
+                    reusePath:40
                 });
                 return;
             }
@@ -208,7 +208,7 @@ module.exports.run = function (creep, debug = false) {
         }
 
         // @TODO Self Setup, build and repair routine for if we have energy
-        if(this.containerRoutine(creep)) {
+        if(creep.containerCheck()) {
             return;
         }
 
@@ -266,8 +266,7 @@ module.exports.run = function (creep, debug = false) {
                         },
                         reusePath:5
                     });
-                    // @TODO Drop a road piece if we don't have one
-                    this.layRoad(creep);
+                    creep.roadCheck(true);
                     // Moving make a say
                     creep.say(global.sayMove)
                 } else {
@@ -284,99 +283,6 @@ module.exports.run = function (creep, debug = false) {
             }
         }
     }
-}
-
-module.exports.containerRoutine = function (creep) {
-    // @TODO Self Setup, build and repair routine for if we have energy
-    if (creep.carry.energy >= creep.carryCapacity) {
-        var container = false;
-        // We have energy, so we should be at our source, is there a container nearby?
-        var objects = creep.room.lookForAt(LOOK_STRUCTURES, creep.pos);
-        if (objects.length > 0) {
-            for (var i in objects) {
-                if (objects[i].structureType == STRUCTURE_CONTAINER) {
-                    var container = objects[i];
-                    break;
-                }
-            }
-        }
-        // If there is a container does it have max hitpoints?
-        if (container) {
-            if (container.hits < container.hitsMax) {
-                creep.repair(container);
-                creep.say(global.sayRepair);
-                return;
-            }
-        } else {
-            // No container, is there a build site?
-            var constructionSite = false;
-            // Get sites
-            var sites = creep.room.lookForAt(LOOK_CONSTRUCTION_SITES, creep.pos);
-            // If there are some
-            if (sites.length > 0) {
-                // Loop through
-                for (var i in sites) {
-                    // If this is a container constructionsite
-                    if (sites[i].structureType == STRUCTURE_CONTAINER) {
-                        // Set constructionSite to it
-                        var constructionSite = sites[i];
-                        break;
-                    }
-                }
-            }
-            // If we found a valid constructionsite
-            if (constructionSite) {
-                // Build it
-                creep.build(constructionSite);
-                creep.say(global.sayBuild);
-                return true;
-            } else {
-                // No constructionsite we should make one!
-                creep.room.createConstructionSite(creep.pos, STRUCTURE_CONTAINER);
-                return;
-            }
-        }
-    }
-}
-
-/**
- * Road Layer remote Miner sub function
- */
-module.exports.layRoad = function (creep) {
-    var road = false;
-    var objects = creep.room.lookForAt(LOOK_STRUCTURES, creep.pos);
-    if (objects.length > 0) {
-        for (var i in objects) {
-            if (objects[i].structureType == STRUCTURE_ROAD) {
-                var road = objects[i];
-                break;
-            }
-        }
-    }
-    // No road?
-    if (!road) {
-        // Check for construction site
-        var site = false;
-        // Get sites
-        var sites = creep.room.lookForAt(LOOK_CONSTRUCTION_SITES, creep.pos);
-        // If there are some
-        if (sites.length > 0) {
-            // Loop through
-            for (var i in sites) {
-                // If this is a road site
-                if (sites[i].structureType == STRUCTURE_ROAD) {
-                    // Set site to it
-                    var site = sites[i];
-                    break;
-                }
-            }
-        }
-        // If no site, make a road site
-        if (!site) {
-            creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
-        }
-    }
-    return;
 }
 
 /**

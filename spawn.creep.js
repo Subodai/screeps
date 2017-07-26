@@ -16,7 +16,7 @@ module.exports.run = function(spawn, role, debug = false) {
     while (_room.energyCapacityAvailable < _role.cost[_level]) {
         // reduce the level
         _level--;
-        console.log('Reducing creep level to ' + _level + ' as not enough capacity yet');
+        console.log('Reducing creep ' + role + ' level to ' + _level + ' as not enough capacity in ' + _room.name);
     }
 
     // CONTINUE FROM HERE

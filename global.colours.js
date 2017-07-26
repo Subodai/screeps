@@ -70,4 +70,5 @@ global.roleColour = {
     'remoteminer': '#ff66ff',
     'hauler':      '#006600',
     'janitor':     '#006699',
+    'refill':      '#888888',
 }

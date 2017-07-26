@@ -68,7 +68,7 @@ module.exports.enabled = function (room, debug = false) {
     var _room = Game.rooms[room];
     var _storage = _room.storage;
     // No Storage, no supergraders
-    if (!_storage) { return false; }
+    if (!_storage || _room.controller.level < 5) { return false; }
 
     // If we go over 4/5 full on energy storage and we're not enabled in this room, turn it on!
     if (_storage.store[RESOURCE_ENERGY] >= 800000) {
@@ -82,7 +82,7 @@ module.exports.enabled = function (room, debug = false) {
         _room.memory.charging = true;
     }
 
-    if (_room.memory.charging) {
+    if (_room.memory.charging || _room.controller.level < 5) {
         return false;
     } else {
         return true;
@@ -127,6 +127,13 @@ module.exports.run = function(creep) {
         creep.say(global.sayPut);
     }
 
+    if (!creep.memory.upgrading) {
+        if (creep.getNearbyEnergy(true) == ERR_FULL) {
+            delete creep.memory.energyPickup;
+            creep.memory.upgrading = true;
+        }
+    }
+
     if(creep.memory.upgrading) {
         if(creep.upgradeController(Game.rooms[creep.memory.roomName].controller) == ERR_NOT_IN_RANGE) {
             creep.moveTo(Game.rooms[creep.memory.roomName].controller, {
@@ -140,55 +147,5 @@ module.exports.run = function(creep) {
         } else {
             creep.say(global.sayUpgrade);
         }
-    } else {
-        // Prioritise the room storage
-        var target = creep.room.storage;
-        // Is there any?
-        if (target) {
-            // If it's at least 1 3rd full
-            if (target.store[RESOURCE_ENERGY] > 10000) {
-                // Withdraw or move to it
-                if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    // No lets move to the source we want
-                    creep.moveTo(target, {
-                        visualizePathStyle: {
-                            stroke: global.colourPickup,
-                            opacity: global.pathOpacity
-                        },
-                        reusePath:5
-                    });
-                    creep.say(global.sayMove);
-                } else {
-                    creep.say(global.sayWithdraw);
-                    creep.memory.upgrading = true;
-                }
-                return;
-            }
-        }
-
-        var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (i) => i.structureType == STRUCTURE_CONTAINER && i.store[RESOURCE_ENERGY] > 100
-        });
-
-        if(container) {
-            // Can we harvest right now?
-            if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(container, {
-                    visualizePathStyle: {
-                        stroke: global.colourPickup,
-                        opacity: global.pathOpacity
-                    },
-                    reusePath:5
-                });
-                creep.say(global.sayMove);
-            } else {
-                creep.say(global.sayWithdraw);
-                creep.memory.upgrading = true;
-            }
-            return;
-        }
-
-        // If we got here.. there's a problem
-        creep.say(global.sayOhno);
     }
 }
