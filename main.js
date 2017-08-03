@@ -30,10 +30,13 @@ var screepsplus = require('screepsplus');
 const q = require('prototype.queue');
 global.Queue = new q.Queue();
 
+// const profiler = require('screeps-profiler');
+// profiler.enable();
 /**
  * Main game loop, call all other functions from here
  */
 module.exports.loop = function () {
+// profiler.wrap(function() { // Start of profiler wrapper
     var debug = false;
     // Only need these once every 10 ticks
     if (Game.time % 10 == 0) {
@@ -141,5 +144,5 @@ module.exports.haulerSetup = function () {
     Memory.myRoom = myRoom;
     var After = Game.cpu.getUsed() - Before;
     console.log('Hauler Target setup used ' + After + ' CPU');
-
+// }); // End of profiler wrapper
 }
