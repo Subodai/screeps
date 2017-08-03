@@ -109,6 +109,7 @@ Room.prototype.clearWalls = function () {
     }
 }
 
+
 Room.prototype.toggleNotifications = function () {
     return (!this.memory.notifications) ? this.enableNotifications() : this.disableNotifications();
 }
@@ -146,4 +147,21 @@ Room.prototype.toggleWar = function () {
     } else {
         this.memory.war = false;
     }
+}
+
+/*
+ * Initiate a room's basic memory setup
+ */
+Room.prototype.init = function () {
+    if (!this.memory.init) {
+        this.memory.init = true;
+        if (!this.memory.mode) { this.memory.mode = 'normal'; }
+        if (!this.memory.war) { this.memory.war = false; }
+        if (!this.memory.charging) { this.memory.charging = true; }
+        if (!this.memory.roles) { this.memory.roles = {}; }
+        if (!this.memory.sources) { this.memory.sources = {}; }
+        if (!this.memory.assignedSources) { this.memory.assignedSources = {}; }
+        if (!this.memory.assignedExtractors) { this.memory.assignedExtractors = {}; }
+    }
+    return 'Successfully initiated room';
 }
