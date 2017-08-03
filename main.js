@@ -63,7 +63,7 @@ module.exports.loop = function () {
         let After = Game.cpu.getUsed() - Before;
         console.log('Spawners used:' + After + ' CPU');
         if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) { console.log('Stopping At 62 To relax CPU use'); console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}'); return; }
-        this.haulerSetup();
+        global.haulerSetup();
         if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) { console.log('Stopping At 64 To relax CPU use'); console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}'); return; }
     }
     if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) { console.log('Stopping At 66 To relax CPU use'); console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}'); return; }
@@ -78,7 +78,7 @@ module.exports.loop = function () {
 // }); // End of profiler wrapper
 }
 
-module.exports.haulerSetup = function () {
+global.haulerSetup = function () {
     console.log('Running Hauler Target setup');
     var Before = Game.cpu.getUsed();
     let remoteRooms = [];
