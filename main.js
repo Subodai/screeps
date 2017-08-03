@@ -75,6 +75,7 @@ module.exports.loop = function () {
     Memory.stats.cpu.used = Game.cpu.getUsed();
     if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) { console.log('Stopping At 73 To relax CPU use'); console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}'); return; }
     console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}');
+// }); // End of profiler wrapper
 }
 
 module.exports.haulerSetup = function () {
@@ -144,5 +145,4 @@ module.exports.haulerSetup = function () {
     Memory.myRoom = myRoom;
     var After = Game.cpu.getUsed() - Before;
     console.log('Hauler Target setup used ' + After + ' CPU');
-// }); // End of profiler wrapper
 }
