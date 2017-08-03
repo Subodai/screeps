@@ -11,7 +11,7 @@ module.exports.cost = {
     5 : 510,
     6 : 510,
     7 : 410,
-    8 : 410,
+    8 : 260,
     /*
     2 : 380,
     3 : 480,
@@ -59,9 +59,8 @@ module.exports.body = {
         ATTACK,ATTACK,                              // 2 Attacks = 160 = 60h/t
     ],
     8 : [
-        TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,  // 5 Toughs = 50
-        MOVE,MOVE,MOVE,MOVE,                        // 4 Moves = 200
-        ATTACK,ATTACK,                              // 2 Attacks = 160 = 60h/t
+        MOVE,MOVE,              // 1 Moves = 100
+        ATTACK,ATTACK,          // 2 Attacks = 160 = 60h/t
     ],
     /*
     2 : [
@@ -147,7 +146,7 @@ module.exports.run = function (creep, debug = false) {
                     stroke: global.colorRepair,
                     opacity: global.pathOpacity
                 },
-                reusePath:3
+                reusePath:10
             });
             creep.say(global.sayWhat);
             return;
@@ -165,7 +164,7 @@ module.exports.run = function (creep, debug = false) {
                 visualizePathStyle : {
                     stroke: '#FF0000',
                     opacity: global.pathOpacity
-                },reusePath:0
+                },reusePath:5
             });
             creep.say(global.sayMove);
             return;
@@ -196,7 +195,7 @@ module.exports.run = function (creep, debug = false) {
                             stroke: '#FF0000',
                             opacity: global.pathOpacity
                         },
-                        reusePath:0
+                        reusePath:5
                     });
                 creep.say(global.sayMove);
                 return;
@@ -218,7 +217,7 @@ module.exports.run = function (creep, debug = false) {
                             stroke: global.colourFlag,
                             opacity: global.pathOpacity
                         },
-                        reusePath:0
+                        reusePath:20
                     });
                     return;
                 }
@@ -233,7 +232,7 @@ module.exports.run = function (creep, debug = false) {
                         stroke: global.colourFlag,
                         opacity: global.pathOpacity
                     },
-                    reusePath:0
+                    reusePath:20
                 });
             } else {
                 var result = creep.moveTo(flag, {
@@ -241,7 +240,7 @@ module.exports.run = function (creep, debug = false) {
                         stroke: global.colourFlag,
                         opacity: global.pathOpacity
                     },
-                    reusePath:0
+                    reusePath:20
                 });
                 return;
             }

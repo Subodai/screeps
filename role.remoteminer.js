@@ -7,34 +7,58 @@ module.exports.cost = {
     1 : 0,
     2 : 0,
     3 : 750,
-    4 : 750,
-    5 : 750,
-    6 : 750,
-    7 : 750,
-    8 : 750,
+    4 : 900,
+    5 : 1050,
+    6 : 1200,
+    7 : 1350,
+    8 : 1500,
 }
 /* Body Parts at each RCL */
 module.exports.body = {
     1 : [],
     2 : [],
-    3 : [ WORK,WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE,MOVE,MOVE ],
-    4 : [ WORK,WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE,MOVE,MOVE ],
-    5 : [ WORK,WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE,MOVE,MOVE ],
-    6 : [ WORK,WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE,MOVE,MOVE ],
-    7 : [ WORK,WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE,MOVE,MOVE ],
-    8 : [ WORK,WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE,MOVE,MOVE ],
+    3 : [
+        WORK,WORK,WORK,WORK,WORK,
+        CARRY,
+        MOVE,MOVE,MOVE,MOVE
+    ],
+    4 : [
+        WORK,WORK,WORK,WORK,WORK,WORK,
+        CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE
+    ],
+    5 : [
+        WORK,WORK,WORK,WORK,WORK,WORK,WORK,
+        CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+    ],
+    6 : [
+        WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,
+        CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+    ],
+    7 : [
+        WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,
+        CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+    ],
+    8 : [
+        WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,
+        CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+    ],
 }
 
 /* Spawn Roster */
 module.exports.roster = {
     1: 0,
     2: 0,
-    3: 6,
-    4: 6,
-    5: 6,
-    6: 6,
-    7: 6,
-    8: 6,
+    3: 3,
+    4: 3,
+    5: 8,
+    6: 8,
+    7: 8,
+    8: 8,
 }
 /**
  * Individual check for a room to check if this creep type should be enabled or not
@@ -125,6 +149,11 @@ module.exports.run = function (creep, debug = false) {
     if (creep.fatigue > 0) {
         if (debug) { console.log('Creep[' + creep.name + '] Fatgiued ' + creep.fatigue); }
         creep.say(global.sayTired);
+        return;
+    }
+
+    if (!creep.canDo(WORK)) {
+        if (debug) { console.log('[' +creep.name+'] Creep damaged seeking repair:' + JSON.stringify(creep.pos)); }
         return;
     }
 

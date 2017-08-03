@@ -161,11 +161,12 @@ module.exports.run = function(creep) {
 
     // Are we sapping?
     if(creep.memory.sapping) {
+        delete creep.memory.energyPickup;
         let result = creep.repairStructures();
         if (result == ERR_FULL) {
             delete creep.memory.repairTarget;
             delete creep.memory.targetmaxHP;
-            creep.repairStructures();
+            let result = creep.repairStructures();
         } else if (result == ERR_NOT_ENOUGH_ENERGY) {
             delete creep.memory.repairTarget;
             delete creep.memory.targetmaxHP;

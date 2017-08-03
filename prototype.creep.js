@@ -18,9 +18,17 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
     }
     // Storage override
     if (!this.memory.energyPickup) {
-        if (useStorage && this.room.storage) {
-            if (this.room.storage.store[RESOURCE_ENERGY] > 1000) {
-                this.memory.energyPickup = this.room.storage.id;
+        if (useStorage && this.room.terminal) {
+            if (this.room.terminal.store[RESOURCE_ENERGY] > 0) {
+                this.memory.energyPickup = this.room.terminal.id;
+            }
+        }
+
+        if (!this.memory.energyPickup) {
+            if (useStorage && this.room.storage) {
+                if (this.room.storage.store[RESOURCE_ENERGY] > 1000) {
+                    this.memory.energyPickup = this.room.storage.id;
+                }
             }
         }
     }
@@ -32,11 +40,11 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
         }
         // Get dropped resources in the room
         var resources = this.room.find(FIND_DROPPED_RESOURCES, {
-            filter: (i) => i.resourceType == RESOURCE_ENERGY && i.amount > (this.carryCapacity - _.sum(this.carry))
+            filter: (i) => i.resourceType == RESOURCE_ENERGY && i.amount > (this.carryCapacity - _.sum(this.carry))/4
         });
         // Get Containers in the room
         var containers = this.room.find(FIND_STRUCTURES, {
-            filter: (i) => i.structureType == STRUCTURE_CONTAINER && i.store[RESOURCE_ENERGY] > (this.carryCapacity - _.sum(this.carry))
+            filter: (i) => i.structureType == STRUCTURE_CONTAINER && i.store[RESOURCE_ENERGY] > (this.carryCapacity - _.sum(this.carry))/4
         });
         // False some things
         var resource = container = false;
@@ -134,7 +142,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
         if (target instanceof Resource) { // Resource
             DBG && console.log('[' + this.name + '] Target is a Resource');
             // Is there still enough of it?
-            if (target.amount < (this.carryCapacity - _.sum(this.carry))) {
+            if (target.amount < (this.carryCapacity - _.sum(this.carry))/4) {
                 DBG && console.log('[' + this.name + '] Resource no longer viable clearing memory');
                 // Target has gone, clear memory
                 delete this.memory.energyPickup;
@@ -156,7 +164,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
         } else if (target instanceof StructureContainer || target instanceof StructureStorage || target instanceof StructureTerminal) { // Container
             DBG && console.log('[' + this.name + '] Target is a Container, Storage, or Terminal');
             // Check the container still has the energy
-            if (target.store[RESOURCE_ENERGY] < (this.carryCapacity - _.sum(this.carry))) {
+            if (target.store[RESOURCE_ENERGY] < (this.carryCapacity - _.sum(this.carry))/4) {
                 DBG && console.log('[' + this.name + '] Target no longer has enough energy clearing memory');
                 // Clear memory and return invalid target
                 delete this.memory.energyPickup;
@@ -263,6 +271,7 @@ Creep.prototype.canWork = function() {
 }
 
 Creep.prototype.findSpaceAtSource = function(source) {
+    return true;
     // Make sure to initialise the source's last check memory
     if (!source.memory.lastSpaceCheck) {
         source.memory.lastSpaceCheck = 0;
@@ -278,21 +287,21 @@ Creep.prototype.findSpaceAtSource = function(source) {
         }
     }
     var spaces = 0;
-    const n  = new RoomPosition(source.pos.x,   source.pos.y-1, source.pos.roomName);
+    var n  = new RoomPosition(source.pos.x,   source.pos.y-1, source.pos.roomName);
     if (this.checkEmptyAtPos(n,  this)) { spaces++; }
-    const ne = new RoomPosition(source.pos.x+1, source.pos.y-1, source.pos.roomName);
+    var ne = new RoomPosition(source.pos.x+1, source.pos.y-1, source.pos.roomName);
     if (this.checkEmptyAtPos(ne, this)) { spaces++; }
-    const e  = new RoomPosition(source.pos.x+1, source.pos.y,   source.pos.roomName);
+    var e  = new RoomPosition(source.pos.x+1, source.pos.y,   source.pos.roomName);
     if (this.checkEmptyAtPos(e,  this)) { spaces++; }
-    const se = new RoomPosition(source.pos.x+1, source.pos.y+1, source.pos.roomName);
+    var se = new RoomPosition(source.pos.x+1, source.pos.y+1, source.pos.roomName);
     if (this.checkEmptyAtPos(se, this)) { spaces++; }
-    const s  = new RoomPosition(source.pos.x,   source.pos.y+1, source.pos.roomName);
+    var s  = new RoomPosition(source.pos.x,   source.pos.y+1, source.pos.roomName);
     if (this.checkEmptyAtPos(s,  this)) { spaces++; }
-    const sw = new RoomPosition(source.pos.x-1, source.pos.y+1, source.pos.roomName);
+    var sw = new RoomPosition(source.pos.x-1, source.pos.y+1, source.pos.roomName);
     if (this.checkEmptyAtPos(sw, this)) { spaces++; }
-    const w  = new RoomPosition(source.pos.x-1, source.pos.y,   source.pos.roomName);
+    var w  = new RoomPosition(source.pos.x-1, source.pos.y,   source.pos.roomName);
     if (this.checkEmptyAtPos(w,  this)) { spaces++; }
-    const nw = new RoomPosition(source.pos.x-1, source.pos.y-1, source.pos.roomName);
+    var nw = new RoomPosition(source.pos.x-1, source.pos.y-1, source.pos.roomName);
     if (this.checkEmptyAtPos(nw, this)) { spaces++; }
     // Set our memory
     source.memory.lastSpaceCheck = Game.time;
@@ -358,6 +367,13 @@ Creep.prototype.roadCheck = function(work = false) {
     }
     // No road?
     if (!road) {
+        // Are we in one of our OWN rooms
+        if (this.room.controller) {
+            if (this.room.controller.my) {
+                // DO nothing don't want millions of roads!
+                return;
+            }
+        }
         this.DBG && console.log(this.name + ' No road, looking for construction site');
         // Check for construction sites
         let sites = this.room.lookForAt(LOOK_CONSTRUCTION_SITES, this.pos);
@@ -378,7 +394,8 @@ Creep.prototype.roadCheck = function(work = false) {
     if (!site) {
         this.DBG && console.log(this.name + ' No site found look for flags');
         // Check for flag
-        let flags = this.room.lookForAt(LOOK_FLAGS, this.pos);
+        let flags = _.filter(Game.flags, (flag) => flag.pos == this.pos);
+        // let flags = this.room.lookForAt(LOOK_FLAGS, this.pos);
         if (flags.length > 0) {
             this.DBG && console.log(this.name + ' Found a flag');
             flag = flags[0];
@@ -386,7 +403,11 @@ Creep.prototype.roadCheck = function(work = false) {
     }
     this.DBG && console.log(this.name + ' No Road, Site, or Flag.. attempting to place one');
     this.DBG && console.log(JSON.stringify(this.pos));
-    if (!flag && global.seedRemoteRoads == true) {
+    if (!site && !flag && global.seedRemoteRoads == true) {
+        // How many construction flags do we have?
+        let roadFlags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['buildsite'] && flag.secondaryColor == COLOR_WHITE);
+        // If we have 100 or more road flags, don't make any more!
+        if (roadFlags.length >= 100) { this.DBG && console.log(this.name + 'Enough flags not dropping any more'); return; }
         this.DBG && console.log(this.name + 'Dropping a flag');
         // Check for room edge here
         this.pos.createFlag();
@@ -475,7 +496,7 @@ Creep.prototype.repairStructures = function (options = {}) {
             ts.sort(function(a,b) {
                 return a.hits - b.hits;
             });
-            this.memory.targetMaxHP = 1;
+            this.memory.targetMaxHP = 10;
             this.memory.repairTarget = ts[0].id;
         }
     }
@@ -667,4 +688,31 @@ Creep.prototype.findDamagedDefences = function() {
             this.memory.repairTarget = ts[0].id;
         }
     }
+}
+
+Creep.prototype.canDo = function(BodyPart) {
+    // If this creep needs a bodypart it doesn't have to function properly, it needs to go home to repair or self repair
+    if (!this.getActiveBodyparts(BodyPart) > 0 || this.memory.repair) {
+        // Creep is damaged, say so!
+        this.say('DMGD');
+        // Do we have our own heal parts?
+        if (this.getActiveBodyparts(HEAL) > 0) {
+            // Heal ourselves
+            this.heal(this);
+        } else {
+            // Get position in centre of home room
+            let pos = new RoomPosition(25,25,this.memory.roomName);
+            // Move the creep
+            this.moveTo(pos, { reusePath:10 });
+        }
+        // Are we at max health?
+        if (this.hits >= this.hitsMax) {
+            delete this.memory.repair;
+            return true;
+        } else {
+            this.memory.repair = true;
+            return false;
+        }
+    }
+    return true;
 }

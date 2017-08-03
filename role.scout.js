@@ -110,6 +110,7 @@ module.exports.run = function (creep, debug = false) {
     if (!creep.memory.arrived) {
         // We didn't, alright lets go get the flag's position and head to it!
         var flag = Game.flags[creep.memory.flagName];
+        if (!flag) { creep.memory.role = 'upgrader'; return; }
         // If our POS is not the flags
         if (creep.pos.roomName == flag.pos.roomName) {
             // We have arrived!

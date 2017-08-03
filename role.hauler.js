@@ -1,3 +1,4 @@
+var DBG = false;
 /* Hauler drone */
 module.exports.role = 'hauler';
 /* sType */
@@ -69,12 +70,12 @@ module.exports.body = {
 module.exports.roster = {
     1: 2,
     2: 2,
-    3: 10,
-    4: 10,
-    5: 20,
-    6: 10,
-    7: 10,
-    8: 10,
+    3: 4,
+    4: 6,
+    5: 6,
+    6: 8,
+    7: 6,
+    8: 6,
 }
 
 module.exports.multiplier = 2;
@@ -95,7 +96,7 @@ module.exports.enabled = function (room, debug = false) {
             // How many sources are in the room, we only need 1 per source
             const sources = _room.find(FIND_SOURCES);
             const req = sources.length*this.multiplier;
-            const list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.remoteRoom == _flag.pos.roomName && !creep.memory.dying);
+            const list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.flagName == _flag.name && !creep.memory.dying);
             const got = list.length;
             if (got < req) { return true; }
         }
@@ -110,7 +111,7 @@ module.exports.enabled = function (room, debug = false) {
  */
 module.exports.run = function(creep) {
     // First thing we need to do, is be assigned a flag and remote Room
-    if (!creep.memory.remoteRoom) {
+    if (!creep.memory.flagName) {
         // Get all the remote room flags
         var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['remote']);
         // if there's no remote flags, just turn this into a harvester
@@ -132,9 +133,7 @@ module.exports.run = function(creep) {
                 const got = list.length;
                 if (got < req) {
                     // This room needs a creep!
-                    creep.memory.remoteRoom = _flag.pos.roomName;
                     creep.memory.flagName = _flag.name;
-                    creep.memory.seek = true;
                 }
             }
         }
@@ -152,6 +151,10 @@ module.exports.run = function(creep) {
         creep.memory.dying = true;
     }
 
+    if (!creep.canDo(CARRY)) {
+        if (debug) { console.log('[' +creep.name+'] Creep damaged seeking repair:' + JSON.stringify(creep.pos)); }
+        return;
+    }
     // Logic is as follows. If empty, head to remote room, if in remote room and empty, find resources as normal
     // if full, return to home room, if in home room drop resources off
     // If travelling with resources we should run a repair on the road we're on as we go
@@ -161,15 +164,31 @@ module.exports.run = function(creep) {
         // Set Seek to true
         creep.memory.seek = true;
     }
+
+    if (_.sum(creep.carry) >= creep.carryCapacity && creep.carryCapacity > 0) {
+        delete creep.memory.seek;
+        delete creep.memory.arrived;
+        delete creep.memory.energyPickup;
+        delete creep.memory.remoteRoom;
+    }
+
     var moved = false;
     // Are we seeking?
     if (creep.memory.seek) {
-        // Are we in the room yet?
-        if (creep.room.name != creep.memory.remoteRoom) {
-            // No get the position of the flag we have in memory and go there
-            const _flag = Game.flags[creep.memory.flagName];
+        if (creep.room.name == creep.memory.remoteRoom) {
+            creep.memory.arrived = true;
+        }
+
+        if (!creep.memory.arrived) {
+            // If we have cleared the remoteRoom (which we should after every successful pickup)
+            if (!creep.memory.remoteRoom) {
+                creep.memory.remoteRoom = Memory.remoteRoom;
+                console.log('['+creep.name+'] setting hauler remote room');
+            }
+            DBG && console.log('['+creep.name+'] Hauler Not in remote room');
+            let pos = new RoomPosition(25,25,creep.memory.remoteRoom);
             // Lets head to the flag
-            creep.moveTo(_flag, {
+            creep.moveTo(pos, {
                 visualizePathStyle: {
                     stroke: global.colourPickup,
                     opacity: global.pathOpacity
@@ -178,58 +197,109 @@ module.exports.run = function(creep) {
             });
             var moved = true;
         } else {
-            // At this point we're in the room with the resources we want to find lets go find them
-            const resource = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
-                filter: (res) => res.amount >= creep.carryCapacity
-            });
-            // Did we find one?
-            if (resource) {
-                // Attempt to pickup
-                if (creep.pickup(resource) == ERR_NOT_IN_RANGE) {
-                    // move to the resource
-                    creep.moveTo(resource, {
-                        visualizePathStyle: {
-                            stroke: global.colourPickup,
-                            opacity: global.pathOpacity
-                        },
-                        reusePath:5
-                    });
-                    var moved = true;
-                } else {
-                    // Clear the seek flag we've picked up some resources!
-                    delete creep.memory.seek;
-                    creep.say(global.sayWithdraw);
-                }
-            } else {
-                // lets try a container
-                const container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (i) => i.structureType == STRUCTURE_CONTAINER && i.store[RESOURCE_ENERGY] >= creep.carryCapacity/2
-                });
-                // Did we find one?
-                if (container) {
-                    // Lets try to withdraw
-                    if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        // move to the container
-                        creep.moveTo(container, {
-                            visualizePathStyle: {
-                                stroke: global.colourPickup,
-                                opacity: global.pathOpacity
-                            },
-                            reusePath:5
-                        });
-                        var moved = true;
-                    } else {
-                        // Clear the seek flag we picked up stuff
-                        delete creep.memory.seek;
-                        creep.say(global.sayWithdraw);
-                    }
-                }
+            if (creep.getNearbyEnergy() == ERR_FULL) {
+                delete creep.memory.seek;
+                delete creep.memory.energyPickup;
             }
         }
+        // DBG && console.log('['+creep.name+'] Hauler Seeking pickup');
+        // // Are we in the room yet?
+        // if (creep.room.name != creep.memory.remoteRoom) {
+
+        // } else {
+        //     // are we at the edge of a room
+        //     if (creep.pos.isRoomEdge()) {
+        //         DBG && console.log('['+creep.name+'] Hauler stuck at room edge');
+        //         if (creep.pos.x == 49) {
+        //             var newPos = new RoomPosition(48,creep.pos.y,creep.room.name);
+        //         }
+
+        //         if (creep.pos.x == 0) {
+        //             var newPos = new RoomPosition(1,creep.pos.y,creep.room.name);
+        //         }
+
+        //         if (creep.pos.y == 49) {
+        //             var newPos = new RoomPosition(creep.pos.x,48,creep.room.name);
+        //         }
+
+        //         if (creep.pos.y == 0) {
+        //             var newPos = new RoomPosition(creep.pos.x,1,creep.room.name);
+        //         }
+        //         DBG && console.log('['+creep.name+'] Moving in one tile');
+        //         creep.moveTo(newPos);
+        //         return;
+        //     }
+
+
+
+
+            // DBG && console.log('['+creep.name+'] Hauler in remote room, looking for pickup');
+            // // At this point we're in the room with the resources we want to find lets go find them
+            // const resource = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
+            //     filter: (res) => res.amount >= creep.carryCapacity/2
+            // });
+            // // Did we find one?
+            // if (resource) {
+            //     DBG && console.log('['+creep.name+'] Hauler found resource');
+            //     // Attempt to pickup
+            //     if (creep.pickup(resource) == ERR_NOT_IN_RANGE) {
+            //         DBG && console.log('['+creep.name+'] Hauler Moving to resource');
+            //         // move to the resource
+            //         creep.moveTo(resource, {
+            //             visualizePathStyle: {
+            //                 stroke: global.colourPickup,
+            //                 opacity: global.pathOpacity
+            //             },
+            //             reusePath:3
+            //         });
+            //         var moved = true;
+            //     } else {
+            //         // Clear the seek flag we've picked up some resources!
+            //         DBG && console.log('['+creep.name+'] Hauler resource pickup success');
+            //         creep.say(global.sayWithdraw);
+            //     }
+            // } else {
+            //     DBG && console.log('['+creep.name+'] Hauler Seeking container');
+            //     // lets try a container
+            //     const container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+            //         filter: (i) => i.structureType == STRUCTURE_CONTAINER && i.store[RESOURCE_ENERGY] >= creep.carryCapacity/2
+            //     });
+            //     // Did we find one?
+            //     if (container) {
+            //         DBG && console.log('['+creep.name+'] Hauler found container');
+            //         // Lets try to withdraw
+            //         if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            //             // move to the container
+            //             creep.moveTo(container, {
+            //                 visualizePathStyle: {
+            //                     stroke: global.colourPickup,
+            //                     opacity: global.pathOpacity
+            //                 },
+            //                 reusePath:5
+            //             });
+            //             var moved = true;
+            //         } else {
+            //             DBG && console.log('['+creep.name+'] Hauler container withdraw success');
+            //             // Clear the seek flag we picked up stuff
+            //             creep.say(global.sayWithdraw);
+            //         }
+            //     } else {
+            //         let pos = new RoomPosition(25,25,creep.room.name);
+            //         creep.moveTo(pos);
+            //         var moved = true;
+            //     }
+            // }
+
     }
 
     // Alright now the code for if we're not seeking
     if (!creep.memory.seek) {
+        // If we don't have a room to deliver to yet (which we should reset after every drop off)
+        if (!creep.memory.roomName) {
+            creep.memory.roomName = Memory.myRoom;
+            console.log('['+creep.name+'] setting hauler home room');
+        }
+        DBG && console.log('['+creep.name+'] Hauler full going home');
         // We need to be heading home are we in our home room yet?
         if (creep.room.name != creep.memory.roomName) {
             // We're not in the room yet, we need to seek the room's controller
@@ -280,6 +350,7 @@ module.exports.run = function(creep) {
                             break;
                         } else {
                             creep.say(global.sayDrop);
+                            delete creep.memory.roomName;
                         }
                     }
                 }
@@ -289,6 +360,7 @@ module.exports.run = function(creep) {
                     if (creep.carry[i] > 0) {
                         creep.drop(i);
                         creep.say(global.sayDrop);
+                        delete creep.memory.roomName;
                     }
                 }
             }

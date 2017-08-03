@@ -15,7 +15,6 @@ global.roles = [
 ];
 
 global.settings = {
-    DeSpawn: false,
     upgrader  : true,
     miner     : true,
     extractor : false,
@@ -53,8 +52,9 @@ global.resourceList = [
     RESOURCE_ENERGY
 ];
 
-global.seedRemoteRoads = false;
+global.seedRemoteRoads = true;
 
+global.cpuDesired = 5000;
 
 global.getSpaceAtSource = function (source, creep) {
     const n  = new RoomPosition(source.pos.x,   source.pos.y-1, source.pos.roomName);
@@ -90,5 +90,67 @@ global.checkEmptyCoord = function (pos, creep) {
                 return true;
             }
         }
+    }
+}
+
+
+global.InitRespawn = function (MeanIt = false) {
+    if (MeanIt) {
+        console.log('Hope you meant it, because nuking everything');
+        console.log('--Killing off creeps--');
+        for (var name in Game.creeps) {
+            let creep = Game.creeps[name];
+            console.log('Creep [' + name + '] Committing Suicide: ' + creep.suicide());
+        }
+        delete Memory.creeps;
+        console.log('--Creeps murdered--');
+
+        console.log('--Removing Flags--');
+        for (var flag in Game.flags) {
+            console.log('Removing flag: ' + flag);
+            Game.flags[flag].remove();
+        }
+        delete Memory.flags;
+        console.log('--Flags cleared--');
+
+        console.log('--Removing construction sites--');
+        var mySites = _.filter(Game.constructionSites, (site) => my.site);
+        for (var site in mySites) {
+            site.remove();
+        }
+        console.log('--Construction Sites removed--');
+
+
+        console.log('--Clearing Structure Memory--');
+        for (var room in Game.rooms) {
+            let structures = Game.rooms[room].find(FIND_STRUCTURES);
+            for (var s in structures) {
+                s.destroy();
+            }
+        }
+        delete Memory.structures;
+        console.log('--Structure Memory Cleared--');
+
+
+        console.log('--Clearing Memory Stats--');
+        delete Memory.stats;
+        console.log('--Stats Memory Cleared--');
+
+
+        console.log('--Clearing Queue Memory--');
+        delete Memory.queue;
+        console.log('--Queue Memory Cleared');
+
+
+        console.log('--Clearing remaining memory');
+        delete Memory.myRoom;
+        delete Memory.sources;
+        console.log('--Remaining Memory Clear');
+
+
+        console.log('++Respawn Cleanup Complete++');
+        console.log('++Good Luck!!++');
+    } else {
+        console.log('You clearly did not mean that, ignoring you');
     }
 }

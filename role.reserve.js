@@ -51,10 +51,10 @@ module.exports.roster = {
     2: 0,
     3: 0,
     4: 4,
-    5: 4,
-    6: 4,
-    7: 4,
-    8: 4,
+    5: 8,
+    6: 8,
+    7: 8,
+    8: 8,
 }
 
 module.exports.enabled = function (room, debug = false) {

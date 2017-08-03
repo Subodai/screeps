@@ -63,10 +63,10 @@ module.exports.body = {
 }
 /* Spawn Roster */
 module.exports.roster = {
-    1: 2,
+    1: 5,
     2: 3,
     3: 3,
-    4: 6,
+    4: 3,
     5: 3,
     6: 3,
     7: 3,
@@ -113,6 +113,20 @@ module.exports.run = function(creep) {
         }
     }
 
+    if (creep.room.name != creep.memory.roomName) {
+        delete creep.memory.energyPickup;
+        let pos = new RoomPosition(25,25,creep.memory.roomName);
+        creep.moveTo(pos, {
+            visualizePathStyle: {
+                stroke: global.colourIdle,
+                opacity: global.pathOpacity
+            },
+            reusePath:5
+        });
+        creep.say('SEEK');
+        return;
+    }
+
     // Is the creep dropping off and empty?
     if (creep.memory.delivering && _.sum(creep.carry) == 0) {
         creep.memory.delivering = false;
@@ -129,16 +143,18 @@ module.exports.run = function(creep) {
     if (!creep.memory.delivering) {
         // Always pickup none
         if (creep.getNearbyEnergy() == ERR_FULL) {
+            delete creep.memory.energyPickup;
             creep.memory.delivering = true;
         }
     }
 
     // Alright at this point if we're delivering it's time to move the Creep to a drop off
     if (creep.memory.delivering) {
+        delete creep.memory.energyPickup;
         // only refill spawns and other things if room level below 4 after 4 we just fill storage
         // after 5 we fill storage and terminal
         // unless emergency, then we fill spawns too
-        if (creep.room.controller.level < 4 || creep.room.memory.emergency || !creep.room.storage) {
+        if (creep.room.controller.level < 7 || creep.room.memory.emergency || !creep.room.storage) {
             // Do we have energy?
             if (creep.carry.energy > 0) {
                 // We do, try to find a spawn or extension to fill

@@ -4,7 +4,7 @@ module.exports.role = 'miner';
 module.exports.sType = 'specialist';
 /* Costs */
 module.exports.cost = {
-    1 : 0,
+    1 : 550,
     2 : 550,
     3 : 550,
     4 : 550,
@@ -27,7 +27,7 @@ module.exports.body = {
 
 /* Spawn Roster */
 module.exports.roster = {
-    1: 0,
+    1: 1,
     2: 2,
     3: 2,
     4: 2,
@@ -109,7 +109,7 @@ module.exports.run = function (creep, debug = false) {
         // Do we have a sourceId?
         if (sourceId == false) {
             if (debug) { console.log('Creep[' + creep.name + '] Miner cannot find source!!'); }
-            Game.notify(Game.time + ' Miner Creep unable to assign a source');
+            // Game.notify(Game.time + ' Miner Creep unable to assign a source');
         }
     }
 

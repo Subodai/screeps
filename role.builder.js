@@ -74,7 +74,7 @@ module.exports.enabled = function (room, debug = false) {
 /**
  * Builder Role
  */
-module.exports.run = function(creep) {
+module.exports.run = function(creep, debug = false) {
     if (creep.spawning) { return; }
     if (creep.fatigue > 0) {
         creep.say('Zzz');
@@ -86,6 +86,12 @@ module.exports.run = function(creep) {
     if (ticks < 100) {
         creep.say('!!');
         creep.memory.dying = true;
+    }
+
+    // Functional check!
+    if (!creep.canDo(WORK)) {
+        if (debug) { console.log('[' +creep.name+'] Creep damaged seeking repair:' + JSON.stringify(creep.pos)); }
+        return;
     }
 
     if(creep.memory.building && creep.carry.energy == 0) {
@@ -108,6 +114,7 @@ module.exports.run = function(creep) {
     }
 
     if(creep.memory.building) {
+        delete creep.memory.energyPickup;
         // Try to get sites in current room
         var site = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
         // If that fails try all rooms

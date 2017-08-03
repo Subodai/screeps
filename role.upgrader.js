@@ -127,6 +127,7 @@ module.exports.run = function(creep) {
     }
 
     if(creep.memory.upgrading) {
+        delete creep.memory.energyPickup;
         // if (Game.rooms[creep.memory.roomName].controller.sign != 'Room Claimed by Subodai - [Ypsilon Pact]') {
         //     if (creep.pos.getRangeTo(Game.rooms[creep.memory.roomName].controller) > 1) {
         //         creep.moveTo(Game.rooms[creep.memory.roomName].controller);
