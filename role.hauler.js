@@ -3,6 +3,17 @@ var DBG = false;
 module.exports.role = 'hauler';
 /* sType */
 module.exports.sType = 'remote';
+/* Spawn Roster */
+module.exports.roster = {
+    1: 0,
+    2: 0,
+    3: 2,
+    4: 2,
+    5: 2,
+    6: 2,
+    7: 2,
+    8: 2,
+}
 /* Costs */
 module.exports.cost = {
     1 : 300,
@@ -66,17 +77,7 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
 }
-/* Spawn Roster */
-module.exports.roster = {
-    1: 2,
-    2: 2,
-    3: 4,
-    4: 6,
-    5: 6,
-    6: 8,
-    7: 6,
-    8: 6,
-}
+
 
 module.exports.multiplier = 2;
 

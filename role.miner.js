@@ -2,6 +2,17 @@
 module.exports.role = 'miner';
 /* SType */
 module.exports.sType = 'specialist';
+/* Spawn Roster */
+module.exports.roster = {
+    1: 1,
+    2: 2,
+    3: 2,
+    4: 2,
+    5: 2,
+    6: 2,
+    7: 2,
+    8: 2,
+}
 /* Costs */
 module.exports.cost = {
     1 : 550,
@@ -25,17 +36,6 @@ module.exports.body = {
     8 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
 }
 
-/* Spawn Roster */
-module.exports.roster = {
-    1: 1,
-    2: 2,
-    3: 2,
-    4: 2,
-    5: 2,
-    6: 2,
-    7: 2,
-    8: 2,
-}
 /**
  * Individual check for a room to check if this creep type should be enabled or not
  */

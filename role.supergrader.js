@@ -2,6 +2,17 @@
 module.exports.role = 'supergrader';
 /* sType */
 module.exports.sType = 'specialist';
+/* Spawn Roster */
+module.exports.roster = {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 3,
+    6: 3,
+    7: 3,
+    8: 3,
+}
 /* Costs */
 module.exports.cost = {
     1 : 0,
@@ -52,17 +63,7 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE         //  200
     ],
 }
-/* Spawn Roster */
-module.exports.roster = {
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 3,
-    6: 3,
-    7: 3,
-    8: 3,
-}
+
 module.exports.enabled = function (room, debug = false) {
     // Define the room
     var _room = Game.rooms[room];

@@ -4,6 +4,17 @@ module.exports.role = 'reserve';
 module.exports.sType = 'specialist';
 /* This role requires a flag to be set */
 module.exports.flagRequirement = 'reserve';
+/* Spawn Roster */
+module.exports.roster = {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 2,
+    5: 2,
+    6: 2,
+    7: 2,
+    8: 2,
+}
 /* Costs */
 module.exports.cost = {
     1 : 0,
@@ -45,18 +56,6 @@ module.exports.body = {
         WORK            // 1 WORK = 100
     ],
 }
-/* Spawn Roster */
-module.exports.roster = {
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 4,
-    5: 8,
-    6: 8,
-    7: 8,
-    8: 8,
-}
-
 module.exports.enabled = function (room, debug = false) {
     // return false;
     // Get all reserve flags without an assigned creep

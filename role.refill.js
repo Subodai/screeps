@@ -2,6 +2,17 @@
 module.exports.role = 'refill';
 /* sType */
 module.exports.sType = 'normal';
+/* Spawn Roster */
+module.exports.roster = {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 1,
+    5: 1,
+    6: 1,
+    7: 1,
+    8: 1,
+}
 /* Costs */
 module.exports.cost = {
     1 : 0,
@@ -48,17 +59,7 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE,MOVE
     ],
 }
-/* Spawn Roster */
-module.exports.roster = {
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 1,
-    5: 1,
-    6: 1,
-    7: 1,
-    8: 1,
-}
+
 module.exports.enabled = function (room, debug = false) {
     const _room = Game.rooms[room];
     if (_room.controller) {

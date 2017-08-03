@@ -2,6 +2,17 @@
 module.exports.role = 'janitor';
 /* sType */
 module.exports.sType = 'normal';
+/* Spawn Roster */
+module.exports.roster = {
+    1: 1,
+    2: 1,
+    3: 1,
+    4: 1,
+    5: 1,
+    6: 1,
+    7: 1,
+    8: 1,
+}
 /* Costs */
 module.exports.cost = {
     1 : 300,
@@ -55,17 +66,7 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
 }
-/* Spawn Roster */
-module.exports.roster = {
-    1: 1,
-    2: 1,
-    3: 1,
-    4: 1,
-    5: 1,
-    6: 1,
-    7: 1,
-    8: 1,
-}
+
 
 module.exports.enabled = function (room, debug = false) {
     var items = 0;

@@ -2,6 +2,17 @@
 module.exports.role = 'remoteminer';
 /* SType */
 module.exports.sType = 'specialist';
+/* Spawn Roster */
+module.exports.roster = {
+    1: 0,
+    2: 0,
+    3: 2,
+    4: 2,
+    5: 2,
+    6: 2,
+    7: 2,
+    8: 2,
+}
 /* Costs */
 module.exports.cost = {
     1 : 0,
@@ -47,18 +58,6 @@ module.exports.body = {
         CARRY,
         MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
-}
-
-/* Spawn Roster */
-module.exports.roster = {
-    1: 0,
-    2: 0,
-    3: 3,
-    4: 3,
-    5: 8,
-    6: 8,
-    7: 8,
-    8: 8,
 }
 /**
  * Individual check for a room to check if this creep type should be enabled or not
