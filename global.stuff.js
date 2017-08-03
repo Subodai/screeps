@@ -151,7 +151,7 @@ global.InitRespawn = function (MeanIt = false) {
         console.log('++Respawn Cleanup Complete++');
         console.log('++Good Luck!!++');
 
-        Game.notify('Performed a Respawn Memory Reset'):
+        Game.notify('Performed a Respawn Memory Reset');
     } else {
         console.log('You clearly did not mean that, ignoring you');
     }
