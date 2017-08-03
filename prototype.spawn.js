@@ -13,5 +13,5 @@ StructureSpawn.prototype.makeCreep = function(role, body, level, home) {
         level: level,
         roomName: home
     });
-    if (creepName) ? return true : return false;
+    if (creepName) { return true; } else { return false; }
 }

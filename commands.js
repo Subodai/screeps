@@ -24,8 +24,29 @@ let test=require('test'); // include a module of yours of non-trivial size.
 console.log(Game.cpu.getUsed());
 delete test;
 
-
+Game.rooms['E36S97'].toggleWar();
 Game.rooms['E37S94'].toggleWar();
 Game.rooms['E38S95'].toggleWar();
 Game.rooms['E38S96'].toggleWar();
 Game.rooms['E39S95'].toggleWar();
+
+
+if (!newCreep) {
+    var newCreep = {
+       role:'harvester',
+       home:'E38S96',
+       cost:300,
+       level:1,
+       body:[WORK,
+        CARRY,CARRY,
+        MOVE,MOVE],
+    };
+}
+
+global.Queue.add(newCreep)
+.add(newCreep)
+.add(newCreep)
+.add(newCreep)
+.add(newCreep)
+.add(newCreep)
+.add(newCreep);

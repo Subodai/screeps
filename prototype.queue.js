@@ -43,7 +43,7 @@ function Queue() {
     this.creeps    = [];
     this.startCPU  = 0;
     this.lastCPU   = 0;
-    this.DBG       = false;
+    this.DBG       = true;
 }
 
 // Define the prototypes
@@ -108,16 +108,17 @@ Queue.prototype = {
     process: function() {
         if (this.initiated == 0) { this.get(); }
         this.startCPU  = Game.cpu.getUsed();
-        this.DBG && console.log('Processing Spawn Queue');
+        console.log('Processing Spawn Queue');
         // If we have nothing in the queue, no need to process it
         if (this.creeps.length == 0) {
             this.DBG && console.log('Spawn Queue Empty, nothing to process');
-            return this.save();
+            this.save();
+            return false;
         }
         // Not empty, let's get to it!
         for (let i in this.creeps) {
             let creep = this.creeps[i];
-            let room = Game.rooms[creep.roomName];
+            let room = Game.rooms[creep.home];
             var energyAvailable = 0;
             if (room == null) {
                 energyAvailable = 0;
@@ -130,7 +131,7 @@ Queue.prototype = {
             if (energyAvailable >= creep.cost) {
                 this.DBG && console.log('Spawning creep in desired room');
                 // It does, pick a spawn in this room
-                const spawns = _.filter(Game.spawns, (s) => !s.spawning && s.room.name == creep.roomName);
+                const spawns = _.filter(Game.spawns, (s) => !s.spawning && s.room.name == creep.home);
                 // Do we have any?
                 if (spawns.length > 0) {
                     spawn = spawns[0];
@@ -151,11 +152,13 @@ Queue.prototype = {
                 this.DBG && console.log('Spawning Creep from Queue in ' + spawn.room.name);
                 if (spawn.makeCreep(creep.role, creep.body, creep.level, creep.home)) {
                     this.remove(creep);
-                    return this.save();
+                    this.save();
+                    return true;
                 }
             }
             this.DBG && console.log('Could not spawn, no suitable spawns available to fulfill queue');
-            return this.save();
+            this.save();
+            return false;
         }
     },
     clear: function() {
@@ -175,6 +178,18 @@ Queue.prototype = {
     },
     spawnCreep: function(spawnName,role) {
         return spawner.run(spawnName,role, this.DBG);
+    },
+    disableDebug: function () {
+        delete Memory.queue.DBG;
+        return 'Disabled Queue Debug';
+    },
+    enableDebug: function() {
+        Memory.queue.DBG = true;
+        return 'Enabled Queue Debug';
+    },
+    reset: function() {
+        delete Memory.queue;
+        return 'Spawn Queue Memory Reset';
     }
 }
 

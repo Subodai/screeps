@@ -113,6 +113,20 @@ module.exports.run = function(creep) {
         }
     }
 
+    if (creep.room.name != creep.memory.roomName) {
+        delete creep.memory.energyPickup;
+        let pos = new RoomPosition(25,25,creep.memory.roomName);
+        creep.moveTo(pos, {
+            visualizePathStyle: {
+                stroke: global.colourIdle,
+                opacity: global.pathOpacity
+            },
+            reusePath:5
+        });
+        creep.say('SEEK');
+        return;
+    }
+
     // Is the creep dropping off and empty?
     if (creep.memory.delivering && _.sum(creep.carry) == 0) {
         creep.memory.delivering = false;

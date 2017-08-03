@@ -55,10 +55,10 @@ module.exports.roster = {
     2: 0,
     3: 3,
     4: 3,
-    5: 3,
-    6: 3,
-    7: 3,
-    8: 3,
+    5: 8,
+    6: 8,
+    7: 8,
+    8: 8,
 }
 /**
  * Individual check for a room to check if this creep type should be enabled or not
@@ -153,7 +153,7 @@ module.exports.run = function (creep, debug = false) {
     }
 
     if (!creep.canDo(WORK)) {
-        console.log('[' +creep.name+'] Creep damaged seeking repair:' + JSON.stringify(creep.pos));
+        if (debug) { console.log('[' +creep.name+'] Creep damaged seeking repair:' + JSON.stringify(creep.pos)); }
         return;
     }
 
