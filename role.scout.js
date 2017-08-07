@@ -8,7 +8,7 @@ module.exports.flagRequirement = 'scout';
 module.exports.roster = {
     1: 0,
     2: 0,
-    3: 0,
+    3: 1,
     4: 1,
     5: 1,
     6: 1,
@@ -19,7 +19,7 @@ module.exports.roster = {
 module.exports.cost = {
     1 : 0,
     2 : 0,
-    3 : 0,
+    3 : 650,
     4 : 900,
     5 : 1550,
     6 : 1550,
@@ -30,7 +30,10 @@ module.exports.cost = {
 module.exports.body = {
     1 : [],
     2 : [],
-    3 : [],
+    3 : [
+        MOVE,                 // 1 MOVE  = 50
+        CLAIM                 // 1 CLAIM = 600
+    ],
     4 : [
         MOVE,MOVE,MOVE,       // 3 MOVE = 150
         CLAIM,                // 1 CLAIM = 600
@@ -129,6 +132,8 @@ module.exports.run = function (creep, debug = false) {
 
     // Have we arrived?
     if (creep.memory.arrived) {
+        var flag = Game.flags[creep.memory.flagName];
+        if (flag) { flag.remove(); }
         // Get the controller of the room we're meant to be in
         if (creep.room.controller) {
             // Okay, attempt to run reserve on the controller

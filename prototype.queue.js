@@ -126,9 +126,9 @@ Queue.prototype = {
                 energyAvailable = room.energyAvailable;
             }
             var spawn = false;
-            this.DBG && console.log('Room energy [' + energyAvailable + '] Req: [' + creep.cost + ']');
+            this.DBG && console.log('Room energy [' + energyAvailable + '] Req: [' + global.getPartsCost(creep.body) + ']');
             // Does this room have enough energy
-            if (energyAvailable >= creep.cost) {
+            if (energyAvailable >= global.getPartsCost(creep.body)) {
                 this.DBG && console.log('Spawning creep in desired room');
                 // It does, pick a spawn in this room
                 const spawns = _.filter(Game.spawns, (s) => !s.spawning && s.room.name == creep.home);
@@ -140,7 +140,7 @@ Queue.prototype = {
             // If we don't have a spawn yet, lets try other rooms
             if (!spawn) {
                 this.DBG && console.log('Not enough energy in desired room, attempting remote spawn');
-                const otherspawns = _.filter(Game.spawns, (s) => !s.spawning && s.room.name != creep.roomName && s.room.energyAvailable >= creep.cost);
+                const otherspawns = _.filter(Game.spawns, (s) => !s.spawning && s.room.name != creep.roomName && s.room.energyAvailable >= global.getPartsCost(creep.body));
                 // @TODO: Sort by distance from wanted room?
                 // Use a spawn that's not in this room then
                 if (otherspawns.length > 0) {

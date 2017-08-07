@@ -35,8 +35,9 @@ module.exports.body = {
     ],
     3 : [
         TOUGH,TOUGH,                                // 2 Toughs = 20
-        MOVE,MOVE,MOVE,MOVE,                        // 4 Moves = 200
+        MOVE,MOVE,MOVE,                             // 4 Moves = 200
         ATTACK,ATTACK,                              // 2 Attacks = 160 = 60h/t
+        MOVE,
     ],
     4 : [
         TOUGH,TOUGH,                            // 2 Toughs = 20
@@ -134,6 +135,12 @@ module.exports.run = function (creep, debug = false) {
         creep.say(global.sayTired);
         return;
     }
+
+    // Functional check!
+    if (!creep.canDo(ATTACK)) {
+        if (debug) { console.log('[' +creep.name+'] Creep damaged seeking repair:' + JSON.stringify(creep.pos)); }
+        return;
+    }
     if (creep.memory.idle >= 100) {
         // No targets.. head back to the room spawn
         var spawn = creep.pos.findClosestByRange(FIND_STRUCTURES, {
@@ -142,7 +149,7 @@ module.exports.run = function (creep, debug = false) {
 
         if (spawn.recycleCreep(creep) == ERR_NOT_IN_RANGE) {
             creep.moveTo(spawn, {
-                sualizePathStyle: {
+                visualizePathStyle: {
                     stroke: global.colorRepair,
                     opacity: global.pathOpacity
                 },
@@ -169,7 +176,7 @@ module.exports.run = function (creep, debug = false) {
             creep.say(global.sayMove);
             return;
         } else {
-            creep.say(global.sayAttack,true);
+            creep.say(global.sayAttack);
             return;
         }
     } else {
@@ -186,7 +193,7 @@ module.exports.run = function (creep, debug = false) {
                 filter: (i) => !(global.friends.indexOf(i.owner.username) > -1) && i.structureType != STRUCTURE_CONTROLLER
             });
         }
-        //var target = false;
+        var target = false;
         if (target) {
             creep.memory.idle = 0;
             if (creep.attack(target) == ERR_NOT_IN_RANGE) {
@@ -232,7 +239,7 @@ module.exports.run = function (creep, debug = false) {
                         stroke: global.colourFlag,
                         opacity: global.pathOpacity
                     },
-                    reusePath:20
+                    reusePath:10
                 });
             } else {
                 var result = creep.moveTo(flag, {
@@ -240,7 +247,7 @@ module.exports.run = function (creep, debug = false) {
                         stroke: global.colourFlag,
                         opacity: global.pathOpacity
                     },
-                    reusePath:20
+                    reusePath:10
                 });
                 return;
             }

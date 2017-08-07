@@ -21,10 +21,10 @@ module.exports.cost = {
     2 : 0,
     3 : 0,
     4 : 1300,
-    5 : 1400,
-    6 : 1400,
-    7 : 1400,
-    8 : 1400,
+    5 : 1300,
+    6 : 1300,
+    7 : 1300,
+    8 : 1300,
 }
 /* Body Parts at each RCL */
 module.exports.body = {
@@ -38,22 +38,18 @@ module.exports.body = {
     5 : [
         MOVE,MOVE,      // 2 MOVE = 100
         CLAIM,CLAIM,    // 2 CLAIM = 1200
-        WORK            // 1 WORK = 100
     ],
     6 : [
         MOVE,MOVE,      // 2 MOVE = 100
         CLAIM,CLAIM,    // 2 CLAIM = 1200
-        WORK            // 1 WORK = 100
     ],
     7 : [
         MOVE,MOVE,      // 2 MOVE = 100
         CLAIM,CLAIM,    // 2 CLAIM = 1200
-        WORK            // 1 WORK = 100
     ],
     8 : [
         MOVE,MOVE,      // 2 MOVE = 100
         CLAIM,CLAIM,    // 2 CLAIM = 1200
-        WORK            // 1 WORK = 100
     ],
 }
 module.exports.enabled = function (room, debug = false) {

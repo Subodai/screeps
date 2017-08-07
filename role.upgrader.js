@@ -4,21 +4,21 @@ module.exports.role = 'upgrader';
 module.exports.sType = 'normal';
 /* Spawn Roster */
 module.exports.roster = {
-    1: 2,
-    2: 2,
-    3: 2,
-    4: 2,
-    5: 2,
-    6: 2,
-    7: 2,
-    8: 2,
+    1: 4,
+    2: 4,
+    3: 4,
+    4: 3,
+    5: 3,
+    6: 3,
+    7: 3,
+    8: 3,
 }
 /* Costs */
 module.exports.cost = {
     1 : 300,
     2 : 550,
     3 : 800,
-    4 : 1300,
+    4 : 950,
     5 : 1550,
     6 : 1550,
     7 : 1550,
@@ -42,34 +42,34 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     4 : [
-        WORK,WORK,WORK,WORK,WORK,
-        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,
+        WORK,WORK,WORK,
         CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE
+        MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     5 : [
-        WORK,WORK,WORK,WORK,WORK,
-        WORK,WORK,WORK,WORK,WORK,
-        CARRY,CARRY,CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+        WORK,WORK,WORK,
+        WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     6 : [
-        WORK,WORK,WORK,WORK,WORK,
-        WORK,WORK,WORK,WORK,WORK,
-        CARRY,CARRY,CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+        WORK,WORK,WORK,
+        WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     7 : [
-        WORK,WORK,WORK,WORK,WORK,
-        WORK,WORK,WORK,WORK,WORK,
-        CARRY,CARRY,CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+        WORK,WORK,WORK,
+        WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     8 : [
-        WORK,WORK,WORK,WORK,WORK,
-        WORK,WORK,WORK,WORK,WORK,
-        CARRY,CARRY,CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+        WORK,WORK,WORK,
+        WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
 }
 
@@ -92,16 +92,22 @@ module.exports.run = function(creep) {
     }
 
     // If supergrader is enabled, switch to it, no need for upgraders while supergraders are on
-    if (creep.room.memory.roles['supergrader'] == true) {
-        creep.memory.role = 'supergrader';
-        return;
+    if (creep.room.memory.roles) {
+        if (creep.room.memory.roles['supergrader'] == true) {
+            creep.memory.role = 'supergrader';
+            return;
+        }
     }
 
     // If we have only a few ticks to live, swap it to harvest mode so it seeks home
     var ticks = creep.ticksToLive;
-    if (ticks < 100) {
-        creep.say('!!');
+    if (ticks < 100 && !creep.memory.dying) {
         creep.memory.dying = true;
+        // creep.QueueReplacement();
+    }
+
+    if (creep.memory.dying) {
+        creep.say('!!');
     }
 
     // if (creep.room.memory.emergency) {
@@ -138,15 +144,28 @@ module.exports.run = function(creep) {
         //         return;
         //     }
         // }
-        if(creep.upgradeController(Game.rooms[creep.memory.roomName].controller) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(Game.rooms[creep.memory.roomName].controller, {
-                visualizePathStyle: {
-                    stroke: global.colourUpgrade,
-                    opacity: global.pathOpacity
-                }
-            });
+        if (Game.rooms[creep.memory.roomName]) {
+            if(creep.upgradeController(Game.rooms[creep.memory.roomName].controller) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(Game.rooms[creep.memory.roomName].controller, {
+                    visualizePathStyle: {
+                        stroke: global.colourUpgrade,
+                        opacity: global.pathOpacity
+                    }
+                });
+            } else {
+                creep.say('(>.<)');
+            }
         } else {
-            creep.say('(>.<)');
+            let pos = new RoomPosition(25,25,creep.memory.roomName);
+            creep.moveTo(pos, {
+                visualizePathStyle: {
+                    stroke: global.colourIdle,
+                    opacity: global.pathOpacity
+                },
+                reusePath:5
+            });
+            creep.say('SEEK');
+            return;
         }
     }
 }

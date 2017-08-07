@@ -33,19 +33,27 @@ module.exports.run = function(debug = false) {
         }
         if(theRoom.controller && theRoom.controller.my) {
 
-            var list = _.filter(Game.creeps, (creep) => !creep.memory.dying && creep.memory.roomName == room);
-            if ((list.length <= 3 && miners == 0) && !theRoom.memory.emergency){
-                notify = true;
-                msg += "\n" + Game.time + ' Room '+ room + ' In Emergency Mode!!' + "\n";
+            var list = _.filter(Game.creeps, (creep) => !creep.memory.dying && creep.pos.roomName == room && !creep.memory.role == 'hauler' && !creep.memory.role == 'guard');
+            if ((list.length <= 3 && miners == 0) && !theRoom.memory.emergency && theRoom.controller.level > 3){
+                //notify = true;
+                // msg += "\n" + Game.time + ' Room '+ room + ' In Emergency Mode!!' + "\n";
                 console.log('Emergency Activated');
                 theRoom.memory.emergency = true;
             }
-            if ((list.length > 5 || miners > 0) && theRoom.memory.emergency) {
-                notify = true;
-                msg += "\n" + Game.time + ' Room ' + room + ' No Longer in Emergency Mode' + "\n";
+            if ((list.length > 7 || miners > 0 || theRoom.controller.level < 3) && theRoom.memory.emergency) {
+                //notify = true;
+                // msg += "\n" + Game.time + ' Room ' + room + ' No Longer in Emergency Mode' + "\n";
                 console.log('Emergency Deactivated');
                 theRoom.memory.emergency = false;
                 delete theRoom.memory.emergency;
+            }
+            if (theRoom.controller.level < 3 && list.length < 2) {
+                theRoom.memory.emergency = true;
+                console.log('Emergency Activated');
+            }
+            if (theRoom.controller.level < 3 && list.length > 5) {
+                theRoom.memory.emergency = false;
+                console.log('Emergency Deactivated');
             }
             if (theRoom.memory.emergency) {
                 console.log(room + ' has ' + list.length + ' total creeps still in emergency mode');

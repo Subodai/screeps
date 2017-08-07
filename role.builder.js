@@ -4,8 +4,8 @@ module.exports.role = 'builder';
 module.exports.sType = 'normal';
 /* Spawn Roster */
 module.exports.roster = {
-    1: 3,
-    2: 3,
+    1: 2,
+    2: 2,
     3: 2,
     4: 2,
     5: 1,

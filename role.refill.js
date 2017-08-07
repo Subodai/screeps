@@ -81,7 +81,8 @@ module.exports.run = function(creep) {
     }
 
     var ticks = creep.ticksToLive;
-    if (ticks < 100) {
+    if (ticks < 100 && !creep.memory.dying) {
+        creep.QueueReplacement();
         creep.memory.dying = true;
     }
 

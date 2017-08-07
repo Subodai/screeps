@@ -6,7 +6,13 @@ module.exports.run = function(debug = false) {
     for(var name in Memory.creeps) {
         if(!Game.creeps[name]) {
             delete Memory.creeps[name];
-            console.log('Memory cleared [' + name +']');
+            console.log('[MEMORY] cleared [' + name +']');
+        }
+    }
+    for(var room in Memory.rooms) {
+        if (!Game.rooms[room]) {
+            delete Memory.rooms[room];
+            console.log('[MEMORY] cleared [' + name + ']');
         }
     }
     if (debug) { console.log('Cleaner used ' + (Game.cpu.getUsed() - _cpu).toFixed(3) + ' CPU'); }

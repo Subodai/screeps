@@ -97,6 +97,13 @@ Room.prototype.clearFlags = function () {
     }
 }
 
+Room.prototype.clearAllFlags = function () {
+    const flags = _.filter(Game.flags, (flag) => flag.pos.roomName == this.name && flag.color == COLOR_WHITE);
+    for (let i in flags) {
+        flags[i].remove();
+    }
+}
+
 /**
  * Fast way to remove all walls in a room
  */
