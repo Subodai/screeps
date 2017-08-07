@@ -1,13 +1,26 @@
 /* Super Upgrader drone */
 module.exports.role = 'supergrader';
+
 /* sType */
 module.exports.sType = 'specialist';
+
+/* Spawn Roster */
+module.exports.roster = {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 8,
+    5: 8,
+    6: 8,
+    7: 8,
+    8: 8,
+}
 /* Costs */
 module.exports.cost = {
     1 : 0,
     2 : 0,
     3 : 0,
-    4 : 0,
+    4 : 1300,
     5 : 1800,
     6 : 1800,
     7 : 1800,
@@ -18,7 +31,12 @@ module.exports.body = {
     1 : [],
     2 : [],
     3 : [],
-    4 : [],
+    4 : [
+        WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,
+        CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+        ],
     5 : [
         WORK,WORK,WORK,WORK,WORK,
         WORK,WORK,WORK,WORK,WORK,   // 1000
@@ -52,23 +70,13 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE         //  200
     ],
 }
-/* Spawn Roster */
-module.exports.roster = {
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 3,
-    6: 3,
-    7: 3,
-    8: 3,
-}
+
 module.exports.enabled = function (room, debug = false) {
     // Define the room
     var _room = Game.rooms[room];
     var _storage = _room.storage;
     // No Storage, no supergraders
-    if (!_storage || _room.controller.level <= 5) { return false; }
+    if (!_storage || _room.controller.level <= 3) { return false; }
 
     // If we go over 4/5 full on energy storage and we're not enabled in this room, turn it on!
     if (_storage.store[RESOURCE_ENERGY] >= 800000) {
@@ -82,7 +90,7 @@ module.exports.enabled = function (room, debug = false) {
         _room.memory.charging = true;
     }
 
-    if (_room.memory.charging || _room.controller.level <= 5) {
+    if (_room.memory.charging || _room.controller.level <= 3) {
         return false;
     } else {
         return true;
@@ -111,12 +119,12 @@ module.exports.run = function(creep) {
         creep.memory.dying = 'true';
     }
 
-    if (creep.room.memory.emergency) {
-        delete creep.memory.upgrading;
-        delete creep.memory.idle;
-        creep.memory.role = 'harvester';
-        return
-    }
+    // if (creep.room.memory.emergency) {
+    //     delete creep.memory.upgrading;
+    //     delete creep.memory.idle;
+    //     //creep.memory.role = 'harvester';
+    //     return
+    // }
 
     if(creep.memory.upgrading && creep.carry.energy == 0) {
         creep.memory.upgrading = false;

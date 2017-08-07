@@ -271,22 +271,36 @@ Creep.prototype.canWork = function() {
 }
 
 Creep.prototype.findSpaceAtSource = function(source) {
-    return true;
+    if (source.id == '5982fecbb097071b4adc1835') {
+        // this.DBG = true;
+    }
+    if (this.pos.getRangeTo(source) == 1) {
+        this.DBG && console.log('We are already at the source');
+        return true;
+    }
+    this.DBG && console.log('Checking for space at source ' + source.id);
+    // return true;
     // Make sure to initialise the source's last check memory
     if (!source.memory.lastSpaceCheck) {
         source.memory.lastSpaceCheck = 0;
     }
     // If we checked the space this tick and there's no space left, we don't need to check again we just need to decrement the spaces
     if (source.memory.lastSpaceCheck == Game.time) {
+        this.DBG && console.log('Last Check was this tick');
         if (source.memory.spaces == 0) {
+            this.DBG && console.log('No more spaces');
             return false
         } else {
+
             // Decrement the spaces left
             source.memory.spaces = source.memory.spaces -1;
+            this.DBG && console.log('Found a space there are ' + source.memory.spaces + ' spaces left');
             return true;
         }
     }
-    var spaces = 0;
+
+    this.DBG && console.log('First check for space at source');
+    var spaces = 1;
     var n  = new RoomPosition(source.pos.x,   source.pos.y-1, source.pos.roomName);
     if (this.checkEmptyAtPos(n,  this)) { spaces++; }
     var ne = new RoomPosition(source.pos.x+1, source.pos.y-1, source.pos.roomName);
@@ -303,6 +317,7 @@ Creep.prototype.findSpaceAtSource = function(source) {
     if (this.checkEmptyAtPos(w,  this)) { spaces++; }
     var nw = new RoomPosition(source.pos.x-1, source.pos.y-1, source.pos.roomName);
     if (this.checkEmptyAtPos(nw, this)) { spaces++; }
+    this.DBG && console.log('We found ' + spaces + ' Spaces at source ' + source.id);
     // Set our memory
     source.memory.lastSpaceCheck = Game.time;
     source.memory.spaces = spaces;
@@ -320,15 +335,21 @@ Creep.prototype.findSpaceAtSource = function(source) {
 Creep.prototype.checkEmptyAtPos = function(pos) {
     const terrain = Game.map.getTerrainAt(pos);
     if (terrain == 'wall') {
+        this.DBG && console.log('wall found at ' + JSON.stringify(pos));
         return false;
     } else {
         let creeps = pos.lookFor(LOOK_CREEPS);
         if (creeps.length == 0) {
+            this.DBG && console.log('Space found at ' + JSON.stringify(pos));
             return true;
         } else {
             // is this, the creep we're trying to find a space for
             if (creeps[0] == this) {
+                this.DBG && console.log('We are at ' + JSON.stringify(pos));
                 return true;
+            } else {
+                this.DBG && console.log('Other creep [' + creeps[0].name + '] found at' + JSON.stringify(pos));
+                return false;
             }
         }
     }
@@ -670,8 +691,8 @@ Creep.prototype.findDamagedDefences = function() {
                 if (a.structureType == STRUCTURE_RAMPART) { var aHitsMax = global.rampartMax*multiplier; }
                 if (b.structureType == STRUCTURE_WALL)    { var bHitsMax = global.wallMax*multiplier; }
                 if (b.structureType == STRUCTURE_RAMPART) { var bHitsMax = global.rampartMax*multiplier; }
-                let aH = ahitsMax - a.hits;
-                let bH = bhitsMax - b.hits;
+                let aH = aHitsMax - a.hits;
+                let bH = bHitsMax - b.hits;
                 if (aH > bH) {
                     return -1;
                 } else if (bH > aH) {
@@ -682,7 +703,7 @@ Creep.prototype.findDamagedDefences = function() {
             if (ts[0].structureType == STRUCTURE_WALL) {
                 this.memory.targetMaxHP = global.wallMax*multiplier;
             }
-            if (ts[0].structureType == STRCUTURE_RAMPART) {
+            if (ts[0].structureType == STRUCTURE_RAMPART) {
                 this.memory.targetMaxHP = global.rampartMax*multiplier;
             }
             this.memory.repairTarget = ts[0].id;
@@ -701,9 +722,11 @@ Creep.prototype.canDo = function(BodyPart) {
             this.heal(this);
         } else {
             // Get position in centre of home room
-            let pos = new RoomPosition(25,25,this.memory.roomName);
-            // Move the creep
-            this.moveTo(pos, { reusePath:10 });
+            if (this.memory.roomName) {
+                let pos = new RoomPosition(25,25,this.memory.roomName);
+                // Move the creep
+                this.moveTo(pos, { reusePath:10 });
+            }
         }
         // Are we at max health?
         if (this.hits >= this.hitsMax) {
@@ -715,4 +738,29 @@ Creep.prototype.canDo = function(BodyPart) {
         }
     }
     return true;
+}
+
+Creep.prototype.QueueReplacement = function(now = false) {
+    if (this.room.controller) {
+        if (this.room.controller.level >= this.memory.level) {
+            return;
+        }
+    }
+    // We don't need level 1 creeps putting themselves in the spawn queue
+    if (this.memory.level == 1) { return; }
+    var bodyParts = [];
+    for (var part of this.body) {
+        bodyParts.push(part.type);
+    }
+    var newCreep = {
+        role: this.memory.role,
+        home: this.memory.roomName,
+        level: this.memory.level,
+        body: bodyParts,
+    }
+    if (now) {
+        global.Queue.add_now(newCreep);
+    } else {
+        global.Queue.add(newCreep);
+    }
 }

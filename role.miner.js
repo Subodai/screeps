@@ -2,29 +2,6 @@
 module.exports.role = 'miner';
 /* SType */
 module.exports.sType = 'specialist';
-/* Costs */
-module.exports.cost = {
-    1 : 550,
-    2 : 550,
-    3 : 550,
-    4 : 550,
-    5 : 550,
-    6 : 550,
-    7 : 550,
-    8 : 550,
-}
-/* Body Parts at each RCL */
-module.exports.body = {
-    1 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
-    2 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
-    3 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
-    4 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
-    5 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
-    6 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
-    7 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
-    8 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
-}
-
 /* Spawn Roster */
 module.exports.roster = {
     1: 1,
@@ -36,6 +13,29 @@ module.exports.roster = {
     7: 2,
     8: 2,
 }
+/* Costs */
+module.exports.cost = {
+    1 : 350,
+    2 : 550,
+    3 : 550,
+    4 : 550,
+    5 : 550,
+    6 : 550,
+    7 : 550,
+    8 : 550,
+}
+/* Body Parts at each RCL */
+module.exports.body = {
+    1 : [ WORK,WORK,WORK,MOVE ],
+    2 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
+    3 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
+    4 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
+    5 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
+    6 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
+    7 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
+    8 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
+}
+
 /**
  * Individual check for a room to check if this creep type should be enabled or not
  */
@@ -55,7 +55,7 @@ module.exports.enabled = function (room, debug = false) {
 }
 
 // Set a time for this creep to 'expire' at
-module.exports.expiry = 150;
+module.exports.expiry = 75;
 /* Run method */
 module.exports.run = function (creep, debug = false) {
     if (creep.spawning) { return; }

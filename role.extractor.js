@@ -4,6 +4,17 @@ module.exports.role = 'extractor';
 module.exports.sType = 'specialist';
 /* Which room memory item should this be checked against */
 module.exports.roomRequirement = 'extractorsNeeded';
+/* Spawn Roster */
+module.exports.roster = {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+}
 /* Costs */
 module.exports.cost = {
     1 : 0,
@@ -62,17 +73,7 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
 }
-/* Spawn Roster */
-module.exports.roster = {
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 0,
-    6: 0,
-    7: 0,
-    8: 0,
-}
+
 // Set a time for this creep to 'expire' at
 module.exports.expiry = 200;
 /**

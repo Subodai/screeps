@@ -4,11 +4,22 @@ module.exports.role = 'scout';
 module.exports.sType = 'specialist';
 /* This role requires a flag to be set */
 module.exports.flagRequirement = 'scout';
+/* Spawn Roster */
+module.exports.roster = {
+    1: 0,
+    2: 0,
+    3: 1,
+    4: 1,
+    5: 1,
+    6: 1,
+    7: 1,
+    8: 1,
+}
 /* Costs */
 module.exports.cost = {
     1 : 0,
     2 : 0,
-    3 : 0,
+    3 : 650,
     4 : 900,
     5 : 1550,
     6 : 1550,
@@ -19,7 +30,10 @@ module.exports.cost = {
 module.exports.body = {
     1 : [],
     2 : [],
-    3 : [],
+    3 : [
+        MOVE,                 // 1 MOVE  = 50
+        CLAIM                 // 1 CLAIM = 600
+    ],
     4 : [
         MOVE,MOVE,MOVE,       // 3 MOVE = 150
         CLAIM,                // 1 CLAIM = 600
@@ -51,17 +65,7 @@ module.exports.body = {
         WORK                  // 1 WORK = 100
     ],
 }
-/* Spawn Roster */
-module.exports.roster = {
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 1,
-    5: 1,
-    6: 1,
-    7: 1,
-    8: 1,
-}
+
 
 module.exports.enabled = function (room, debug = false) {
     // Get all reserve flags without an assigned creep
@@ -128,6 +132,8 @@ module.exports.run = function (creep, debug = false) {
 
     // Have we arrived?
     if (creep.memory.arrived) {
+        var flag = Game.flags[creep.memory.flagName];
+        if (flag) { flag.remove(); }
         // Get the controller of the room we're meant to be in
         if (creep.room.controller) {
             // Okay, attempt to run reserve on the controller

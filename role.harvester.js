@@ -2,6 +2,17 @@
 module.exports.role = 'harvester';
 /* sType */
 module.exports.sType = 'normal';
+/* Spawn Roster */
+module.exports.roster = {
+    1: 2,
+    2: 2,
+    3: 2,
+    4: 2,
+    5: 2,
+    6: 2,
+    7: 2,
+    8: 2,
+}
 /* Costs */
 module.exports.cost = {
     1 : 300,
@@ -61,17 +72,7 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
 }
-/* Spawn Roster */
-module.exports.roster = {
-    1: 5,
-    2: 3,
-    3: 3,
-    4: 3,
-    5: 3,
-    6: 3,
-    7: 3,
-    8: 3,
-}
+
 
 module.exports.multiplier = 2;
 
@@ -151,10 +152,14 @@ module.exports.run = function(creep) {
     // Alright at this point if we're delivering it's time to move the Creep to a drop off
     if (creep.memory.delivering) {
         delete creep.memory.energyPickup;
+        var fillSpawns = false;
+        if (creep.room.energyAvailable < creep.room.energyCapacityAvailable*0.75) {
+            var fillSpawns = true;
+        }
         // only refill spawns and other things if room level below 4 after 4 we just fill storage
         // after 5 we fill storage and terminal
         // unless emergency, then we fill spawns too
-        if (creep.room.controller.level < 7 || creep.room.memory.emergency || !creep.room.storage) {
+        if (fillSpawns || creep.room.controller.level < 4 || creep.room.memory.emergency || !creep.room.storage) {
             // Do we have energy?
             if (creep.carry.energy > 0) {
                 // We do, try to find a spawn or extension to fill
@@ -332,9 +337,9 @@ module.exports.run = function(creep) {
             creep.memory.idle++;
             creep.say('idle: ' + creep.memory.idle);
 
-            if (creep.memory.idle >= 100) {
+            if (creep.memory.idle >= 10) {
                 // Are we in our home room?
-                if (creep.room.name != creep.memory.roomName) {
+                //if (creep.room.name != creep.memory.roomName) {
                     // lets go home
                     var spawns = Game.rooms[creep.memory.roomName].find(FIND_STRUCTURES, {
                         filter: (i) => i.structureType == STRUCTURE_SPAWN
@@ -350,7 +355,7 @@ module.exports.run = function(creep) {
                         });
                         creep.say(global.sayMove);
                     }
-                }
+                //}
 
 
                 // console.log('Creep idle too long, switching to refiller');

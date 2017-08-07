@@ -2,6 +2,17 @@
 module.exports.role = 'refill';
 /* sType */
 module.exports.sType = 'normal';
+/* Spawn Roster */
+module.exports.roster = {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 1,
+    5: 1,
+    6: 1,
+    7: 1,
+    8: 1,
+}
 /* Costs */
 module.exports.cost = {
     1 : 0,
@@ -48,17 +59,7 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE,MOVE
     ],
 }
-/* Spawn Roster */
-module.exports.roster = {
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 1,
-    5: 1,
-    6: 1,
-    7: 1,
-    8: 1,
-}
+
 module.exports.enabled = function (room, debug = false) {
     const _room = Game.rooms[room];
     if (_room.controller) {
@@ -80,7 +81,8 @@ module.exports.run = function(creep) {
     }
 
     var ticks = creep.ticksToLive;
-    if (ticks < 100) {
+    if (ticks < 100 && !creep.memory.dying) {
+        creep.QueueReplacement();
         creep.memory.dying = true;
     }
 
@@ -92,6 +94,20 @@ module.exports.run = function(creep) {
         } else {
             creep.memory.delivering = false;
         }
+    }
+
+    if (creep.room.name != creep.memory.roomName) {
+        delete creep.memory.energyPickup;
+        let pos = new RoomPosition(25,25,creep.memory.roomName);
+        creep.moveTo(pos, {
+            visualizePathStyle: {
+                stroke: global.colourIdle,
+                opacity: global.pathOpacity
+            },
+            reusePath:5
+        });
+        creep.say('SEEK');
+        return;
     }
 
     // Is the creep dropping off and empty?

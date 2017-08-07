@@ -56,6 +56,23 @@ global.seedRemoteRoads = true;
 
 global.cpuDesired = 5000;
 
+global.getPartsCost = function(parts) {
+    // If it's a creep we just want it's body
+    if (parts instanceof Creep) {
+        parts = parts.body;
+        var bodyCost = 0;
+        for (var part of parts) {
+            bodyCost += BODYPART_COST[part.type];
+        }
+    } else {
+        var bodyCost = 0;
+        for (var part of parts) {
+            bodyCost += BODYPART_COST[part];
+        }
+    }
+    return bodyCost;
+}
+
 global.getSpaceAtSource = function (source, creep) {
     const n  = new RoomPosition(source.pos.x,   source.pos.y-1, source.pos.roomName);
     if (global.checkEmptyCoord(n, creep)) { return true; }
@@ -93,6 +110,17 @@ global.checkEmptyCoord = function (pos, creep) {
     }
 }
 
+global.toggleWar = function() {
+    if (!Memory.war) {
+        Memory.war = true;
+    } else {
+        Memory.war = false;
+    }
+    for (var room in Game.rooms) {
+        console.log('Setting War to ' + Memory.war + ' in ' + room);
+        Game.rooms[room].memory.war = Memory.war;
+    }
+}
 
 global.InitRespawn = function (MeanIt = false) {
     if (MeanIt) {
@@ -150,6 +178,8 @@ global.InitRespawn = function (MeanIt = false) {
 
         console.log('++Respawn Cleanup Complete++');
         console.log('++Good Luck!!++');
+
+        Game.notify('Performed a Respawn Memory Reset');
     } else {
         console.log('You clearly did not mean that, ignoring you');
     }

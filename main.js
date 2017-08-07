@@ -30,13 +30,13 @@ var screepsplus = require('screepsplus');
 const q = require('prototype.queue');
 global.Queue = new q.Queue();
 
-// const profiler = require('screeps-profiler');
-// profiler.enable();
+const profiler = require('screeps-profiler');
+profiler.enable();
 /**
  * Main game loop, call all other functions from here
  */
 module.exports.loop = function () {
-// profiler.wrap(function() { // Start of profiler wrapper
+profiler.wrap(function() { // Start of profiler wrapper
     var debug = false;
     // Only need these once every 10 ticks
     if (Game.time % 10 == 0) {
@@ -52,7 +52,7 @@ module.exports.loop = function () {
         extractor.setup();
     }
     // Only need these once every 5 ticks
-    if (Game.time % 10 == 0) {
+    if (Game.time % 5 == 0) {
         // Setup rooms before we run the spawner
         if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) { console.log('Stopping At 55 To relax CPU use'); console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}'); return; }
         counter.setupRoomRoles(debug);
@@ -63,7 +63,7 @@ module.exports.loop = function () {
         let After = Game.cpu.getUsed() - Before;
         console.log('Spawners used:' + After + ' CPU');
         if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) { console.log('Stopping At 62 To relax CPU use'); console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}'); return; }
-        this.haulerSetup();
+        global.haulerSetup();
         if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) { console.log('Stopping At 64 To relax CPU use'); console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}'); return; }
     }
     if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) { console.log('Stopping At 66 To relax CPU use'); console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}'); return; }
@@ -75,9 +75,10 @@ module.exports.loop = function () {
     Memory.stats.cpu.used = Game.cpu.getUsed();
     if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) { console.log('Stopping At 73 To relax CPU use'); console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}'); return; }
     console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}');
+}); // End of profiler wrapper
 }
 
-module.exports.haulerSetup = function () {
+global.haulerSetup = function () {
     console.log('Running Hauler Target setup');
     var Before = Game.cpu.getUsed();
     let remoteRooms = [];
@@ -144,5 +145,4 @@ module.exports.haulerSetup = function () {
     Memory.myRoom = myRoom;
     var After = Game.cpu.getUsed() - Before;
     console.log('Hauler Target setup used ' + After + ' CPU');
-// }); // End of profiler wrapper
 }
