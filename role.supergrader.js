@@ -119,12 +119,12 @@ module.exports.run = function(creep) {
         creep.memory.dying = 'true';
     }
 
-    if (creep.room.memory.emergency) {
-        delete creep.memory.upgrading;
-        delete creep.memory.idle;
-        creep.memory.role = 'harvester';
-        return
-    }
+    // if (creep.room.memory.emergency) {
+    //     delete creep.memory.upgrading;
+    //     delete creep.memory.idle;
+    //     //creep.memory.role = 'harvester';
+    //     return
+    // }
 
     if(creep.memory.upgrading && creep.carry.energy == 0) {
         creep.memory.upgrading = false;

@@ -39,6 +39,27 @@ module.exports.run = function(debug = false) {
                 // msg += "\n" + Game.time + ' Room '+ room + ' In Emergency Mode!!' + "\n";
                 console.log('Emergency Activated');
                 theRoom.memory.emergency = true;
+                // Add a harvester to the global spawn queue
+                let creep1 = {
+                    role:'harvester',
+                    home:theRoom.name,
+                    level:theRoom.controller.level,
+                    body:[
+                        WORK,
+                        CARRY,CARRY,
+                        MOVE,MOVE,MOVE
+                    ],
+                }
+                let creep2 = {
+                    role:'refill',
+                    home:theRoom.name,
+                    level:theRoom.controller.level,
+                    body:[
+                        CARRY,CARRY,CARRY,CARRY,CARRY,
+                        MOVE,MOVE,MOVE,MOVE,MOVE
+                    ],
+                }
+                global.Queue.add(creep1).add(creep1).add(creep1).add(creep1).add(creep2);
             }
             if ((list.length > 7 || miners > 0 || theRoom.controller.level < 3) && theRoom.memory.emergency) {
                 //notify = true;
@@ -61,7 +82,6 @@ module.exports.run = function(debug = false) {
         } else {
             delete theRoom.memory.emergency;
         }
-
 
         msg += ' [' + room + ':' + theRoom.energyAvailable + ']';
     }
