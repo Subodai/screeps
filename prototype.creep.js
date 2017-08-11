@@ -497,12 +497,18 @@ Creep.prototype.repairStructures = function (options = {}) {
     // Is their an item in memory, with full health already?
     if (this.memory.repairTarget) {
         let target = Game.getObjectById(this.memory.repairTarget);
-        // Have we already filled the items health to what we want?
-        if (target.hits >= this.memory.targetMaxHP) {
-            // Clear the target, time for a new one
+        if (target) {
+            // Have we already filled the items health to what we want?
+            if (target.hits >= this.memory.targetMaxHP) {
+                // Clear the target, time for a new one
+                delete this.memory.repairTarget;
+                delete this.memory.targetMaxHP;
+            }
+        } else {
             delete this.memory.repairTarget;
             delete this.memory.targetMaxHP;
         }
+
     }
     // Do we have a repairTarget in memory?
     if (!this.memory.repairTarget) {
