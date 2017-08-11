@@ -26,7 +26,7 @@ module.exports.run = function(debug = false) {
             } else {
                 var minCreeps = 3;
                 var desiredCreeps = 5;
-                var minMiners = 2;
+                var minMiners = 1;
             }
             var list   = _.filter(Game.creeps, (i) => i.pos.roomName == room && !i.memory.dying && i.memory.role != 'hauler' && i.memory.role != 'guard');
             var miners = _.filter(Game.creeps, (i) => i.pos.roomName == room && !i.memory.dying && (i.memory.role == 'miner' || i.memory.role == 'linkminer'));
