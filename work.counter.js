@@ -79,6 +79,8 @@ module.exports.run = function(debug = false) {
             // non owned rooms can never be in emergency
             delete theRoom.memory.emergency;
 
+
+            // TODO We should add a tick counter to remove this hostile flag based on the life time of the hostile creeps in it
             if (hostiles.length > 0 && theRoom.memory.mode == 'safe') {
                 theRoom.memory.mode = 'hostile';
                 console.log(room + ' Remote Room has gone Hostile');
