@@ -90,63 +90,15 @@ module.exports.multiplier = 1;
 
 module.exports.enabled = function (room, debug = false) {
     // Get the flags
-    var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['remote']);
+    var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['haul']);
     // No remote flags, return false
     if (flags.length == 0) { return false; }
-    // Loop through the flags
-    for (var i in flags) {
-        // Get the flag
-        var _flag = flags[i];
-        // Get the room
-        var _room = Game.rooms[_flag.pos.roomName];
-        // Do we have the room?
-        if (_room) {
-            // How many sources are in the room, we only need 1 per source
-            const sources = _room.find(FIND_SOURCES);
-            const req = sources.length*this.multiplier;
-            const list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.flagName == _flag.name && !creep.memory.dying);
-            const got = list.length;
-            if (got < req) { return true; }
-        }
-
-        // probably false.. if we don't have anyone in there we don't have vision
-        return false;
-    }
-    return false;
+    return true;
 }
 /**
  * Hauler role
  */
 module.exports.run = function(creep, debug = false) {
-
-    // First thing we need to do, is be assigned a flag and remote Room
-    if (!creep.memory.flagName) {
-        // Get all the remote room flags
-        var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['remote']);
-        // if there's no remote flags, just turn this into a harvester
-        if (flags.length == 0) {
-            creep.memory.role = 'harvester';
-            return;
-        }
-        // Loop through the flags
-        for (var i in flags) {
-            // Get the flag
-            var _flag = flags[i];
-            // get the room
-            var _room = Game.rooms[_flag.pos.roomName];
-            // Do we have the room?
-            if (_room) {
-                const sources = _room.find(FIND_SOURCES);
-                const req = sources.length*this.multiplier;
-                const list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.remoteRoom == _flag.pos.roomName && !creep.memory.dying);
-                const got = list.length;
-                if (got < req) {
-                    // This room needs a creep!
-                    creep.memory.flagName = _flag.name;
-                }
-            }
-        }
-    }
     // Now if we're spawning just return
     if (creep.spawning) { return; }
     // If it's fatigued we should just return there's no need to carry on
@@ -195,16 +147,18 @@ module.exports.run = function(creep, debug = false) {
                 DBG && console.log('['+creep.name+'] setting hauler remote room ' + creep.memory.remoteRoom);
             }
             DBG && console.log('['+creep.name+'] Hauler Not in remote room ' + creep.memory.remoteRoom);
-            let pos = new RoomPosition(25,25,creep.memory.remoteRoom);
-            // Lets head to the flag
-            creep.moveTo(pos, {
-                visualizePathStyle: {
-                    stroke: global.colourPickup,
-                    opacity: global.pathOpacity
-                },
-                reusePath:5
-            });
-            var moved = true;
+            if (creep.memory.remoteRoom) {
+                let pos = new RoomPosition(25,25,creep.memory.remoteRoom);
+                // Lets head to the remoteRoom
+                creep.moveTo(pos, {
+                    visualizePathStyle: {
+                        stroke: global.colourPickup,
+                        opacity: global.pathOpacity
+                    },
+                    reusePath:5
+                });
+                var moved = true;
+            }
         } else {
             DBG && console.log(creep.name + ' Creep has arrived seeking energy');
             if (creep.getNearbyEnergy() == ERR_FULL) {
@@ -212,92 +166,6 @@ module.exports.run = function(creep, debug = false) {
                 delete creep.memory.energyPickup;
             }
         }
-        // DBG && console.log('['+creep.name+'] Hauler Seeking pickup');
-        // // Are we in the room yet?
-        // if (creep.room.name != creep.memory.remoteRoom) {
-
-        // } else {
-        //     // are we at the edge of a room
-        //     if (creep.pos.isRoomEdge()) {
-        //         DBG && console.log('['+creep.name+'] Hauler stuck at room edge');
-        //         if (creep.pos.x == 49) {
-        //             var newPos = new RoomPosition(48,creep.pos.y,creep.room.name);
-        //         }
-
-        //         if (creep.pos.x == 0) {
-        //             var newPos = new RoomPosition(1,creep.pos.y,creep.room.name);
-        //         }
-
-        //         if (creep.pos.y == 49) {
-        //             var newPos = new RoomPosition(creep.pos.x,48,creep.room.name);
-        //         }
-
-        //         if (creep.pos.y == 0) {
-        //             var newPos = new RoomPosition(creep.pos.x,1,creep.room.name);
-        //         }
-        //         DBG && console.log('['+creep.name+'] Moving in one tile');
-        //         creep.moveTo(newPos);
-        //         return;
-        //     }
-
-
-        //     DBG && console.log('['+creep.name+'] Hauler in remote room, looking for pickup');
-        //     // At this point we're in the room with the resources we want to find lets go find them
-        //     const resource = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
-        //         filter: (res) => res.amount >= creep.carryCapacity/2
-        //     });
-        //     // Did we find one?
-        //     if (resource) {
-        //         DBG && console.log('['+creep.name+'] Hauler found resource');
-        //         // Attempt to pickup
-        //         if (creep.pickup(resource) == ERR_NOT_IN_RANGE) {
-        //             DBG && console.log('['+creep.name+'] Hauler Moving to resource');
-        //             // move to the resource
-        //             creep.moveTo(resource, {
-        //                 visualizePathStyle: {
-        //                     stroke: global.colourPickup,
-        //                     opacity: global.pathOpacity
-        //                 },
-        //                 reusePath:3
-        //             });
-        //             var moved = true;
-        //         } else {
-        //             // Clear the seek flag we've picked up some resources!
-        //             DBG && console.log('['+creep.name+'] Hauler resource pickup success');
-        //             creep.say(global.sayWithdraw);
-        //         }
-        //     } else {
-        //         DBG && console.log('['+creep.name+'] Hauler Seeking container');
-        //         // lets try a container
-        //         const container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-        //             filter: (i) => i.structureType == STRUCTURE_CONTAINER && i.store[RESOURCE_ENERGY] >= creep.carryCapacity/2
-        //         });
-        //         // Did we find one?
-        //         if (container) {
-        //             DBG && console.log('['+creep.name+'] Hauler found container');
-        //             // Lets try to withdraw
-        //             if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-        //                 // move to the container
-        //                 creep.moveTo(container, {
-        //                     visualizePathStyle: {
-        //                         stroke: global.colourPickup,
-        //                         opacity: global.pathOpacity
-        //                     },
-        //                     reusePath:5
-        //                 });
-        //                 var moved = true;
-        //             } else {
-        //                 DBG && console.log('['+creep.name+'] Hauler container withdraw success');
-        //                 // Clear the seek flag we picked up stuff
-        //                 creep.say(global.sayWithdraw);
-        //             }
-        //         } else {
-        //             let pos = new RoomPosition(25,25,creep.room.name);
-        //             creep.moveTo(pos);
-        //             var moved = true;
-        //         }
-        //     }
-        // }
     }
 
     // Alright now the code for if we're not seeking

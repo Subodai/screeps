@@ -20,12 +20,13 @@ global.pathOpacity   = .3;
 
 global.flagColor = {
     'reserve': COLOR_PURPLE,
+    'haul': COLOR_GREEN,
+    'remote': COLOR_YELLOW,
+    
     'claim': COLOR_GREY,
     'invade': COLOR_RED,
     'friendly': COLOR_BLUE,
     'suspicious': COLOR_CYAN,
-    'nap': COLOR_GREEN,
-    'remote': COLOR_YELLOW,
     'defend': COLOR_ORANGE,
     'avoid': COLOR_BROWN,
     'buildsite': COLOR_WHITE,
