@@ -4,7 +4,7 @@ module.exports.role = 'miner';
 module.exports.sType = 'specialist';
 /* Spawn Roster */
 module.exports.roster = {
-    1: 1,
+    1: 2,
     2: 2,
     3: 2,
     4: 2,
