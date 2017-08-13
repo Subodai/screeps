@@ -4,6 +4,7 @@ RoomPosition.prototype.isRoomEdge = function() {
     return false;
 }
 
+
 RoomPosition.prototype.seedFlags = function() {
     let spawns = [
         [0,0]
@@ -54,4 +55,3 @@ RoomPosition.prototype.seedFlags = function() {
         newPos.createFlag(null,COLOR_WHITE,COLOR_WHITE);
     }
 }
-
