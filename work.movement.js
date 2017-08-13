@@ -44,7 +44,7 @@ module.exports.colour = function (creep, cost) {
         radius: 0.4,
         opacity: 0.1,
         stroke: global.roleColour[creep.memory.role],
-    }).text("<--= [" + creep.memory.level + '] ' + creep.memory.role + ' ' + cost.toFixed(2), creep.pos, {
+    }).text(/* "<--= [" + creep.memory.level + '] '  + creep.memory.role + ' '*/  + cost.toFixed(2), creep.pos, {
         color:global.roleColour[creep.memory.role],
         font:0.5,
         align:'left',
