@@ -133,6 +133,57 @@ module.exports.run = function(creep) {
     // Alright at this point if we're delivering it's time to move the Creep to a drop off
     if (creep.memory.delivering) {
         delete creep.memory.energyPickup;
+        // Let's try putting energy in the link
+        if (creep.carry.energy > 0 && creep.room.controller.level >= 5) {
+            var target = false;
+            // Find the link near the storage
+            if (creep.room.storage) {
+                // Check the storage cache
+                if (!creep.room.storage.memory.linkId) {
+                    // we have storage, lets find the link nearby
+                    var links = creep.room.find(FIND_MY_STRUCTURES, {
+                        filter:(i) => i.structureType == STRUCTURE_LINK && i.pos.inRangeTo(creep.room.storage, 3)
+                    });
+                    // If we found a lin
+                    if (links.length > 0) {
+                        creep.room.storage.memory.linkId = links[0].id;
+                        var target = links[0].id
+                        if (target) {
+                            Game.getObjectById(links[0].id).memory.linkType = 'storage';
+                        }
+                    }
+                    
+                }
+                if (creep.room.storage.memory.linkId) {
+                    var target = Game.getObjectById(creep.room.storage.memory.linkId);
+                    // in case this gets switched
+                    if (!target) {
+                        delete creep.room.storage.memory.linkId;
+                    }
+                }
+                
+                // If we found the link, lets fill it
+                if (target && target.energy < target.energyCapacity) {
+                    // Attempt transfer, unless out of range
+                    if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        // Let's go to the target
+                        creep.moveTo(target, {
+                            visualizePathStyle: {
+                                stroke: global.colourTower,
+                                opacity: global.pathOpacity
+                            },
+                            reusePath: 5
+                        });
+                        // Say because move
+                        creep.say('>>');
+                    } else {
+                        // Succesful drop off
+                        creep.say('V');
+                    }
+                    return;
+                }
+            }
+        }
         // Do we have energy?
         if (creep.carry.energy > 0) {
             // We do, try to find a spawn or extension to fill
@@ -175,10 +226,12 @@ module.exports.run = function(creep) {
             // We're done, next
             return;
         }
+        
+        
         // We didn't find a target yet, do we still have energy to use?
         if (creep.carry.energy > 0) {
             var target = false;
-            // First find towers with less than 400 energy
+            // First find towers 
             var targets = creep.room.find(FIND_MY_STRUCTURES, {
                 filter : (i) => i.structureType == STRUCTURE_TOWER && i.energy < i.energyCapacity
             });
