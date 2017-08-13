@@ -16,6 +16,22 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
         delete this.memory.energyPickup;
         return ERR_FULL;
     }
+    // Are we near a link with memory of receiver
+    if (!this.memory.energyPickup) {
+        DBG && console.log('[' + this.name + '] Checking for Links');
+        // If we're in our own room, with our own controller, above level 5 (should have links)
+        if (this.room.controller && this.room.controller.my && this.room.controller.level >= 5) {
+            DBG && console.log('[' + this.name + '] Links available');
+            // Lets find the nearest link with energy that has the right flag
+            var links = this.room.find(FIND_STRUCTURES, {
+                filter: (i) => i.structureType == STRUCTURE_LINK && i.memory.linkType == 'receiver' && i.energy > 0 && i.pos.inRangeTo(this,5)
+            });
+            if (links.length > 0) {
+                DBG && console.log('[' + this.name + '] Found a link, using it');
+                this.memory.energyPickup = links[0].id;
+            }
+        }
+    }
     // Storage override
     if (!this.memory.energyPickup) {
         if (useStorage && this.room.terminal) {
@@ -161,10 +177,31 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
                 var pickupSuccess = false;
             }
 
-        } else if (target instanceof StructureContainer || target instanceof StructureStorage || target instanceof StructureTerminal) { // Container
+        } else if (target instanceof StructureContainer || target instanceof StructureStorage || target instanceof StructureTerminal) { // Container, Storage, Terminal
             DBG && console.log('[' + this.name + '] Target is a Container, Storage, or Terminal');
             // Check the container still has the energy
             if (target.store[RESOURCE_ENERGY] < (this.carryCapacity - _.sum(this.carry))/4) {
+                DBG && console.log('[' + this.name + '] Target no longer has enough energy clearing memory');
+                // Clear memory and return invalid target
+                delete this.memory.energyPickup;
+                return ERR_INVALID_TARGET;
+            }
+            // Only bother trying to pick up if we're within 1 range
+            if (this.pos.inRangeTo(target,1)) {
+                DBG && console.log('[' + this.name + '] Target should be in range, attempting withdraw');
+                // Lets attempt to withdraw
+                if (this.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    DBG && console.log('[' + this.name + '] Withdraw failed');
+                    var pickupSuccess = false;
+                }
+            } else {
+                DBG && console.log('[' + this.name + '] Target not in range');
+                var pickupSuccess = false;
+            }
+        } else if (target instanceof StructureLink) { // Link
+            DBG && console.log('[' + this.name + '] Target is a Link');
+            // Check the container still has the energy
+            if (target.energy == 0) {
                 DBG && console.log('[' + this.name + '] Target no longer has enough energy clearing memory');
                 // Clear memory and return invalid target
                 delete this.memory.energyPickup;
