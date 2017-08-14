@@ -89,6 +89,8 @@ module.exports.body = {
 module.exports.multiplier = 1;
 
 module.exports.enabled = function (room, debug = false) {
+    // Turn off if room is discharging with supergraders
+    if (Game.rooms[room].memory.charging == false) { return false; }
     // Get the flags
     var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['haul']);
     // No remote flags, return false

@@ -63,6 +63,8 @@ module.exports.body = {
  * Individual check for a room to check if this creep type should be enabled or not
  */
 module.exports.enabled = function (room, debug = false) {
+    // Turn off if room is discharging with supergraders
+    if (Game.rooms[room].memory.charging == false) { return false; }
     // Get the flags for remote
     var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['remote']);
     // If there are no flags, just return false
