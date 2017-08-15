@@ -53,6 +53,8 @@ module.exports.body = {
     ],
 }
 module.exports.enabled = function (room, debug = false) {
+    // Turn off if room is discharging with supergraders
+    if (Game.rooms[room].memory.charging == false) { return false; }
     // return false;
     // Get all reserve flags without an assigned creep
     const flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['reserve']);

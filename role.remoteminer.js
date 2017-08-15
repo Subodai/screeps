@@ -20,9 +20,9 @@ module.exports.cost = {
     3 : 750,
     4 : 900,
     5 : 1050,
-    6 : 1200,
-    7 : 1350,
-    8 : 1500,
+    6 : 1050,
+    7 : 1050,
+    8 : 1050,
 }
 /* Body Parts at each RCL */
 module.exports.body = {
@@ -44,25 +44,27 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     6 : [
-        WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,WORK,WORK,
         CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     7 : [
-        WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,WORK,WORK,
         CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     8 : [
-        WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,WORK,WORK,
         CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
 }
 /**
  * Individual check for a room to check if this creep type should be enabled or not
  */
 module.exports.enabled = function (room, debug = false) {
+    // Turn off if room is discharging with supergraders
+    if (Game.rooms[room].memory.charging == false) { return false; }
     // Get the flags for remote
     var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['remote']);
     // If there are no flags, just return false

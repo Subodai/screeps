@@ -57,15 +57,16 @@ global.seedRemoteRoads = true;
 global.cpuDesired = 5000;
 
 global.getPartsCost = function(parts) {
+    var bodyCost = 0
     // If it's a creep we just want it's body
     if (parts instanceof Creep) {
         parts = parts.body;
-        var bodyCost = 0;
         for (var part of parts) {
             bodyCost += BODYPART_COST[part.type];
         }
-    } else {
-        var bodyCost = 0;
+    } else if (parts == undefined) {
+        
+    } else if (parts.length > 1) {
         for (var part of parts) {
             bodyCost += BODYPART_COST[part];
         }

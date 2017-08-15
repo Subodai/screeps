@@ -162,13 +162,17 @@ Room.prototype.toggleWar = function () {
 Room.prototype.init = function () {
     if (!this.memory.init) {
         this.memory.init = true;
-        if (!this.memory.mode) { this.memory.mode = 'normal'; }
-        if (!this.memory.war) { this.memory.war = false; }
-        if (!this.memory.charging) { this.memory.charging = true; }
-        if (!this.memory.roles) { this.memory.roles = {}; }
+        if (this.controller && this.controller.my) {
+            if (!this.memory.mode) { this.memory.mode = 'normal'; }
+            if (!this.memory.war) { this.memory.war = false; }
+            if (!this.memory.charging) { this.memory.charging = true; }
+            if (!this.memory.roles) { this.memory.roles = {}; }
+        } else {
+            if (!this.memory.mode) { this.memory.mode = 'safe'; }
+        }
         if (!this.memory.sources) { this.memory.sources = {}; }
         if (!this.memory.assignedSources) { this.memory.assignedSources = {}; }
         if (!this.memory.assignedExtractors) { this.memory.assignedExtractors = {}; }
+        return 'Successfully initiated room';
     }
-    return 'Successfully initiated room';
 }
