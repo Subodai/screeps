@@ -16,15 +16,15 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
         delete this.memory.energyPickup;
         return ERR_FULL;
     }
-    // Are we near a link with memory of receiver
-    if (!this.memory.energyPickup) {
+    // Are we near a link with memory of receiver limit to only upgraders or supergraders, otherwise refillers become.. interesting
+    if (!this.memory.energyPickup && (this.memory.role == 'upgrader' || this.memory.role == 'supergrader')) {
         DBG && console.log('[' + this.name + '] Checking for Links');
         // If we're in our own room, with our own controller, above level 5 (should have links)
         if (this.room.controller && this.room.controller.my && this.room.controller.level >= 5) {
             DBG && console.log('[' + this.name + '] Links available');
             // Lets find the nearest link with energy that has the right flag
             var links = this.room.find(FIND_STRUCTURES, {
-                filter: (i) => i.structureType == STRUCTURE_LINK && i.memory.linkType == 'receiver' && i.energy > 0 && i.pos.inRangeTo(this,5)
+                filter: (i) => i.structureType == STRUCTURE_LINK && i.memory.linkType == 'receiver' && i.energy > 0 && i.pos.inRangeTo(this,7)
             });
             if (links.length > 0) {
                 DBG && console.log('[' + this.name + '] Found a link, using it');
@@ -32,6 +32,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
             }
         }
     }
+
     // Storage override
     if (!this.memory.energyPickup) {
         if (useStorage && this.room.terminal) {
