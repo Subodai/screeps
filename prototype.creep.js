@@ -16,15 +16,15 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
         delete this.memory.energyPickup;
         return ERR_FULL;
     }
-    // Are we near a link with memory of receiver
-    if (!this.memory.energyPickup) {
+    // Are we near a link with memory of receiver limit to only upgraders or supergraders, otherwise refillers become.. interesting
+    if (!this.memory.energyPickup && (this.memory.role == 'upgrader' || this.memory.role == 'supergrader')) {
         DBG && console.log('[' + this.name + '] Checking for Links');
         // If we're in our own room, with our own controller, above level 5 (should have links)
         if (this.room.controller && this.room.controller.my && this.room.controller.level >= 5) {
             DBG && console.log('[' + this.name + '] Links available');
             // Lets find the nearest link with energy that has the right flag
             var links = this.room.find(FIND_STRUCTURES, {
-                filter: (i) => i.structureType == STRUCTURE_LINK && i.memory.linkType == 'receiver' && i.energy > 0 && i.pos.inRangeTo(this,5)
+                filter: (i) => i.structureType == STRUCTURE_LINK && i.memory.linkType == 'receiver' && i.energy > 0 && i.pos.inRangeTo(this,7)
             });
             if (links.length > 0) {
                 DBG && console.log('[' + this.name + '] Found a link, using it');
@@ -32,6 +32,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
             }
         }
     }
+
     // Storage override
     if (!this.memory.energyPickup) {
         if (useStorage && this.room.terminal) {
@@ -271,6 +272,156 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
             // Say!
             this.say(global.sayMove);
             return OK;
+        }
+    }
+}
+
+Creep.prototype.getNearbyMinerals = function(options = {}) {
+    // First are we full?
+    if (this.full()) {
+        DBG && console.log('[' + this.name + '] Creep Full Cannot Get Nearby Minerals');
+        // Clear the pickup target
+        this.invalidateMineralTarget(true);
+    }
+    // Start with ground minerals
+    if (!this.memory.mineralPickup) { this.findGroundMinerals(); }
+    // Next Container Minerals
+    if (!this.memory.mineralPickup) { this.findContainerMinerals(); }
+    // Do we have a target?
+    if (this.memory.mineralPickup) { return this.moveToAndPickupMinerals(); }
+    // No target return not found
+    return ERR_NOT_FOUND;
+}
+
+Creep.prototype.moveToAndPickupMinerals = function() {
+    DBG && console.log('[' + this.name + '] Found minerals in memory');
+    let target = Game.getObjectById(this.memory.mineralPickup);
+    // if the target is invalid, or cannot be found let's clear it
+    if (!target) { return this.invalidateMineralTarget(); }
+    // Set some options
+    if (options == {}) {
+        var options = {
+            visualizePathStyle: {
+                stroke: global.colourPickupMins,
+                opacity: global.pathOpacity
+            },
+            reusePath:this.pos.getRangeTo(target) // Use the range to the object we're after as the reusePath opt
+        };
+    }
+    // Quick validation pass on the target
+    if (target instanceof Resource) {
+        // If it's going to disapwn before we get there, then there's no point in carrying on
+        if (target.amount < (this.pos.getRangeTo(target) / this.moveEfficiency())) {
+            return this.invalidateMineralTarget();
+        }
+        // Can we pick it up yet?
+        if (!this.canPickup(target)) {
+            this.say(global.sayMove);
+            // We can't pick it up yet, let's move to it
+            this.moveTo(target, options);
+        }
+        // Can we pick it up after our move?
+        if (this.canPickup(target)) {
+            // Attempt to pick it up
+            let pickupResult = this.pickup(target);
+            // Check the result
+            if (pickupResult == ERR_NOT_IN_RANGE) {
+                // something went wrong
+            } else if (pickupResult == OK) {
+                this.say(global.sayPickup);
+                // Invalidate and return full
+                return this.invalidateMineralTarget(true);
+            }
+        }
+    } else if (target instanceof StructureContainer) {
+        // Check there is still res in the container
+        if (_.sum(target.store) - target.store[RESOURCE_ENERGY] == 0) {
+            return this.invalidateMineralTarget();
+        }
+        // Can we pick it up yet?
+        if (!this.canPickup(target)) {
+            this.say(global.sayMove);
+            // Can't pick it up yet, so lets move towards it
+            this.moveTo(target, options);
+        }
+        // Can we pick it up now?
+        if (this.canPickup(target)) {
+            // Loop through all the resources in the container
+            for (let res in target.store) {
+                // If there is more than 0 of this mineral, let's pick it up
+                if (target.store[res] > 0) {
+                    // Attempt to pick it up
+                    let pickupResult = this.withdraw(target, res);
+                    // check the result
+                    if (pickupResult == ERR_NOT_IN_RANGE) {
+                        // something probbaly went wrong
+                    } else if (pickupResult == OK) {
+                        this.say(global.sayWithdraw);
+                        // Invalidate and return full
+                        if (this.full()) {
+                            return this.invalidateMineralTarget(true);
+                        } else {
+                            return this.invalidateMineralTarget();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // We've probably moved return ok
+    return OK;
+}
+
+Creep.prototype.invalidateMineralTarget = function(full = false) {
+    delete this.memory.mineralPickup;
+    if (full) { return ERR_FULL; }
+    return ERR_INVALID_TARGET;
+}
+
+Creep.prototype.canPickup = function(target) {
+    if (!target) { return false; }
+    // Are we within 1 range?
+    return this.pos.inRangeTo(target,1);
+}
+
+Creep.prototype.findGroundMinerals = function() {
+    var resource = false;
+    let thisCreep = this;
+    DBG && console.log('[' + this.name + '] Creep has no mineral memory, finding stuff to pickup');
+    // First check for nearby dropped resources
+    var resources = this.room.find(FIND_DROPPED_RESOURCES, {
+        filter: (i) => i.resourceType != RESOURCE_ENERGY && i.amount > (this.pos.getRangeTo(i) / this.moveEfficiency())
+    });
+    // Did we find resources?
+    if (resources.length > 0) {
+        DBG && console.log('[' + this.name + '] Found some minerals picking the closest');
+        // get the closest resource
+        resource = _.min(resources, function(r) { return thisCreep.pos.getRangeTo(r); });
+        // Did we find some resources?
+        if (resource) {
+            // We did, let's store their id
+            this.memory.mineralPickup = resource.id;
+        }
+    }
+}
+
+Creep.prototype.findContainerMinerals = function() {
+    var container = false;
+    let thisCreep = this;
+    DBG && console.log('[' + this.name + '] Creep searching for mineral containers');
+    // Check for containers with anything other than energy in them
+    var containers = this.room.find(FIND_STRUCTURES, {
+        filter: (i) => i.structureType == STRUCTURE_CONTAINER && (_.sum(i.store) - i.store[RESOURCE_ENERGY]) > 0
+    });
+    // Any containers?
+    if (containers.length > 0) {
+        DBG && console.log('[' + this.name + '] Found some mineral containers picking the most cost effective');
+        container = _.max(containers, function(c) { return (_.sum(c.store) - c.store[RESOURCE_ENERGY]) / thisCreep.pos.getRangeTo(c) ;});
+        // Did we find a container
+        if (container) {
+            // We did it, store the id
+            this.memory.mineralPickup = container.id;
         }
     }
 }
@@ -806,4 +957,13 @@ Creep.prototype.QueueReplacement = function(now = false) {
     } else {
         global.Queue.add(newCreep);
     }
+}
+
+Creep.prototype.moveEfficiency = function () {
+    // TODO Add a calculation for our move efficiency here
+    return 1;
+}
+
+Creep.prototype.full = function () {
+    return _.sum(this.carry) >= this.carryCapacity
 }

@@ -21,24 +21,27 @@ module.exports.run = function (debug = false) {
                 this.colour(tower,cost);
             }
         }
-        const links = _room.find(FIND_MY_STRUCTURES, {
-            filter: (i) => i.structureType == STRUCTURE_LINK && i.memory.linkType == 'receiver' && i.energy <= i.energyCapacity*0.25
-        });
-        if (links.length > 0) {
-            for (let l in links) {
-                const a = Game.cpu.getUsed();
-                const link = links[l];
-                // Find the storage link
-                const sourceLinks = link.room.find(FIND_MY_STRUCTURES, {
-                    filter: (i) => i.structureType == STRUCTURE_LINK && i.memory.linkType == 'storage' && i.energy >= i.energyCapacity*0.5 && i.cooldown == 0
-                });
-                // Any available?
-                if (sourceLinks.length > 0) {
-                    let fromLink = sourceLinks[0];
-                    fromLink.transferEnergy(link,fromLink.energy);
+        // Only enable the links when they are enabled in the room (i.e above 400k)
+        if (_room.memory.links) {
+            const links = _room.find(FIND_MY_STRUCTURES, {
+                filter: (i) => i.structureType == STRUCTURE_LINK && i.memory.linkType == 'receiver' && i.energy <= i.energyCapacity*0.25
+            });
+            if (links.length > 0) {
+                for (let l in links) {
+                    const a = Game.cpu.getUsed();
+                    const link = links[l];
+                    // Find the storage link
+                    const sourceLinks = link.room.find(FIND_MY_STRUCTURES, {
+                        filter: (i) => i.structureType == STRUCTURE_LINK && i.memory.linkType == 'storage' && i.energy >= i.energyCapacity*0.5 && i.cooldown == 0
+                    });
+                    // Any available?
+                    if (sourceLinks.length > 0) {
+                        let fromLink = sourceLinks[0];
+                        fromLink.transferEnergy(link,fromLink.energy);
+                    }
+                    const cost = Game.cpu.getUsed() - a;
+                    this.colour(link,cost);
                 }
-                const cost = Game.cpu.getUsed() - a;
-                this.colour(link,cost);
             }
         }
     }

@@ -2,6 +2,7 @@
                        // #RRGGBB
 global.colourPickup    = '#000077';
 global.colourPickupRes = '#FFFFFF';
+global.colourPickupMins= '#663300';
 global.colourDropoff   = '#007700';
 global.colourBuild     = '#FFFF00';
 global.colourHostile   = '#FF0000';
@@ -22,7 +23,7 @@ global.flagColor = {
     'reserve': COLOR_PURPLE,
     'haul': COLOR_GREEN,
     'remote': COLOR_YELLOW,
-    
+
     'claim': COLOR_GREY,
     'invade': COLOR_RED,
     'friendly': COLOR_BLUE,

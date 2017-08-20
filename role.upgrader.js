@@ -1,7 +1,9 @@
 /* Upgrader drone */
 module.exports.role = 'upgrader';
+
 /* sType */
 module.exports.sType = 'normal';
+
 /* Spawn Roster */
 module.exports.roster = {
     1: 4,
@@ -13,17 +15,19 @@ module.exports.roster = {
     7: 3,
     8: 3,
 }
+
 /* Costs */
 module.exports.cost = {
     1 : 300,
     2 : 550,
     3 : 800,
-    4 : 950,
-    5 : 1550,
-    6 : 1550,
-    7 : 1550,
-    8 : 1550,
+    4 : 1000,
+    5 : 1300,
+    6 : 1300,
+    7 : 1300,
+    8 : 1300,
 }
+
 /* Body Parts at each RCL */
 module.exports.body = {
     1 : [
@@ -44,32 +48,32 @@ module.exports.body = {
     4 : [
         WORK,WORK,WORK,
         WORK,WORK,WORK,
-        CARRY,CARRY,
+        CARRY,CARRY,CARRY,
         MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     5 : [
-        WORK,WORK,WORK,
-        WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
         CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+        MOVE,MOVE,MOVE,MOVE,
     ],
     6 : [
-        WORK,WORK,WORK,
-        WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
         CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+        MOVE,MOVE,MOVE,MOVE,
     ],
     7 : [
-        WORK,WORK,WORK,
-        WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
         CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+        MOVE,MOVE,MOVE,MOVE,
     ],
     8 : [
-        WORK,WORK,WORK,
-        WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
         CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+        MOVE,MOVE,MOVE,MOVE,
     ],
 }
 

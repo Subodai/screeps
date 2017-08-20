@@ -142,11 +142,19 @@ module.exports.run = function(creep) {
 
     // If we're not delivering, check if we can harvest, if not and we have half energy, go and deliver
     if (!creep.memory.delivering) {
-        // Always pickup none
-        if (creep.getNearbyEnergy() == ERR_FULL) {
-            delete creep.memory.energyPickup;
+        // Any minerals to pickup?
+        let mineralResult = creep.getNearbyMinerals();
+        if (mineralResult == ERR_NOT_FOUND) {
+            // Always pickup none
+            if (creep.getNearbyEnergy() == ERR_FULL) {
+                delete creep.memory.energyPickup;
+                creep.memory.delivering = true;
+            }
+        } else if (mineralResult == ERR_FULL) {
+            delete creep.memory.mineralPickup;
             creep.memory.delivering = true;
         }
+
     }
 
     // Alright at this point if we're delivering it's time to move the Creep to a drop off
