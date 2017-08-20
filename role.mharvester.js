@@ -1,17 +1,17 @@
-/* Harvester drone */
-module.exports.role = 'harvester';
+/* Mineral Harvester drone */
+module.exports.role = 'mharvester';
 /* sType */
 module.exports.sType = 'normal';
 /* Spawn Roster */
 module.exports.roster = {
-    1: 2,
-    2: 2,
-    3: 2,
-    4: 2,
-    5: 2,
-    6: 2,
-    7: 2,
-    8: 2,
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 1,
+    7: 1,
+    8: 1,
 }
 /* Costs */
 module.exports.cost = {
@@ -73,19 +73,19 @@ module.exports.body = {
     ],
 }
 
-
-module.exports.multiplier = 2;
-
 module.exports.enabled = function (room, debug = false) {
-    const _room = Game.rooms[room];
-    if (_room.controller) {
-        if (_room.memory.minersNeeded && _room.memory.minersNeeded > 0) {
-            var list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.roomName == room && !creep.memory.dying);
-            if (list.length < _room.memory.minersNeeded*this.multiplier) {
-                return true;
-            }
+    // define the room
+    var theRoom = Game.rooms[room];
+    // Find the mineral site in the room
+    var mineral = theRoom.find(FIND_MINERALS);
+    // does it have minerals?
+    if (theRoom.controller) {
+        if (mineral[0].mineralAmount > 0 && theRoom.controller.level >= 6) {
+            // it does, return true!
+            return true;
         }
     }
+    // This should be disabled
     return false;
 }
 /**
@@ -143,11 +143,18 @@ module.exports.run = function(creep) {
     // If we're not delivering, check if we can harvest, if not and we have half energy, go and deliver
     if (!creep.memory.delivering) {
         // Any minerals to pickup?
-        // Always pickup none
-        if (creep.getNearbyEnergy() == ERR_FULL) {
-            delete creep.memory.energyPickup;
+        let mineralResult = creep.getNearbyMinerals();
+        if (mineralResult == ERR_NOT_FOUND) {
+            // Always pickup none
+            if (creep.getNearbyEnergy() == ERR_FULL) {
+                delete creep.memory.energyPickup;
+                creep.memory.delivering = true;
+            }
+        } else if (mineralResult == ERR_FULL) {
+            delete creep.memory.mineralPickup;
             creep.memory.delivering = true;
         }
+
     }
 
     // Alright at this point if we're delivering it's time to move the Creep to a drop off
