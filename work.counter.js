@@ -31,6 +31,29 @@ module.exports.run = function(debug = false) {
             var list   = _.filter(Game.creeps, (i) => i.pos.roomName == room && !i.memory.dying && i.memory.role != 'hauler' && i.memory.role != 'guard');
             var miners = _.filter(Game.creeps, (i) => i.pos.roomName == room && !i.memory.dying && (i.memory.role == 'miner' || i.memory.role == 'linkminer'));
             var hostiles = theRoom.find(FIND_HOSTILE_CREEPS, { filter: (i) => !(global.friends.indexOf(i.owner.username) > -1) });
+
+            var storage = theRoom.storage;
+            if (!storage) {
+                theRoom.memory.links = false;
+            } else {
+                // Turn off room charging if we're above 800k
+                if (storage.store[RESOURCE_ENERGY] >= 800000 && theRoom.memory.charging == true) {
+                    theRoom.memory.charging = false;
+                }
+                // If the room is below 10000 turn charging back on
+                if (storage.store[RESOURCE_ENERGY] <= 10000 && theRoom.memory.charging == false) {
+                    theRoom.memory.charging = true;
+                }
+                // Turn on links when above 400k and they're off
+                if (storage.store[RESOURCE_ENERGY] >= 400000 && theRoom.memory.links == false) {
+                    theRoom.memory.links = true;
+                }
+                // Turn off links when below 100k and they're on
+                if (storage.store[RESOURCE_ENERGY] <= 100000 && theRoom.memory.links == true) {
+                    theRoom.memory.links = false;
+                }
+            }
+
         } else {
             theRoom.init();
             // Handle remote room
