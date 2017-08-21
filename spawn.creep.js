@@ -12,8 +12,17 @@ module.exports.run = function(spawn, role, debug = false) {
         var _level = _room.controller.level;
     }
 
+    var body  = _role.body;
+    // If links are on
+    if (_room.memory.links) {
+        // If this role has a links based body
+        if (_role.bodylinks) {
+            var body = _role.bodylinks;
+        }
+    }
+
     // If we don't have enough energy for this level of creep, we've likely recently levelled up the controller, so try to spawn the previous level
-    while (_room.energyCapacityAvailable < global.getPartsCost(_role.body[_level])) {
+    while (_room.energyCapacityAvailable < global.getPartsCost(body[_level])) {
         // reduce the level
         _level--;
         debug && console.log('Reducing creep ' + role + ' level to ' + _level + ' as not enough capacity in ' + _room.name);
@@ -36,8 +45,9 @@ module.exports.run = function(spawn, role, debug = false) {
 
     var roster = _role.roster;
 
-    if (_room.energyAvailable >= global.getPartsCost(_role.body[_level]) && list.length < roster[_level] && !spawned) {
-        var creepName = _spawn.createCreep(_role.body[_level], undefined, {
+
+    if (_room.energyAvailable >= global.getPartsCost(body[_level]) && list.length < roster[_level] && !spawned) {
+        var creepName = _spawn.createCreep(body[_level], undefined, {
             role : _role.role,
             level : _level,
             sType : _role.sType,

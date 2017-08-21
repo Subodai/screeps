@@ -21,6 +21,18 @@ module.exports.cost = {
     1 : 300,
     2 : 550,
     3 : 800,
+    4 : 950,
+    5 : 1550,
+    6 : 1550,
+    7 : 1550,
+    8 : 1550,
+}
+
+/* Costs */
+module.exports.costlinks = {
+    1 : 300,
+    2 : 550,
+    3 : 800,
     4 : 1000,
     5 : 1300,
     6 : 1300,
@@ -30,6 +42,58 @@ module.exports.cost = {
 
 /* Body Parts at each RCL */
 module.exports.body = {
+    1 : [
+        WORK,WORK,
+        MOVE,
+        CARRY
+    ],
+    2 : [
+        WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE
+    ],
+    3 : [
+        WORK,WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
+    ],
+    4 : [
+        WORK,WORK,WORK,
+        WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE
+    ],
+    5 : [
+        WORK,WORK,WORK,
+        WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,
+    ],
+    6 : [
+        WORK,WORK,WORK,
+        WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,
+    ],
+    7 : [
+        WORK,WORK,WORK,
+        WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,
+    ],
+    8 : [
+        WORK,WORK,WORK,
+        WORK,WORK,WORK,
+        CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,
+    ],
+}
+
+module.exports.bodylinks = {
     1 : [
         WORK,WORK,
         MOVE,
