@@ -167,6 +167,7 @@ Room.prototype.init = function () {
             if (!this.memory.war) { this.memory.war = false; }
             if (!this.memory.charging) { this.memory.charging = true; }
             if (!this.memory.roles) { this.memory.roles = {}; }
+            if (!this.memory.links) { this.memory.links = false; }
         } else {
             if (!this.memory.mode) { this.memory.mode = 'safe'; }
         }
@@ -175,4 +176,42 @@ Room.prototype.init = function () {
         if (!this.memory.assignedExtractors) { this.memory.assignedExtractors = {}; }
         return 'Successfully initiated room';
     }
+}
+
+/*
+ * Get a room's harvestable energy and cache it
+ */
+Room.prototype.collectableEnergy = function () {
+    if (!this.memory.lastEnergyCheck || this.memory.lastEnergyCheck != Game.time) {
+        var energy = 0;
+        let containers = this.find(FIND_STRUCTURES, {
+            filter: c => c.structureType == STRUCTURE_CONTAINER && c.store[RESOURCE_ENERGY] > 0
+        });
+        let resources = this.find(FIND_DROPPED_RESOURCES, {
+            filter: r => r.resourceType == RESOURCE_ENERGY
+        });
+        if (containers.length > 0) {
+            energy += _.sum(containers, c => c.store[RESOURCE_ENERGY]);
+        }
+        if (resources.length > 0) {
+            energy += _.sum(resources, r => r.amount);
+        }
+        this.memory.energy = energy;
+        this.memory.lastEnergyCheck = Game.time;
+    }
+    return this.memory.energy;
+}
+
+/*
+ * Get the hostiles in a room
+ */
+Room.prototype.hostiles = function() {
+    if (!this.memory.lastHostileCheck || this.memroy.lastHostileCheck != Game.time) {
+        var hostiles = this.find(FIND_HOSTILE_CREEPS, {
+            filter: (i) => !(global.friends.indexOf(i.owner.username) > -1)
+        });
+        this.memory.hostiles = hostiles.length;
+        this.memory.lastHostileCheck = Game.time;
+    }
+    return this.memory.hostiles;
 }
