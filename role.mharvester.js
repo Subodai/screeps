@@ -145,202 +145,48 @@ module.exports.run = function(creep) {
         // Any minerals to pickup?
         let mineralResult = creep.getNearbyMinerals();
         if (mineralResult == ERR_NOT_FOUND) {
-            // Always pickup none
-            if (creep.getNearbyEnergy() == ERR_FULL) {
-                delete creep.memory.energyPickup;
-                creep.memory.delivering = true;
-            }
+            // Go and empty storage instead
+            creep.getNearbyMinerals(true);
         } else if (mineralResult == ERR_FULL) {
             delete creep.memory.mineralPickup;
             creep.memory.delivering = true;
         }
-
     }
 
     // Alright at this point if we're delivering it's time to move the Creep to a drop off
     if (creep.memory.delivering) {
-        delete creep.memory.energyPickup;
-        var fillSpawns = false;
-        if (creep.room.energyAvailable < creep.room.energyCapacityAvailable*0.75) {
-            var fillSpawns = true;
-        }
-        // only refill spawns and other things if room level below 4 after 4 we just fill storage
-        // after 5 we fill storage and terminal
-        // unless emergency, then we fill spawns too
-        if (fillSpawns || creep.room.controller.level < 4 || creep.room.memory.emergency || !creep.room.storage) {
-            // Do we have energy?
-            if (creep.carry.energy > 0) {
-                // We do, try to find a spawn or extension to fill
-                var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (structure) => {
-                        return (
-                            structure.structureType == STRUCTURE_EXTENSION ||
-                            structure.structureType == STRUCTURE_SPAWN
-                        ) && structure.energy < structure.energyCapacity;
+        delete creep.memory.mineralPickup;
+        // mineral harvester should always use the terminal
+        var target = creep.room.terminal;
+        // Did we find a target?
+        if (target) {
+            // Are we in range of the target
+            if (!creep.pos.inRangeTo(target,1)) {
+                creep.moveTo(target, {
+                    visualizePathStyle: {
+                        stroke: global.colourDropoff,
+                        opacity: global.pathOpacity
                     }
                 });
+                // Say because move
+                creep.say('>>');
             }
-            // Did we find a spawn or extension?
-            if (target) {
-                // Yep, so reset idle
-                creep.memory.idle = 0;
-                // Loop through our carry
+
+            if (creep.pos.inRangeTo(target,2)) {
+                // Loop through our resources
                 for(var resourceType in creep.carry) {
-                    // Only try to delivery energy to spawn and exention
-                    if (resourceType == RESOURCE_ENERGY) {
-                        // If we're not in range
+                    // Attempt to transfer them
+                    if (creep.carry[resourceType] > 0) {
                         if (creep.transfer(target, resourceType) == ERR_NOT_IN_RANGE) {
-                            // Move to it
-                            creep.moveTo(target, {
-                                visualizePathStyle: {
-                                    stroke: global.colourDropoff,
-                                    opacity: global.pathOpacity
-                                },
-                                reusePath: 5
-                            });
-                             // Say because move
-                            creep.say('>>');
+                            // something went wrong
+                            break;
                         } else {
-                            // Successful drop off
                             creep.say('V');
                         }
                     }
                 }
-
-                // We're done, next
                 return;
             }
-            // We didn't find a target yet, do we still have energy to use?
-            if (creep.carry.energy > 0) {
-                // First find towers with less than 400 energy
-                var tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                    filter : (i) => i.structureType == STRUCTURE_TOWER && i.energy < 400
-                });
-
-                // If we didn't find any get them with less than 800
-                if (!tower) {
-                    var tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                        filter : (i) =>  i.structureType == STRUCTURE_TOWER && i.energy < 800
-                    });
-                }
-
-                // Okay all above 800, get any now
-                if (!tower) {
-                    var tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                        filter : (i) => i.structureType == STRUCTURE_TOWER && i.energy < i.energyCapacity
-                    });
-                }
-
-                // If towers are full, can we dump it into a lab?
-                if (!tower) {
-                    var tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                        filter : (i) => i.structureType == STRUCTURE_LAB && i.energy < i.energyCapacity
-                    });
-                }
-                // So did we find one?
-                if (tower) {
-                    // Attempt transfer, unless out of range
-                    if(creep.transfer(tower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        // Let's go to the tower
-                        creep.moveTo(tower, {
-                            visualizePathStyle: {
-                                stroke: global.colourTower,
-                                opacity: global.pathOpacity
-                            },
-                            reusePath: 5
-                        });
-                        // Say because move
-                        creep.say('>>');
-                    } else {
-                        // Succesful drop off
-                        creep.say('V');
-                    }
-                    return;
-                }
-            }
-        }
-        // Okay time for some fancy maths
-        var terminal = creep.room.terminal;
-        var storage = creep.room.storage;
-
-        // If we have both storage and terminal
-        if (storage && terminal) {
-            if (creep.room.memory.prioritise) {
-                if (creep.room.memory.prioritise == 'terminal') {
-                    if (_.sum(terminal.store) < terminal.storeCapacity) {
-                        var target = terminal;
-                    } else {
-                        var target = storage;
-                    }
-                } else if (creep.room.memory.prioritise == 'storage') {
-                    if (_.sum(stroage.store) < stroage.storeCapacity) {
-                        var target = storage;
-                    } else {
-                        var target = terminal;
-                    }
-                } else {
-                    if (creep.carry.energy > 0) {
-                        var target = storage;
-                    } else {
-                        var target = terminal;
-                    }
-                }
-            } else {
-                // Do we have energy?
-                if (creep.carry.energy > 0) {
-                    // Lets just assume these exist and get the percentage filled
-                    // We need to know the relative filled of each of these, so [filled / (capacity/100)] should give us the percentage?
-                    var terminalP = (_.sum(terminal.store) / (terminal.storeCapacity / 100));
-                    var storageP  = (_.sum(storage.store)  / (storage.storeCapacity  / 100));
-                    // If the fill percentage is less or equal
-                    if (terminalP <= storageP) {
-                        var target = terminal;
-                    }
-                    // if it's the other way around use storage
-                    if (storageP < terminalP) {
-                        var target = storage;
-                    }
-                } else {
-                    // Prioritise the terminal for non-energy
-                    var target = terminal;
-                    // If we don't have one
-                    if (!target || _.sum(terminal.store) == terminal.storeCapacity ) {
-                        // try storage
-                        var target = storage;
-                    }
-                }
-            }
-
-        } else if (storage) { // Room storage?
-            var target = storage;
-        } else {
-            // We've no targets... now what?
-        }
-        // Did we find a target?
-        if (target) {
-            // reset idle
-            creep.memory.idle = 0;
-            // Loop through our resources
-            for(var resourceType in creep.carry) {
-                // Attempt to transfer them
-                if (creep.carry[resourceType] > 0) {
-                    if (creep.transfer(target, resourceType) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(target, {
-                            visualizePathStyle: {
-                                stroke: global.colourDropoff,
-                                opacity: global.pathOpacity
-                            }
-                        });
-                        // Say because move
-                        creep.say('>>');
-                        // if we failed, we don't need to keep trying
-                        break;
-                    } else {
-                        creep.say('V');
-                    }
-                }
-            }
-            return;
         } else {
             creep.memory.idle++;
             creep.say('idle: ' + creep.memory.idle);
@@ -373,6 +219,5 @@ module.exports.run = function(creep) {
                 // creep.memory.role = 'smallrefiller';
             }
         }
-
     }
 }
