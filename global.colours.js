@@ -63,6 +63,7 @@ global.roleColour = {
     'guard':       '#cc0000',
     'miner':       '#996600',
     'harvester':   '#ffff00',
+    'mharvester':  '#f4cb42',
     'upgrader':    '#009900',
     'builder':     '#99ccff',
     'mover':       '#FFFFFF',

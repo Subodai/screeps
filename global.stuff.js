@@ -7,6 +7,7 @@ global.roles = [
     'builder',      // Sources until 4, storage after
     'janitor',      // Sources until 4, storage after
     'extractor',
+    'mharvester',
     'supergrader',  // Storage always
     'scout',
     'reserve',
@@ -65,7 +66,7 @@ global.getPartsCost = function(parts) {
             bodyCost += BODYPART_COST[part.type];
         }
     } else if (parts == undefined) {
-        
+
     } else if (parts.length > 1) {
         for (var part of parts) {
             bodyCost += BODYPART_COST[part];

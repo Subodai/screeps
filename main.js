@@ -81,50 +81,29 @@ profiler.wrap(function() { // Start of profiler wrapper
 global.haulerSetup = function () {
     console.log('Running Hauler Target setup');
     var Before = Game.cpu.getUsed();
-    let remoteRooms = [];
-    for (let room in Game.rooms) {
-        if (_.isString(room)) {
-            room = Game.rooms[room];
-        }
-        if (room != null) {
-            if (!room.controller || !room.controller.my) {
-                // Any hostiles in this room?
-                var hostiles = room.find(FIND_HOSTILE_CREEPS, {
-                    filter: (i) => !(global.friends.indexOf(i.owner.username) > -1)
-                });
-                // If there are no hostiles, send the haulers!
-                if (hostiles.length <= 0) {
-                    remoteRooms.push(room.name);
+
+    // Check the level of the energy in the current target
+    let target = Game.rooms[Memory.remoteRoom];
+    // if the room has less than 500 energy, lets pick a different one
+    if (target.collectableEnergy() <= 500 || target.hostiles > 0) {
+        let remoteRooms = [];
+        for (let room in Game.rooms) {
+            if (_.isString(room)) {
+                room = Game.rooms[room];
+            }
+            if (room != null) {
+                if (!room.controller || !room.controller.my) {
+                    // If there are no hostiles, send the haulers!
+                    if (room.hostiles <= 0) {
+                        remoteRooms.push(room.name);
+                    }
                 }
             }
         }
+
+        let remoteRoom = _.max(remoteRooms, function(c) { return Game.rooms[c].collectableEnergy(); })
+        Memory.remoteRoom = remoteRoom;
     }
-    remoteRooms.sort(function(a,b) {
-        let aTainers = Game.rooms[a].find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_CONTAINER });
-        let aTainergy = _.sum(aTainers, c => c.store.energy);
-
-        let bTainers = Game.rooms[b].find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_CONTAINER });
-        let bTainergy = _.sum(bTainers, c => c.store.energy);
-
-        let aResources = Game.rooms[a].find(FIND_DROPPED_RESOURCES, { filter: r => r.resourceType == RESOURCE_ENERGY });
-        let aResourceTotal = _.sum(aResources, r => r.amount);
-
-        let bResources = Game.rooms[b].find(FIND_DROPPED_RESOURCES, { filter: r => r.resourceType == RESOURCE_ENERGY });
-        let bResourceTotal = _.sum(bResources, r => r.amount);
-
-        let aTotal = aTainergy + bResourceTotal;
-        let bTotal = bTainergy + bResourceTotal;
-
-        if (aTotal > bTotal) {
-            return -1;
-        } else if (aTotal < bTotal) {
-            return 1;
-        }
-        return 0;
-    });
-    let remoteRoom = remoteRooms[0];
-    Memory.remoteRoom = remoteRoom;
-
     // Get a list of our rooms
     let myRooms = [];
     for (let room in Game.rooms) {
@@ -136,12 +115,7 @@ global.haulerSetup = function () {
             }
         }
     }
-    myRooms.sort(function(a,b) {
-        let A = _.sum(Game.rooms[a].storage.store);
-        let B = _.sum(Game.rooms[b].storage.store);
-        return A-B;
-    });
-    let myRoom = myRooms[0];
+    let myRoom = _.min(myRooms, function(c) { return Game.rooms[c].storage.store[RESOURCE_ENERGY]; })
     Memory.myRoom = myRoom;
     var After = Game.cpu.getUsed() - Before;
     console.log('Hauler Target setup used ' + After + ' CPU');
