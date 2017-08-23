@@ -640,6 +640,8 @@ Creep.prototype.roadCheck = function(work = false) {
 }
 
 Creep.prototype.containerCheck = function() {
+    // If we're in our own room, stop right there! no container check here please
+    if (this.room.controller && this.room.controller.my) { return; }
     // Check we have energy (and it's higher than 0.. because 0 probably means we got smacked and lost our carry)
     if (this.carry.energy >= this.carryCapacity && this.carry.energy > 0) {
         var container = false;
