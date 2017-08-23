@@ -276,13 +276,14 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
     }
 }
 
-Creep.prototype.getNearbyMinerals = function(options = {}) {
+Creep.prototype.getNearbyMinerals = function(storage = false, options = {}) {
     // First are we full?
     if (this.full()) {
         DBG && console.log('[' + this.name + '] Creep Full Cannot Get Nearby Minerals');
         // Clear the pickup target
         this.invalidateMineralTarget(true);
     }
+    if (!this.memory.mineralPickup && storage) { this.findStorageMinerals(); }
     // Start with ground minerals
     if (!this.memory.mineralPickup) { this.findGroundMinerals(); }
     // Next Container Minerals
@@ -333,7 +334,7 @@ Creep.prototype.moveToAndPickupMinerals = function() {
                 return this.invalidateMineralTarget(true);
             }
         }
-    } else if (target instanceof StructureContainer) {
+    } else if (target instanceof StructureContainer || target instanceof StructureStorage) {
         // Check there is still res in the container
         if (_.sum(target.store) - target.store[RESOURCE_ENERGY] == 0) {
             return this.invalidateMineralTarget();
@@ -379,10 +380,24 @@ Creep.prototype.invalidateMineralTarget = function(full = false) {
     return ERR_INVALID_TARGET;
 }
 
-Creep.prototype.canPickup = function(target) {
+Creep.prototype.canPickup = function(target, range = 1) {
     if (!target) { return false; }
     // Are we within 1 range?
-    return this.pos.inRangeTo(target,1);
+    return this.pos.inRangeTo(target,range);
+}
+
+Creep.prototype.findStorageMinerals = function() {
+    // Have an override, call it storeMinerals for now (it'l do)
+    if (this.room.memory.storeMinerals) { return; }
+    let storage = this.room.storage;
+    // Does this room have a storage? (no harm in checking)
+    if (storage) {
+        // Is there something other than energy in the storage?
+        if (_.sum(storage.store) - storage.store[RESOURCE_ENERGY] > 0) {
+            // Set the target to be the storage
+            this.memory.mineralPickup = storage.id;
+        }
+    }
 }
 
 Creep.prototype.findGroundMinerals = function() {
@@ -625,6 +640,8 @@ Creep.prototype.roadCheck = function(work = false) {
 }
 
 Creep.prototype.containerCheck = function() {
+    // If we're in our own room, stop right there! no container check here please
+    if (this.room.controller && this.room.controller.my) { return; }
     // Check we have energy (and it's higher than 0.. because 0 probably means we got smacked and lost our carry)
     if (this.carry.energy >= this.carryCapacity && this.carry.energy > 0) {
         var container = false;

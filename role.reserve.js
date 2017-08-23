@@ -32,24 +32,24 @@ module.exports.body = {
     2 : [],
     3 : [],
     4 : [
-        MOVE,MOVE,      // 2 MOVE = 100
         CLAIM,CLAIM,    // 2 CLAIM = 1200
+        MOVE,MOVE,      // 2 MOVE = 100
     ],
     5 : [
-        MOVE,MOVE,      // 2 MOVE = 100
         CLAIM,CLAIM,    // 2 CLAIM = 1200
+        MOVE,MOVE,      // 2 MOVE = 100
     ],
     6 : [
-        MOVE,MOVE,      // 2 MOVE = 100
         CLAIM,CLAIM,    // 2 CLAIM = 1200
+        MOVE,MOVE,      // 2 MOVE = 100
     ],
     7 : [
-        MOVE,MOVE,      // 2 MOVE = 100
         CLAIM,CLAIM,    // 2 CLAIM = 1200
+        MOVE,MOVE,      // 2 MOVE = 100
     ],
     8 : [
-        MOVE,MOVE,      // 2 MOVE = 100
         CLAIM,CLAIM,    // 2 CLAIM = 1200
+        MOVE,MOVE,      // 2 MOVE = 100
     ],
 }
 module.exports.enabled = function (room, debug = false) {
@@ -137,6 +137,13 @@ module.exports.run = function (creep, debug = false) {
         // Creep is dying, flag for a replacement
         creep.memory.dying = true;
     }
+
+    // Functional check!
+    if (!creep.canDo(CLAIM)) {
+        if (debug) { console.log('[' +creep.name+'] Creep damaged seeking repair:' + JSON.stringify(creep.pos)); }
+        return;
+    }
+
     // Alright, did we already make it to the room with the flag?
     if (!creep.memory.arrived) {
         // We didn't, alright lets go get the flag's position and head to it!

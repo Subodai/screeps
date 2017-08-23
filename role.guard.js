@@ -26,42 +26,48 @@ module.exports.cost = {
 /* Body parts */
 module.exports.body = {
     1 : [
-        MOVE,MOVE,              // 1 Moves = 100
-        ATTACK,ATTACK,          // 2 Attacks = 160 = 60h/t
+        ATTACK,ATTACK,
+        MOVE,MOVE,
     ],
     2 : [
-        MOVE,MOVE,              // 1 Moves = 100
-        ATTACK,ATTACK,          // 2 Attacks = 160 = 60h/t
+        ATTACK,ATTACK,
+        MOVE,MOVE,
     ],
     3 : [
-        TOUGH,TOUGH,                                // 2 Toughs = 20
-        MOVE,MOVE,MOVE,                             // 4 Moves = 200
-        ATTACK,ATTACK,                              // 2 Attacks = 160 = 60h/t
+        TOUGH,TOUGH,
+        MOVE,MOVE,MOVE,
+        ATTACK,ATTACK,
         MOVE,
     ],
     4 : [
-        TOUGH,TOUGH,                            // 2 Toughs = 20
-        MOVE,MOVE,MOVE,MOVE,MOVE,               // 5 Moves = 250
-        ATTACK,ATTACK,ATTACK,                   // 3 Attacks = 240 = 150h/t
+        TOUGH,TOUGH,
+        MOVE,MOVE,MOVE,MOVE,
+        ATTACK,ATTACK,ATTACK,
+        MOVE,
     ],
     5 : [
-        TOUGH,TOUGH,                            // 2 Toughs = 20
-        MOVE,MOVE,MOVE,MOVE,MOVE,               // 5 Moves = 250
-        ATTACK,ATTACK,ATTACK,                   // 3 Attacks = 240 = 150h/t
+        TOUGH,TOUGH,
+        MOVE,MOVE,MOVE,MOVE,
+        ATTACK,ATTACK,ATTACK,
+        MOVE,
     ],
     6 : [
-        TOUGH,TOUGH,                            // 2 Toughs = 20
-        MOVE,MOVE,MOVE,MOVE,MOVE,               // 5 Moves = 250
-        ATTACK,ATTACK,ATTACK,                   // 3 Attacks = 240 = 150h/t
+        TOUGH,TOUGH,
+        MOVE,MOVE,MOVE,MOVE,
+        ATTACK,ATTACK,ATTACK,
+        MOVE,
     ],
     7 : [
-        TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,  // 5 Toughs = 50
-        MOVE,MOVE,MOVE,MOVE,                        // 4 Moves = 200
-        ATTACK,ATTACK,                              // 2 Attacks = 160 = 60h/t
+        TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,
+        MOVE,MOVE,MOVE,
+        ATTACK,ATTACK,
+        MOVE,
     ],
     8 : [
-        MOVE,MOVE,              // 1 Moves = 100
-        ATTACK,ATTACK,          // 2 Attacks = 160 = 60h/t
+        TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,
+        MOVE,MOVE,MOVE,
+        ATTACK,ATTACK,
+        MOVE,
     ],
     /*
     2 : [
