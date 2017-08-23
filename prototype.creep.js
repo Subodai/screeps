@@ -350,7 +350,7 @@ Creep.prototype.moveToAndPickupMinerals = function() {
             // Loop through all the resources in the container
             for (let res in target.store) {
                 // If there is more than 0 of this mineral, let's pick it up
-                if (target.store[res] > 0) {
+                if (target.store[res] > 0 && res != RESOURCE_ENERGY) {
                     // Attempt to pick it up
                     let pickupResult = this.withdraw(target, res);
                     // check the result
