@@ -157,7 +157,7 @@ module.exports.run = function(creep, debug = false) {
                         stroke: global.colourPickup,
                         opacity: global.pathOpacity
                     },
-                    reusePath:5
+                    reusePath:25
                 });
                 var moved = true;
             }
@@ -194,7 +194,7 @@ module.exports.run = function(creep, debug = false) {
                         stroke: global.colourDropoff,
                         opacity: global.pathOpacity
                     },
-                    reusePath:5
+                    reusePath:25
                 });
                 var moved = true;
             }
@@ -222,7 +222,7 @@ module.exports.run = function(creep, debug = false) {
                                     stroke: global.colourDropoff,
                                     opacity: global.pathOpacity
                                 },
-                                reusePath:5
+                                reusePath:15
                             });
                             var moved = true;
                             break;
