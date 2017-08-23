@@ -66,7 +66,7 @@ global.getPartsCost = function(parts) {
             bodyCost += BODYPART_COST[part.type];
         }
     } else if (parts == undefined) {
-
+        bodyCost += 0;
     } else if (parts.length > 1) {
         for (var part of parts) {
             bodyCost += BODYPART_COST[part];
