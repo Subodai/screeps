@@ -30,13 +30,13 @@ var screepsplus = require('screepsplus');
 const q = require('prototype.queue');
 global.Queue = new q.Queue();
 
-const profiler = require('screeps-profiler');
-profiler.enable();
+// const profiler = require('screeps-profiler');
+// profiler.enable();
 /**
  * Main game loop, call all other functions from here
  */
 module.exports.loop = function () {
-profiler.wrap(function() { // Start of profiler wrapper
+//profiler.wrap(function() { // Start of profiler wrapper
     var debug = false;
     // Only need these once every 10 ticks
     if (Game.time % 10 == 0) {
@@ -75,7 +75,7 @@ profiler.wrap(function() { // Start of profiler wrapper
     Memory.stats.cpu.used = Game.cpu.getUsed();
     if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) { console.log('Stopping At 73 To relax CPU use'); console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}'); return; }
     console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}');
-}); // End of profiler wrapper
+//}); // End of profiler wrapper
 }
 
 global.haulerSetup = function () {
@@ -86,23 +86,25 @@ global.haulerSetup = function () {
     let target = Game.rooms[Memory.remoteRoom];
     // if the room has less than 500 energy, lets pick a different one
     if (!target || target.collectableEnergy() <= 500 || target.hostiles > 0) {
+        console.log('picking new room');
         let remoteRooms = [];
         for (let room in Game.rooms) {
-            if (_.isString(room)) {
-                room = Game.rooms[room];
-            }
-            if (room != null) {
-                if (!room.controller || !room.controller.my) {
+            let _room = Game.rooms[room];
+            console.log(JSON.stringify(_room));
+            if (_room != null) {
+                console.log(JSON.stringify(_room));
+                if (!_room.controller || (_room.controller && !_room.controller.my)) {
                     // If there are no hostiles, send the haulers!
-                    if (room.hostiles <= 0) {
-                        remoteRooms.push(room.name);
+                    if (_room.hostiles() <= 0) {
+                        remoteRooms.push(_room.name);
                     }
                 }
             }
         }
-
-        let remoteRoom = _.max(remoteRooms, function(c) { return Game.rooms[c].collectableEnergy(); })
+        let remoteRoom = _.max(remoteRooms, function(c) { return Game.rooms[c].collectableEnergy(); });
         Memory.remoteRoom = remoteRoom;
+    } else {
+        console.log(Memory.remoteRoom + ':' + target.collectableEnergy());
     }
     // Get a list of our rooms
     let myRooms = [];
