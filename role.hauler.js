@@ -149,6 +149,7 @@ module.exports.run = function(creep, debug = false) {
                 DBG && console.log('['+creep.name+'] setting hauler remote room ' + creep.memory.remoteRoom);
             }
             DBG && console.log('['+creep.name+'] Hauler Not in remote room ' + creep.memory.remoteRoom);
+            if (creep.memory.remoteRoom == '-Infinity') { delete creep.memory.remoteRoom; }
             if (creep.memory.remoteRoom) {
                 let pos = new RoomPosition(25,25,creep.memory.remoteRoom);
                 // Lets head to the remoteRoom

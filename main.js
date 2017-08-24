@@ -85,7 +85,7 @@ global.haulerSetup = function () {
     // Check the level of the energy in the current target
     let target = Game.rooms[Memory.remoteRoom];
     // if the room has less than 500 energy, lets pick a different one
-    if (target.collectableEnergy() <= 500 || target.hostiles > 0) {
+    if (!target || target.collectableEnergy() <= 500 || target.hostiles > 0) {
         let remoteRooms = [];
         for (let room in Game.rooms) {
             if (_.isString(room)) {
