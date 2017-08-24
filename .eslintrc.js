@@ -1,4 +1,4 @@
-module.exports = {
+{
     "env": {
         "es6": true,
         "node": true,
@@ -37,4 +37,4 @@ module.exports = {
     "plugins": [
         "screeps"
     ]
-};
+}
