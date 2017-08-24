@@ -1,7 +1,9 @@
 /* Janitor drone */
-module.exports.role = 'janitor';
+module.exports.role = "janitor";
+
 /* sType */
-module.exports.sType = 'normal';
+module.exports.sType = "normal";
+
 /* Spawn Roster */
 module.exports.roster = {
     1: 1,
@@ -12,7 +14,8 @@ module.exports.roster = {
     6: 1,
     7: 1,
     8: 1,
-}
+};
+
 /* Costs */
 module.exports.cost = {
     1 : 300,
@@ -23,7 +26,8 @@ module.exports.cost = {
     6 : 800,
     7 : 800,
     8 : 800,
-}
+};
+
 module.exports.body = {
     1 :  [
         WORK,WORK,
@@ -65,7 +69,7 @@ module.exports.body = {
         CARRY,CARRY,
         MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
-}
+};
 
 
 module.exports.enabled = function (room, debug = false) {
@@ -74,9 +78,9 @@ module.exports.enabled = function (room, debug = false) {
     var _room = Game.rooms[room];
     // Search for all targets that are walls or ramparts below their global max, or anything else with less hits than max
     const targets = _room.find(FIND_STRUCTURES, {
-        filter: (i) => (i.structureType == STRUCTURE_RAMPART && i.hits <= global.rampartMax) ||
-                       (i.structureType == STRUCTURE_WALL && i.hits <= global.wallMax) ||
-                       ((i.structureType != STRUCTURE_WALL && i.structureType != STRUCTURE_RAMPART) && i.hits < i.hitsMax)
+        filter: (i) => (i.structureType === STRUCTURE_RAMPART && i.hits <= global.rampartMax) ||
+                       (i.structureType === STRUCTURE_WALL && i.hits <= global.wallMax) ||
+                       ((i.structureType !== STRUCTURE_WALL && i.structureType != STRUCTURE_RAMPART) && i.hits < i.hitsMax)
     });
     // Do we have any?
     if (targets.length > 0) {
@@ -90,28 +94,29 @@ module.exports.visuals = function (items, room, debug = false) {
     // _room.visual.clear();
     for (var i in items) {
         var item = items[i];
-        if(item.structureType == STRUCTURE_RAMPART) {
-            var percent = (item.hits/global.rampartMax)*100;
+        var percent = 100;
+        if(item.structureType === STRUCTURE_RAMPART) {
+            percent = (item.hits/global.rampartMax)*100;
         } else if (item.structureType == STRUCTURE_WALL) {
-            var percent = (item.hits/global.wallMax)*100;
+            percent = (item.hits/global.wallMax)*100;
         } else {
-            var percent = (item.hits/item.hitsMax)*100;
+            percent = (item.hits/item.hitsMax)*100;
         }
 
         var r = Math.round(255 - ((255/100)*(percent/100)*100));
         var g = Math.round((255/100)*(percent/100)*100);
         var b = 0;
-        var _color = '#' + this.tohex(r) + this.tohex(g) + this.tohex(b);
+        var _color = "#" + this.tohex(r) + this.tohex(g) + this.tohex(b);
         _room.visual.circle(item.pos, {
             fill: _color,
             radius:0.35,
             opacity:0.05,
             stroke:_color
-        }).text(percent.toFixed(2) + '%', item.pos, {
+        }).text(percent.toFixed(2) + "%", item.pos, {
             color:_color,
             font:0.5,
-            align:'left',
-            stroke:'rgba(0,0,0,0.5)',
+            align:"left",
+            stroke:"rgba(0,0,0,0.5)",
             opacity:0.6,
         });
     }
@@ -120,62 +125,49 @@ module.exports.visuals = function (items, room, debug = false) {
 module.exports.tohex = function (d, padding) {
     var hex = Number(d).toString(16);
     padding = typeof (padding) === "undefined" || padding === null ? padding = 2 : padding;
-
-    while (hex.length < padding) {
-        hex = "0" + hex;
-    }
-
+    while (hex.length < padding) { hex = "0" + hex; }
     return hex;
 }
 /**
  * Janitor Role
  */
 module.exports.run = function(creep) {
-    if (creep.spawning) { return; }
-    if (creep.fatigue > 0) {
-        creep.say(global.sayTired);
-        return;
-    }
-
+    // If spawning or fatigued
+    if (creep.spawning || creep.fatigue > 0) { return; }
     // If we have only a few ticks to live we should set to dying
-    var ticks = creep.ticksToLive;
-    if (ticks < 100) {
-        creep.say(global.sayWhat);
-        creep.memory.dying = true;
-    }
-
-    if(creep.memory.sapping && creep.carry.energy == 0) {
+    if (creep.ticksToLive < 100) { creep.memory.dying = true; }
+    // If we're sapping and have run out of energy
+    if(creep.memory.sapping && creep.carry.energy === 0) {
+        // clear sapping flag
         creep.memory.sapping = false;
         creep.say(global.sayGet);
     }
-    if(!creep.memory.sapping && creep.carry.energy == creep.carryCapacity) {
+    // Are we full?
+    if(!creep.memory.sapping && creep.carryCapacity > 0 && creep.carry.energy === creep.carryCapacity) {
+        // Yes set sapping flag to true
         creep.memory.sapping = true;
         creep.say(global.sayPUT);
     }
-
-    if (!creep.memory.sapping) {
-        if (creep.getNearbyEnergy(true) == ERR_FULL) {
-            delete creep.memory.energyPickup;
-            creep.memory.sapping = true;
-        }
+    // Are we in pickup energy mode?
+    if (!creep.memory.sapping && creep.getNearbyEnergy(true) === ERR_FULL) {
+        delete creep.memory.energyPickup;
+        creep.memory.sapping = true;
     }
-
     // Are we sapping?
     if(creep.memory.sapping) {
         delete creep.memory.energyPickup;
         let result = creep.repairStructures();
-        if (result == ERR_FULL) {
-            delete creep.memory.repairTarget;
-            delete creep.memory.targetmaxHP;
-            let result = creep.repairStructures();
-        } else if (result == ERR_NOT_ENOUGH_ENERGY) {
-            delete creep.memory.repairTarget;
-            delete creep.memory.targetmaxHP;
-            creep.memory.sapping == false;
-        } else if (result == OK) {
-            // Nothing to do here
-        } else if (result == ERR_INVALID_TARGET) {
-            // Heading back to spawn
+        switch (creep.repairStructures()) {
+            case ERR_FULL: // We have completed this fill
+                delete creep.memory.repairTarget;
+                delete creep.memory.targetmaxHP;
+                break;
+            case ERR_NOT_ENOUGH_ENERGY: // We have run out of energy
+                delete creep.memory.repairTarget;
+                delete creep.memory.targetmaxHP;
+                creep.memory.sapping == false;
+                break;
+            default: // Nothing to do here
         }
     }
 }
