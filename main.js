@@ -4,6 +4,7 @@ require('global.stuff');   // Settings and stuff
 require('global.colours'); // Colours various variables
 require('global.speech');  // Colours various variables
 require('global.friends'); // The global friend list
+var Traveler = require('Traveler');
 
 // Get the prototypes
 var protoypes = [
