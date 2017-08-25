@@ -169,10 +169,25 @@ module.exports.run = function (creep, debug = false) {
     var target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
         filter: (i) => !(global.friends.indexOf(i.owner.username) > -1)
     });
+    if (!target) {
+        var target = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
+            filter: (i) => !(global.friends.indexOf(i.owner.username) > -1) && i.structureType == STRUCTURE_TOWER
+        });
+    }
+    if (!target) {
+        var target = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
+            filter: (i) => !(global.friends.indexOf(i.owner.username) > -1) && i.structureType == STRUCTURE_SPAWN
+        });
+    }
+    if (!target) {
+        var target = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
+            filter: (i) => !(global.friends.indexOf(i.owner.username) > -1) && i.structureType != STRUCTURE_CONTROLLER
+        });
+    }
     // var target = false;
     if (target) {
         creep.memory.idle = 0;
-        if (creep.attack(target) == ERR_NOT_IN_RANGE) {
+        if (!creep.pos.inRangeTo(target,1)) {
             creep.moveTo(target, {
                 visualizePathStyle : {
                     stroke: '#FF0000',
@@ -180,24 +195,32 @@ module.exports.run = function (creep, debug = false) {
                 },reusePath:5
             });
             creep.say(global.sayMove);
-            return;
-        } else {
+        }
+
+        if (creep.pos.inRangeTo(target,1)) {
+            creep.attack(target);
             creep.say(global.sayAttack);
-            return;
         }
     } else {
-        var target = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
-            filter: (i) => !(global.friends.indexOf(i.owner.username) > -1) && i.structureType == STRUCTURE_TOWER
-        });
-        if (!target) {
-            var target = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
-                filter: (i) => !(global.friends.indexOf(i.owner.username) > -1) && i.structureType == STRUCTURE_SPAWN
-            });
+        var flag = Game.flags['attack'];
+        if (!flag) {
+            flag = Game.flags['stage'];
         }
-        if (!target) {
-            var target = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
-                filter: (i) => !(global.friends.indexOf(i.owner.username) > -1) && i.structureType != STRUCTURE_CONTROLLER
-            });
+        if (!flag) {
+            creep.memory.idle++;
+            creep.say(creep.memory.idle);
+            return;
+        } else {
+            // If we're more than 1 tile away attempt to move there
+            if (!creep.pos.inRangeTo(flag,1)) {
+                creep.moveTo(flag, {
+                    visualizePathStyle : {
+                        stroke: global.colourFlag,
+                        opacity: global.pathOpacity
+                    },
+                    reusePath:20
+                });
+            }
         }
         var target = false;
         if (target) {
@@ -234,30 +257,7 @@ module.exports.run = function (creep, debug = false) {
                     });
                     return;
                 }
-
-            }
-            // If our POS is not the flags
-            if (creep.pos.roomName == flag.pos.roomName) {
-                // We have arrived!
-                creep.memory.arrived = true;
-                var result = creep.moveTo(flag, {
-                    visualizePathStyle : {
-                        stroke: global.colourFlag,
-                        opacity: global.pathOpacity
-                    },
-                    reusePath:10
-                });
-            } else {
-                var result = creep.moveTo(flag, {
-                    visualizePathStyle : {
-                        stroke: global.colourFlag,
-                        opacity: global.pathOpacity
-                    },
-                    reusePath:10
-                });
-                return;
             }
         }
-
     }
 }

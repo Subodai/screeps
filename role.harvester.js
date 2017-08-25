@@ -1,7 +1,9 @@
 /* Harvester drone */
 module.exports.role = 'harvester';
+
 /* sType */
 module.exports.sType = 'normal';
+
 /* Spawn Roster */
 module.exports.roster = {
     1: 2,
@@ -12,7 +14,8 @@ module.exports.roster = {
     6: 2,
     7: 2,
     8: 2,
-}
+};
+
 /* Costs */
 module.exports.cost = {
     1 : 300,
@@ -23,7 +26,7 @@ module.exports.cost = {
     6 : 1800,
     7 : 1800,
     8 : 1800,
-}
+};
 
 /* Body parts */
 module.exports.body = {
@@ -71,8 +74,7 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
         MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
-}
-
+};
 
 module.exports.multiplier = 2;
 
@@ -80,7 +82,7 @@ module.exports.enabled = function (room, debug = false) {
     const _room = Game.rooms[room];
     if (_room.controller) {
         if (_room.memory.minersNeeded && _room.memory.minersNeeded > 0) {
-            var list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.roomName == room && !creep.memory.dying);
+            var list = _.filter(Game.creeps, (creep) => creep.memory.role === this.role && creep.memory.roomName === room && !creep.memory.dying);
             if (list.length < _room.memory.minersNeeded*this.multiplier) {
                 return true;
             }
@@ -114,7 +116,7 @@ module.exports.run = function(creep) {
         }
     }
 
-    if (creep.room.name != creep.memory.roomName) {
+    if (creep.room.name !== creep.memory.roomName) {
         delete creep.memory.energyPickup;
         let pos = new RoomPosition(25,25,creep.memory.roomName);
         creep.moveTo(pos, {
@@ -129,13 +131,13 @@ module.exports.run = function(creep) {
     }
 
     // Is the creep dropping off and empty?
-    if (creep.memory.delivering && _.sum(creep.carry) == 0) {
+    if (creep.memory.delivering && _.sum(creep.carry) === 0) {
         creep.memory.delivering = false;
         creep.say('GET');
     }
 
     // Is the creep not delivering and full?
-    if (!creep.memory.delivering && _.sum(creep.carry) == creep.carryCapacity) {
+    if (!creep.memory.delivering && _.sum(creep.carry) === creep.carryCapacity) {
         creep.memory.delivering = true;
         creep.say('PUT');
     }
@@ -144,7 +146,7 @@ module.exports.run = function(creep) {
     if (!creep.memory.delivering) {
         // Any minerals to pickup?
         // Always pickup none
-        if (creep.getNearbyEnergy() == ERR_FULL) {
+        if (creep.getNearbyEnergy() === ERR_FULL) {
             delete creep.memory.energyPickup;
             creep.memory.delivering = true;
         }
@@ -155,20 +157,21 @@ module.exports.run = function(creep) {
         delete creep.memory.energyPickup;
         var fillSpawns = false;
         if (creep.room.energyAvailable < creep.room.energyCapacityAvailable*0.75) {
-            var fillSpawns = true;
+            fillSpawns = true;
         }
         // only refill spawns and other things if room level below 4 after 4 we just fill storage
         // after 5 we fill storage and terminal
         // unless emergency, then we fill spawns too
         if (fillSpawns || creep.room.controller.level < 4 || creep.room.memory.emergency || !creep.room.storage) {
+            var target = false;
             // Do we have energy?
             if (creep.carry.energy > 0) {
                 // We do, try to find a spawn or extension to fill
-                var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return (
-                            structure.structureType == STRUCTURE_EXTENSION ||
-                            structure.structureType == STRUCTURE_SPAWN
+                            structure.structureType === STRUCTURE_EXTENSION ||
+                            structure.structureType === STRUCTURE_SPAWN
                         ) && structure.energy < structure.energyCapacity;
                     }
                 });
@@ -178,11 +181,11 @@ module.exports.run = function(creep) {
                 // Yep, so reset idle
                 creep.memory.idle = 0;
                 // Loop through our carry
-                for(var resourceType in creep.carry) {
+                for(let resourceType in creep.carry) {
                     // Only try to delivery energy to spawn and exention
-                    if (resourceType == RESOURCE_ENERGY) {
+                    if (resourceType === RESOURCE_ENERGY) {
                         // If we're not in range
-                        if (creep.transfer(target, resourceType) == ERR_NOT_IN_RANGE) {
+                        if (creep.transfer(target, resourceType) === ERR_NOT_IN_RANGE) {
                             // Move to it
                             creep.moveTo(target, {
                                 visualizePathStyle: {
@@ -207,33 +210,33 @@ module.exports.run = function(creep) {
             if (creep.carry.energy > 0) {
                 // First find towers with less than 400 energy
                 var tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                    filter : (i) => i.structureType == STRUCTURE_TOWER && i.energy < 400
+                    filter : (i) => i.structureType === STRUCTURE_TOWER && i.energy < 400
                 });
 
                 // If we didn't find any get them with less than 800
                 if (!tower) {
                     var tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                        filter : (i) =>  i.structureType == STRUCTURE_TOWER && i.energy < 800
+                        filter : (i) =>  i.structureType === STRUCTURE_TOWER && i.energy < 800
                     });
                 }
 
                 // Okay all above 800, get any now
                 if (!tower) {
                     var tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                        filter : (i) => i.structureType == STRUCTURE_TOWER && i.energy < i.energyCapacity
+                        filter : (i) => i.structureType === STRUCTURE_TOWER && i.energy < i.energyCapacity
                     });
                 }
 
                 // If towers are full, can we dump it into a lab?
                 if (!tower) {
                     var tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                        filter : (i) => i.structureType == STRUCTURE_LAB && i.energy < i.energyCapacity
+                        filter : (i) => i.structureType === STRUCTURE_LAB && i.energy < i.energyCapacity
                     });
                 }
                 // So did we find one?
                 if (tower) {
                     // Attempt transfer, unless out of range
-                    if(creep.transfer(tower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    if(creep.transfer(tower, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
                         // Let's go to the tower
                         creep.moveTo(tower, {
                             visualizePathStyle: {
@@ -259,13 +262,13 @@ module.exports.run = function(creep) {
         // If we have both storage and terminal
         if (storage && terminal) {
             if (creep.room.memory.prioritise) {
-                if (creep.room.memory.prioritise == 'terminal') {
+                if (creep.room.memory.prioritise === 'terminal') {
                     if (_.sum(terminal.store) < terminal.storeCapacity) {
                         var target = terminal;
                     } else {
                         var target = storage;
                     }
-                } else if (creep.room.memory.prioritise == 'storage') {
+                } else if (creep.room.memory.prioritise === 'storage') {
                     if (_.sum(stroage.store) < stroage.storeCapacity) {
                         var target = storage;
                     } else {
@@ -297,7 +300,7 @@ module.exports.run = function(creep) {
                     // Prioritise the terminal for non-energy
                     var target = terminal;
                     // If we don't have one
-                    if (!target || _.sum(terminal.store) == terminal.storeCapacity ) {
+                    if (!target || _.sum(terminal.store) === terminal.storeCapacity ) {
                         // try storage
                         var target = storage;
                     }
@@ -317,7 +320,7 @@ module.exports.run = function(creep) {
             for(var resourceType in creep.carry) {
                 // Attempt to transfer them
                 if (creep.carry[resourceType] > 0) {
-                    if (creep.transfer(target, resourceType) == ERR_NOT_IN_RANGE) {
+                    if (creep.transfer(target, resourceType) === ERR_NOT_IN_RANGE) {
                         creep.moveTo(target, {
                             visualizePathStyle: {
                                 stroke: global.colourDropoff,
@@ -343,7 +346,7 @@ module.exports.run = function(creep) {
                 //if (creep.room.name != creep.memory.roomName) {
                     // lets go home
                     var spawns = Game.rooms[creep.memory.roomName].find(FIND_STRUCTURES, {
-                        filter: (i) => i.structureType == STRUCTURE_SPAWN
+                        filter: (i) => i.structureType === STRUCTURE_SPAWN
                     });
                     var spawn = spawns[0];
                     if (spawn) {
@@ -357,15 +360,7 @@ module.exports.run = function(creep) {
                         creep.say(global.sayMove);
                     }
                 //}
-
-
-                // console.log('Creep idle too long, switching to refiller');
-                // Game.notify(Game.time + ' Harvester Idle too long, switching to refiller');
-                // delete creep.memory.idle;
-                // delete creep.memory.delivering;
-                // creep.memory.role = 'smallrefiller';
             }
         }
-
     }
 }
