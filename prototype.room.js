@@ -58,7 +58,7 @@ Room.prototype.processBuildFlags = function () {
             flag.remove();
         }
         // If it workes lets feedback and remove the flag
-        if (result == OK) {
+        if (result === OK) {
             // Clear the flag
             flag.remove()
             // feedback
