@@ -185,10 +185,10 @@ Room.prototype.collectableEnergy = function () {
     if (!this.memory.lastEnergyCheck || this.memory.lastEnergyCheck != Game.time) {
         var energy = 0;
         let containers = this.find(FIND_STRUCTURES, {
-            filter: c => c.structureType == STRUCTURE_CONTAINER && c.store[RESOURCE_ENERGY] > 0
+            filter: (c) => c.structureType == STRUCTURE_CONTAINER && c.store[RESOURCE_ENERGY] > 0
         });
         let resources = this.find(FIND_DROPPED_RESOURCES, {
-            filter: r => r.resourceType == RESOURCE_ENERGY
+            filter: (r) => r.resourceType == RESOURCE_ENERGY
         });
         if (containers.length > 0) {
             energy += _.sum(containers, c => c.store[RESOURCE_ENERGY]);
