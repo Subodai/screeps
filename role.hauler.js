@@ -1,9 +1,12 @@
 var DBG = false;
-/* Hauler drone */
+
+// Remote Hauler Drone
 module.exports.role = 'hauler';
-/* sType */
+
+// Core Type
 module.exports.sType = 'remote';
-/* Spawn Roster */
+
+// Roster (max number we want per room)
 module.exports.roster = {
     1: 1,
     2: 1,
@@ -13,8 +16,9 @@ module.exports.roster = {
     6: 1,
     7: 1,
     8: 1,
-}
-/* Costs */
+};
+
+// Costs (human readability mostly, likely to nuke this soon)
 module.exports.cost = {
     1 : 300,
     2 : 450,
@@ -24,27 +28,27 @@ module.exports.cost = {
     6 : 1250,
     7 : 1250,
     8 : 1250,
-}
+};
 
-/* Body parts */
+// Body parts array for each RCL level
 module.exports.body = {
     1 : [
-        WORK,
+        // WORK,
         CARRY,CARRY,
         MOVE,MOVE
     ],
     2 : [
-        WORK,
+        // WORK,
         CARRY,CARRY,CARRY,
         MOVE,MOVE,MOVE,MOVE
     ],
     3 : [
-        WORK,
+        // WORK,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     4 : [
-        WORK,
+        // WORK,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         MOVE,
@@ -52,7 +56,7 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
     5 : [
-        WORK,
+        // WORK,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         MOVE,
@@ -60,7 +64,7 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
     6 : [
-        WORK,
+        // WORK,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         MOVE,
@@ -68,7 +72,7 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
     7 : [
-        WORK,
+        // WORK,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         MOVE,
@@ -76,46 +80,45 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
     8 : [
-        WORK,
+        // WORK,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         MOVE,
         MOVE,MOVE,MOVE,MOVE,MOVE,
         MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
-}
+};
 
-
+// Multiplier
 module.exports.multiplier = 1;
 
+// Enabled flag
 module.exports.enabled = function (room, debug = false) {
     // Turn off if room is discharging with supergraders
-    if (Game.rooms[room].memory.charging == false) { return false; }
+    if (Game.rooms[room].memory.charging === false) { return false; }
     // Get the flags
-    var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['haul']);
+    var flags = _.filter(Game.flags, (flag) => flag.color === global.flagColor['haul']);
     // No remote flags, return false
-    if (flags.length == 0) { return false; }
+    if (flags.length === 0) { return false; }
     return true;
 }
-/**
- * Hauler role
- */
+
+// The main run method
 module.exports.run = function(creep, debug = false) {
     // Now if we're spawning just return
-    if (creep.spawning) { return; }
-    // If it's fatigued we should just return there's no need to carry on
-    if (creep.fatigue > 0) {
-        creep.say(global.sayTired);
+    if (creep.spawning || creep.fatigue > 0) {
+        new RoomVisual(creep.pos.roomName).circle(creep.pos, {
+            radius: .45, fill: "transparent", stroke: 'aqua', strokeWidth: .15, opacity: .3
+        });
         return;
     }
-    // Check our time to live
-    var ticks = creep.ticksToLive;
-    if (ticks < 100) {
+    // Is it dying?
+    if (!creep.memory.dying && creep.ticksToLive <= 100) {
         creep.memory.dying = true;
     }
 
     if (!creep.canDo(CARRY)) {
-        if (debug) { console.log('[' +creep.name+'] Creep damaged seeking repair:' + JSON.stringify(creep.pos)); }
+        DBG && console.log('[' +creep.name+'] Creep damaged seeking repair:' + JSON.stringify(creep.pos));
         return;
     }
     // Logic is as follows. If empty, head to remote room, if in remote room and empty, find resources as normal
@@ -123,7 +126,7 @@ module.exports.run = function(creep, debug = false) {
     // If travelling with resources we should run a repair on the road we're on as we go
 
     // First are we empty, if we are we should be heading to remote
-    if (_.sum(creep.carry) == 0) {
+    if (_.sum(creep.carry) === 0) {
         // Set Seek to true
         creep.memory.seek = true;
     }
@@ -138,9 +141,7 @@ module.exports.run = function(creep, debug = false) {
     var moved = false;
     // Are we seeking?
     if (creep.memory.seek) {
-        if (creep.room.name == creep.memory.remoteRoom) {
-            creep.memory.arrived = true;
-        }
+        if (creep.room.name === creep.memory.remoteRoom) { creep.memory.arrived = true; }
         if (!creep.memory.arrived) {
             DBG && console.log(creep.name + ' Creep has not arrived');
             // If we have cleared the remoteRoom (which we should after every successful pickup)
@@ -153,18 +154,12 @@ module.exports.run = function(creep, debug = false) {
             if (creep.memory.remoteRoom) {
                 let pos = new RoomPosition(25,25,creep.memory.remoteRoom);
                 // Lets head to the remoteRoom
-                creep.moveTo(pos, {
-                    visualizePathStyle: {
-                        stroke: global.colourPickup,
-                        opacity: global.pathOpacity
-                    },
-                    reusePath:25
-                });
+                creep.travelTo(pos);
                 var moved = true;
             }
         } else {
             DBG && console.log(creep.name + ' Creep has arrived seeking energy');
-            if (creep.getNearbyEnergy() == ERR_FULL) {
+            if (creep.getNearbyEnergy() === ERR_FULL) {
                 delete creep.memory.seek;
                 delete creep.memory.energyPickup;
             }
@@ -176,37 +171,31 @@ module.exports.run = function(creep, debug = false) {
         // If we don't have a room to deliver to yet (which we should reset after every drop off)
         if (!creep.memory.roomName) {
             creep.memory.roomName = Memory.myRoom;
-            console.log('['+creep.name+'] setting hauler home room');
+            DBG && console.log('['+creep.name+'] setting hauler home room');
         }
         DBG && console.log('['+creep.name+'] Hauler full going home');
         // We need to be heading home are we in our home room yet?
         if (creep.room.name != creep.memory.roomName) {
             // We're not in the room yet, we need to seek the room's controller
             const spawns = Game.rooms[creep.memory.roomName].find(FIND_STRUCTURES, {
-                filter: (i) => i.structureType == STRUCTURE_SPAWN
+                filter: (i) => i.structureType === STRUCTURE_SPAWN
             });
             // Get the first spawn
             const spawn = spawns[0];
             // If we have one
             if (spawn) {
                 // Lets go to it
-                creep.moveTo(spawn, {
-                    visualizePathStyle: {
-                        stroke: global.colourDropoff,
-                        opacity: global.pathOpacity
-                    },
-                    reusePath:25
-                });
+                creep.travelTo(spawn);
                 var moved = true;
             }
         } else {
             // We're already in the room lets dump our resources on the storage
-            const target = creep.room.storage;
+            var target = creep.room.storage;
             // Does it have storage?
             if (!target) {
                 // no.. okay lets dump it in a container
-                const target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (i) => i.structureType == STRUCTURE_CONTAINER && _.sum(i.store) < i.storeCapacity
+                target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                    filter: (i) => i.structureType === STRUCTURE_CONTAINER && _.sum(i.store) < i.storeCapacity
                 });
             }
             // Did we find a target?
@@ -218,13 +207,7 @@ module.exports.run = function(creep, debug = false) {
                         // attempt to transfer
                         if (creep.transfer(target, i) == ERR_NOT_IN_RANGE) {
                             // Lets go to it
-                            creep.moveTo(target, {
-                                visualizePathStyle: {
-                                    stroke: global.colourDropoff,
-                                    opacity: global.pathOpacity
-                                },
-                                reusePath:15
-                            });
+                            creep.travelTo(target);
                             var moved = true;
                             break;
                         } else {
