@@ -10,7 +10,7 @@ module.exports.run = function(debug = false) {
         var theRoom = Game.rooms[room];
         var owned = false;
         // Do we have vision into this room?
-        if (theRoom == undefined) { continue; }
+        if (theRoom === undefined) { continue; }
         // Does it have a controller?
         if (theRoom.controller && theRoom.controller.my) {
             var owned = true;
@@ -28,8 +28,8 @@ module.exports.run = function(debug = false) {
                 var desiredCreeps = 5;
                 var minMiners = 1;
             }
-            var list   = _.filter(Game.creeps, (i) => i.pos.roomName == room && !i.memory.dying && i.memory.role != 'hauler' && i.memory.role != 'guard');
-            var miners = _.filter(Game.creeps, (i) => i.pos.roomName == room && !i.memory.dying && (i.memory.role == 'miner' || i.memory.role == 'linkminer'));
+            var list   = _.filter(Game.creeps, (i) => i.pos.roomName === room && !i.memory.dying && i.memory.role !== 'hauler' && i.memory.role !== 'guard');
+            var miners = _.filter(Game.creeps, (i) => i.pos.roomName === room && !i.memory.dying && (i.memory.role === 'miner' || i.memory.role === 'linkminer'));
             var hostiles = theRoom.find(FIND_HOSTILE_CREEPS, { filter: (i) => !(global.friends.indexOf(i.owner.username) > -1) });
 
             var storage = theRoom.storage;
@@ -37,19 +37,19 @@ module.exports.run = function(debug = false) {
                 theRoom.memory.links = false;
             } else {
                 // Turn off room charging if we're above 800k
-                if (storage.store[RESOURCE_ENERGY] >= 800000 && theRoom.memory.charging == true) {
+                if (storage.store[RESOURCE_ENERGY] >= 800000 && theRoom.memory.charging === true) {
                     theRoom.memory.charging = false;
                 }
                 // If the room is below 10000 turn charging back on
-                if (storage.store[RESOURCE_ENERGY] <= 10000 && theRoom.memory.charging == false) {
+                if (storage.store[RESOURCE_ENERGY] <= 10000 && theRoom.memory.charging === false) {
                     theRoom.memory.charging = true;
                 }
                 // Turn on links when above 400k and they're off
-                if (storage.store[RESOURCE_ENERGY] >= 400000 && theRoom.memory.links == false) {
+                if (storage.store[RESOURCE_ENERGY] >= 400000 && theRoom.memory.links === false) {
                     theRoom.memory.links = true;
                 }
                 // Turn off links when below 100k and they're on
-                if (storage.store[RESOURCE_ENERGY] <= 100000 && theRoom.memory.links == true) {
+                if (storage.store[RESOURCE_ENERGY] <= 100000 && theRoom.memory.links === true) {
                     theRoom.memory.links = false;
                 }
             }
@@ -84,17 +84,17 @@ module.exports.run = function(debug = false) {
                 console.log(room + ' Still in emergency with ' + list.length + ' creeps and ' + miners.length + ' miners');
             }
 
-            if (hostiles.length > 0 && theRoom.memory.mode == 'normal') {
+            if (hostiles.length > 0 && theRoom.memory.mode === 'normal') {
                 theRoom.memory.mode = 'guard';
                 console.log(room + ' Put into guard mode');
             }
 
-            if (hostiles.length == 0 && theRoom.memory.mode == 'guard') {
+            if (hostiles.length === 0 && theRoom.memory.mode === 'guard') {
                 theRoom.memory.mode = 'normal';
                 console.log(room + ' No longer in guard mode');
             }
 
-            if (theRoom.memory.mode == 'guard') {
+            if (theRoom.memory.mode === 'guard') {
                 console.log(room + ' Still in guard mode');
             }
             msg += ' [' + room + ':' + theRoom.energyAvailable + ']';
@@ -104,17 +104,17 @@ module.exports.run = function(debug = false) {
 
 
             // TODO We should add a tick counter to remove this hostile flag based on the life time of the hostile creeps in it
-            if (hostiles.length > 0 && theRoom.memory.mode == 'safe') {
+            if (hostiles.length > 0 && theRoom.memory.mode === 'safe') {
                 theRoom.memory.mode = 'hostile';
                 console.log(room + ' Remote Room has gone Hostile');
             }
 
-            if (hostiles.length == 0 && theRoom.memory.mode == 'hostile') {
+            if (hostiles.length === 0 && theRoom.memory.mode === 'hostile') {
                 theRoom.memory.mode = 'safe';
                 console.log(room + ' Remote Room is now Safe');
             }
 
-            if (theRoom.memory.mode == 'hostile') {
+            if (theRoom.memory.mode === 'hostile') {
                 console.log(room + ' Remote Room is still Hostile');
             }
         }
