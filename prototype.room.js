@@ -206,7 +206,7 @@ Room.prototype.collectableEnergy = function () {
  * Get the hostiles in a room
  */
 Room.prototype.hostiles = function() {
-    if (!this.memory.lastHostileCheck || this.memroy.lastHostileCheck != Game.time) {
+    if (!this.memory.lastHostileCheck || this.memory.lastHostileCheck != Game.time) {
         var hostiles = this.find(FIND_HOSTILE_CREEPS, {
             filter: (i) => !(global.friends.indexOf(i.owner.username) > -1)
         });

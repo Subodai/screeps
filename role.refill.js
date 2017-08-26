@@ -218,17 +218,7 @@ module.exports.run = function(creep) {
                 });
             }
             if (targets.length > 0) {
-                // Sort the targets
-                targets.sort(function(a,b){
-                    if (a.energy < b.energy) {
-                        return -1;
-                    } else if (b.energy > a.energy) {
-                        return 1;
-                    }
-                    return 0;
-                });
-                // Get the first one
-                target = targets[0];
+                target = _.min(targets, (t) => { return t.energy; });
             }
 
             // So did we find one?
