@@ -1,10 +1,13 @@
-/* Specialist Extractor Drone */
+// Specialist Extractor Drone
 module.exports.role = 'extractor';
-/* SType */
+
+// The core type
 module.exports.sType = 'specialist';
-/* Which room memory item should this be checked against */
+
+// Possibly unused variable
 module.exports.roomRequirement = 'extractorsNeeded';
-/* Spawn Roster */
+
+// Spawn roster per RCL
 module.exports.roster = {
     1: 0,
     2: 0,
@@ -14,8 +17,9 @@ module.exports.roster = {
     6: 1,
     7: 1,
     8: 1,
-}
-/* Costs */
+};
+
+// Human Readable costs (soon to be removed)
 module.exports.cost = {
     1 : 0,
     2 : 0,
@@ -25,14 +29,11 @@ module.exports.cost = {
     6 : 2300,
     7 : 4750,
     8 : 4750,
-}
-/* Body Parts at each RCL */
+};
+
+// Room RCL based body parts
 module.exports.body = {
-    1 : [],
-    2 : [],
-    3 : [],
-    4 : [],
-    5 : [],
+    1 : [], 2 : [], 3 : [], 4 : [], 5 : [],
     6 : [
         WORK,WORK,WORK,WORK,WORK,
         WORK,WORK,WORK,WORK,WORK,
@@ -72,41 +73,28 @@ module.exports.body = {
         WORK,WORK,WORK,WORK,WORK,
         MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
-}
+};
 
 // Set a time for this creep to 'expire' at
 module.exports.expiry = 200;
-/**
- * Individual check for a room to check if this creep type should be enabled or not
- */
+
+// Enabled logic goes in here
 module.exports.enabled = function (room, debug = false) {
     // define the room
     var theRoom = Game.rooms[room];
     // Find the mineral site in the room
     var mineral = theRoom.find(FIND_MINERALS);
     // does it have minerals?
-    if (theRoom.controller) {
-        if (mineral[0].mineralAmount > 0 && theRoom.controller.level >= 6) {
-            // it does, return true!
-            return true;
-        }
-    }
+    if (theRoom.controller && theRoom.controller.level >= 6 && mineral[0].mineralAmount > 0) { return true; }
     // This should be disabled
     return false;
 }
-/* Run method */
-module.exports.run = function (creep, debug = false) {
-    if (creep.spawning) { return; }
-    // Fatigue Check
-    if (creep.fatigue > 0) {
-        if (debug) { console.log('Creep[' + creep.name + '] Fatgiued ' + creep.fatigue); }
-        creep.say('Zzz');
-        return;
-    }
 
+// Main run method for this role
+module.exports.run = function (creep, debug = false) {
+    if (creep.isTired()) { return; }
     // Okay, health check
-    var ticks = creep.ticksToLive;
-    if (ticks <= 200 && !creep.memory.dying) {
+    if (!creep.memory.dying && creep.ticksToLive <= 200) {
         if (debug) { console.log('Creep[' + creep.name + '] Extractor Dying Making sure we spawn a new one'); }
         // set dying to true and set the sourceId to null in room memory
         creep.memory.dying = true;
@@ -117,11 +105,11 @@ module.exports.run = function (creep, debug = false) {
     // Alright if it's dying, output the timer
     if (creep.memory.dying) {
         if (debug) { console.log('Creep[' + creep.name + '] Extractor Dying, ticking down'); }
-        creep.say(ticks);
+        creep.say(creep.ticksToLive);
         // If it's less than 10 ticks, drop what we have
-        if (ticks < 10) {
+        if (creep.ticksToLive < 10) {
             if (debug) { console.log('Creep[' + creep.name + '] Extractor about to die'); }
-            creep.say('!!' + ticks + '!!');
+            creep.say('!!' + creep.ticksToLive + '!!');
         }
     }
 
@@ -145,7 +133,7 @@ module.exports.run = function (creep, debug = false) {
             }
         }
         // Do we have a extractorId?
-        if (extractorId == false) {
+        if (extractorId === false) {
             if (debug) { console.log('Creep[' + creep.name + '] Extractor cannot find extractor!!'); }
             if (!creep.room.memory.extractorReset) {
                 creep.room.memory.extractorReset = true;
@@ -155,7 +143,7 @@ module.exports.run = function (creep, debug = false) {
     }
 
     // Are we full?
-    if (_.sum(creep.carry) == creep.carryCapacity) {
+    if (_.sum(creep.carry) === creep.carryCapacity) {
         if (debug) { console.log('Creep[' + creep.name + '] Extractor full, dropping!'); }
         creep.memory.dropping = true;
     } else {
@@ -195,27 +183,23 @@ module.exports.run = function (creep, debug = false) {
         // Alright if we're not dropping, we're harvesting lets try harvesting our assigned source
         var extractor = Game.getObjectById(creep.memory.assignedExtractor);
         if (extractor) {
-            if (creep.harvest(extractor) == ERR_TIRED) {
-                creep.say('q(-_-)p');
-                return;
-            } else if (creep.harvest(extractor) == ERR_NOT_IN_RANGE) {
-                if (debug) { console.log('Creep[' + creep.name + '] Extractor not in range, moving into range'); }
-                // We're not at the thing! Lets go there!
-                creep.moveTo(extractor, {
-                    visualizePathStyle: {
-                         stroke: global.colourMine,
-                        opacity: global.pathOpacity
-                    },
-                    reusePath:5
-                });
-                // Moving make a say
-                creep.say('>>');
-                return;
-            }
-
-            // Mining say we're mining
-            if (!creep.memory.dying) {
-                creep.say('d(^-^)b');
+            let result = creep.harvest(extractor);
+            switch (result) {
+                case ERR_TIRED:
+                    creep.say('q(-_-)p');
+                    return;
+                    break;
+                case ERR_NOT_IN_RANGE:
+                    if (debug) { console.log('Creep[' + creep.name + '] Extractor not in range, moving into range'); }
+                    // We're not at the thing! Lets go there!
+                    creep.travelTo(extractor);
+                    // Moving make a say
+                    creep.say('>>');
+                    return;
+                    break;
+                case OK:
+                    creep.say('d(^-^)b');
+                    break;
             }
         } else {
             if (debug) { console.log('Creep[' + creep.name + '] Extractor cannot find extractor!!'); }
@@ -259,7 +243,7 @@ module.exports.setup = function (debug = false) {
 
         // First get the extractors
         var extractors = theRoom.find(FIND_MINERALS, {
-            filter: (i) => i.ticksToRegeneration == 0
+            filter: (i) => i.ticksToRegeneration === 0
         });
         // Loop through the extractors
         for (var i=0;i<=extractors.length-1;i++) {
@@ -278,7 +262,7 @@ module.exports.setup = function (debug = false) {
                     continue;
                 }
                 // If this creep has the assigned Source, we found it
-                if (creep.memory.assignedExtractor == extractorId) {
+                if (creep.memory.assignedExtractor === extractorId) {
                     found = true;
                     creepId = creep.id;
                     break;

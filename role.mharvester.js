@@ -12,7 +12,7 @@ module.exports.roster = {
     6: 1,
     7: 1,
     8: 1,
-}
+};
 /* Costs */
 module.exports.cost = {
     1 : 300,
@@ -23,7 +23,7 @@ module.exports.cost = {
     6 : 1800,
     7 : 1800,
     8 : 1800,
-}
+};
 
 /* Body parts */
 module.exports.body = {
@@ -71,7 +71,7 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
         MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
-}
+};
 
 module.exports.enabled = function (room, debug = false) {
     // define the room
@@ -79,12 +79,7 @@ module.exports.enabled = function (room, debug = false) {
     // Find the mineral site in the room
     var mineral = theRoom.find(FIND_MINERALS);
     // does it have minerals?
-    if (theRoom.controller) {
-        if (mineral[0].mineralAmount > 0 && theRoom.controller.level >= 6) {
-            // it does, return true!
-            return true;
-        }
-    }
+    if (theRoom.controller && theRoom.controller.level >= 6 && mineral[0].mineralAmount > 0) { return true; }
     // This should be disabled
     return false;
 }
@@ -92,22 +87,12 @@ module.exports.enabled = function (room, debug = false) {
  * Harvester Role
  */
 module.exports.run = function(creep) {
-    if (creep.spawning) { return; }
-    // If it's fatigued we should just return there's no need to carry on
-    if (creep.fatigue > 0) {
-        creep.say('Zzz');
-        return;
-    }
-
-    var ticks = creep.ticksToLive;
-    if (ticks < 100) {
-        creep.memory.dying = true;
-    }
-
+    if (creep.isTired()) { return; }
+    if (!creep.memory.dying && creep.ticksToLive < 100) { creep.memory.dying = true; }
     // If it's dying force it into delivery mode
     if (creep.memory.dying) {
-        creep.say(ticks);
-        if (_.sum(creep.carry) > (creep.carryCapacity/2) || ticks < 50) {
+        creep.say(creep.ticksToLive);
+        if (_.sum(creep.carry) > (creep.carryCapacity/2) || creep.ticksToLive < 50) {
             creep.memory.delivering = true;
         } else {
             creep.memory.delivering = false;
@@ -117,25 +102,19 @@ module.exports.run = function(creep) {
     if (creep.room.name != creep.memory.roomName) {
         delete creep.memory.energyPickup;
         let pos = new RoomPosition(25,25,creep.memory.roomName);
-        creep.moveTo(pos, {
-            visualizePathStyle: {
-                stroke: global.colourIdle,
-                opacity: global.pathOpacity
-            },
-            reusePath:5
-        });
+        creep.travelTo(pos);
         creep.say('SEEK');
         return;
     }
 
     // Is the creep dropping off and empty?
-    if (creep.memory.delivering && _.sum(creep.carry) == 0) {
+    if (creep.memory.delivering && _.sum(creep.carry) === 0) {
         creep.memory.delivering = false;
         creep.say('GET');
     }
 
     // Is the creep not delivering and full?
-    if (!creep.memory.delivering && _.sum(creep.carry) == creep.carryCapacity) {
+    if (!creep.memory.delivering && _.sum(creep.carry) === creep.carryCapacity) {
         creep.memory.delivering = true;
         creep.say('PUT');
     }
@@ -144,10 +123,10 @@ module.exports.run = function(creep) {
     if (!creep.memory.delivering) {
         // Any minerals to pickup?
         let mineralResult = creep.getNearbyMinerals();
-        if (mineralResult == ERR_NOT_FOUND) {
+        if (mineralResult === ERR_NOT_FOUND) {
             // Go and empty storage instead
             creep.getNearbyMinerals(true);
-        } else if (mineralResult == ERR_FULL) {
+        } else if (mineralResult === ERR_FULL) {
             delete creep.memory.mineralPickup;
             creep.memory.delivering = true;
         }
@@ -162,12 +141,7 @@ module.exports.run = function(creep) {
         if (target) {
             // Are we in range of the target
             if (!creep.pos.inRangeTo(target,1)) {
-                creep.moveTo(target, {
-                    visualizePathStyle: {
-                        stroke: global.colourDropoff,
-                        opacity: global.pathOpacity
-                    }
-                });
+                creep.travelTo(target);
                 // Say because move
                 creep.say('>>');
             }
@@ -177,7 +151,7 @@ module.exports.run = function(creep) {
                 for(var resourceType in creep.carry) {
                     // Attempt to transfer them
                     if (creep.carry[resourceType] > 0) {
-                        if (creep.transfer(target, resourceType) == ERR_NOT_IN_RANGE) {
+                        if (creep.transfer(target, resourceType) === ERR_NOT_IN_RANGE) {
                             // something went wrong
                             break;
                         } else {
@@ -200,23 +174,10 @@ module.exports.run = function(creep) {
                     });
                     var spawn = spawns[0];
                     if (spawn) {
-                        creep.moveTo(spawn, {
-                            visualizePathStyle: {
-                                stroke: global.colourIdle,
-                                opacity: global.pathOpacity
-                            },
-                            reusePath:3
-                        });
+                        creep.travelTo(spawn);
                         creep.say(global.sayMove);
                     }
                 //}
-
-
-                // console.log('Creep idle too long, switching to refiller');
-                // Game.notify(Game.time + ' Harvester Idle too long, switching to refiller');
-                // delete creep.memory.idle;
-                // delete creep.memory.delivering;
-                // creep.memory.role = 'smallrefiller';
             }
         }
     }

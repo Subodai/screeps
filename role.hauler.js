@@ -106,7 +106,7 @@ module.exports.enabled = function (room, debug = false) {
 // The main run method
 module.exports.run = function(creep, debug = false) {
     // Now if we're spawning just return
-    if (creep.spawning || creep.fatigue > 0) {
+    if (creep.isTired()) {
         new RoomVisual(creep.pos.roomName).circle(creep.pos, {
             radius: .45, fill: "transparent", stroke: 'aqua', strokeWidth: .15, opacity: .3
         });

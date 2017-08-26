@@ -14,7 +14,7 @@ module.exports.roster = {
     6: 3,
     7: 3,
     8: 3,
-}
+};
 
 /* Costs */
 module.exports.cost = {
@@ -26,7 +26,7 @@ module.exports.cost = {
     6 : 1550,
     7 : 1550,
     8 : 1550,
-}
+};
 
 /* Costs */
 module.exports.costlinks = {
@@ -38,7 +38,7 @@ module.exports.costlinks = {
     6 : 1300,
     7 : 1300,
     8 : 1300,
-}
+};
 
 /* Body Parts at each RCL */
 module.exports.body = {
@@ -91,7 +91,7 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE,
         MOVE,MOVE,MOVE,MOVE,
     ],
-}
+};
 
 module.exports.bodylinks = {
     1 : [
@@ -139,29 +139,22 @@ module.exports.bodylinks = {
         CARRY,CARRY,
         MOVE,MOVE,MOVE,MOVE,
     ],
-}
+};
 
 module.exports.enabled = function (room, debug = false) {
     var _room = Game.rooms[room];
     // Turn off normal upgraders while supergraders are on
-    if (_room.memory.roles['supergrader'] == true) {
-        return false;
-    }
+    if (_room.memory.roles['supergrader'] === true) { return false; }
     return true;
 }
 /**
  * Big Harvester Role
  */
 module.exports.run = function(creep) {
-    if (creep.spawning) { return; }
-    if (creep.fatigue > 0) {
-        creep.say('Zzz');
-        return;
-    }
-
+    if (creep.isTired()) { return; }
     // If supergrader is enabled, switch to it, no need for upgraders while supergraders are on
     if (creep.room.memory.roles) {
-        if (creep.room.memory.roles['supergrader'] == true) {
+        if (creep.room.memory.roles['supergrader'] === true) {
             creep.memory.role = 'supergrader';
             return;
         }
@@ -169,33 +162,23 @@ module.exports.run = function(creep) {
 
     // If we have only a few ticks to live, swap it to harvest mode so it seeks home
     var ticks = creep.ticksToLive;
-    if (ticks < 100 && !creep.memory.dying) {
+    if (!creep.memory.dying && ticks < 100) {
         creep.memory.dying = true;
         // creep.QueueReplacement();
     }
+    if (creep.memory.dying) { creep.say('!!'); }
 
-    if (creep.memory.dying) {
-        creep.say('!!');
-    }
-
-    // if (creep.room.memory.emergency) {
-    //     delete creep.memory.upgrading;
-    //     delete creep.memory.idle;
-    //     creep.memory.role = 'harvester';
-    //     return
-    // }
-
-    if(creep.memory.upgrading && creep.carry.energy == 0) {
+    if(creep.memory.upgrading && creep.carry.energy === 0) {
         creep.memory.upgrading = false;
         creep.say('GET');
     }
-    if(!creep.memory.upgrading && creep.carry.energy == creep.carryCapacity) {
+    if(!creep.memory.upgrading && creep.carry.energy === creep.carryCapacity) {
         creep.memory.upgrading = true;
         creep.say('PUT');
     }
 
     if (!creep.memory.upgrading) {
-        if (creep.getNearbyEnergy(true) == ERR_FULL) {
+        if (creep.getNearbyEnergy(true) === ERR_FULL) {
             delete creep.memory.energyPickup;
             creep.memory.upgrading = true;
         }
@@ -214,24 +197,13 @@ module.exports.run = function(creep) {
         // }
         if (Game.rooms[creep.memory.roomName]) {
             if(creep.upgradeController(Game.rooms[creep.memory.roomName].controller) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(Game.rooms[creep.memory.roomName].controller, {
-                    visualizePathStyle: {
-                        stroke: global.colourUpgrade,
-                        opacity: global.pathOpacity
-                    }
-                });
+                creep.travelTo(Game.rooms[creep.memory.roomName].controller);
             } else {
                 creep.say('(>.<)');
             }
         } else {
             let pos = new RoomPosition(25,25,creep.memory.roomName);
-            creep.moveTo(pos, {
-                visualizePathStyle: {
-                    stroke: global.colourIdle,
-                    opacity: global.pathOpacity
-                },
-                reusePath:5
-            });
+            creep.travelTo(pos);
             creep.say('SEEK');
             return;
         }

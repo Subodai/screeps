@@ -14,7 +14,7 @@ module.exports.roster = {
     6: 8,
     7: 8,
     8: 8,
-}
+};
 /* Costs */
 module.exports.cost = {
     1 : 0,
@@ -25,12 +25,10 @@ module.exports.cost = {
     6 : 1800,
     7 : 1800,
     8 : 1800,
-}
+};
 /* Body Parts at each RCL */
 module.exports.body = {
-    1 : [],
-    2 : [],
-    3 : [],
+    1 : [], 2 : [], 3 : [],
     4 : [
         WORK,WORK,WORK,WORK,
         WORK,WORK,WORK,WORK,
@@ -69,7 +67,7 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE,        //  200
         MOVE,MOVE,MOVE,MOVE         //  200
     ],
-}
+};
 
 module.exports.enabled = function (room, debug = false) {
     // Define the room
@@ -87,21 +85,15 @@ module.exports.enabled = function (room, debug = false) {
  * Big Harvester Role
  */
 module.exports.run = function(creep) {
-    if (creep.spawning) { return; }
-    if (creep.fatigue > 0) {
-        creep.say(global.sayTired);
-        return;
-    }
-
+    if (creep.isTired()) { return; }
     // If supergrader is enabled, switch to it, no need for upgraders while supergraders are on
-    if (creep.room.memory.roles['supergrader'] == false) {
+    if (creep.room.memory.roles['supergrader'] === false) {
         creep.memory.role = 'upgrader';
         return;
     }
 
     // If we have only a few ticks to live, swap it to harvest mode so it seeks home
-    var ticks = creep.ticksToLive;
-    if (ticks < 100) {
+    if (!creep.memory.dying && creep.ticksToLive < 100) {
         creep.say(global.sayWhat);
         creep.memory.dying = 'true';
     }
@@ -113,17 +105,17 @@ module.exports.run = function(creep) {
     //     return
     // }
 
-    if(creep.memory.upgrading && creep.carry.energy == 0) {
+    if(creep.memory.upgrading && creep.carry.energy === 0) {
         creep.memory.upgrading = false;
         creep.say(global.sayGet);
     }
-    if(!creep.memory.upgrading && creep.carry.energy == creep.carryCapacity) {
+    if(!creep.memory.upgrading && creep.carry.energy === creep.carryCapacity) {
         creep.memory.upgrading = true;
         creep.say(global.sayPut);
     }
 
     if (!creep.memory.upgrading) {
-        if (creep.getNearbyEnergy(true) == ERR_FULL) {
+        if (creep.getNearbyEnergy(true) === ERR_FULL) {
             delete creep.memory.energyPickup;
             creep.memory.upgrading = true;
         }
@@ -131,14 +123,8 @@ module.exports.run = function(creep) {
 
     if(creep.memory.upgrading) {
         delete creep.memory.energyPickup;
-        if(creep.upgradeController(Game.rooms[creep.memory.roomName].controller) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(Game.rooms[creep.memory.roomName].controller, {
-                visualizePathStyle: {
-                    stroke: global.colourUpgrade,
-                    opacity: global.pathOpacity
-                },
-                reusePath:5
-            });
+        if(creep.upgradeController(Game.rooms[creep.memory.roomName].controller) === ERR_NOT_IN_RANGE) {
+            creep.travelTo(Game.rooms[creep.memory.roomName].controller);
             creep.say(global.sayMove);
         } else {
             creep.say(global.sayUpgrade);

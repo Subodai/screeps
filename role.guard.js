@@ -21,7 +21,7 @@ module.exports.cost = {
     7 : 700,
     8 : 700,
     */
-}
+};
 
 /* Body parts */
 module.exports.body = {
@@ -106,7 +106,7 @@ module.exports.body = {
         ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,     // 5 Attacks = 400 = 150h/t
     ],
     */
-}
+};
 /* Spawn Roster */
 module.exports.roster = {
     1: 3,
@@ -115,9 +115,9 @@ module.exports.roster = {
     4: 3,
     5: 10,
     6: 10,
-    7: 5,
+    7: 10,
     8: 3,
-}
+};
 /**
  * Individual check for a room to check if this creep type should be enabled or not
  */
@@ -125,7 +125,7 @@ module.exports.enabled = function (room, debug = false) {
     // define the room
     var _room = Game.rooms[room];
     // Is this room in guard mode?
-    if (_room.memory.mode == 'guard' || _room.memory.war) {
+    if (_room.memory.mode === 'guard' || _room.memory.war) {
         // yep lets go spawn guards!
         return true;
     }
@@ -134,14 +134,7 @@ module.exports.enabled = function (room, debug = false) {
 }
 /* Okay, lets code the creep */
 module.exports.run = function (creep, debug = false) {
-    if (creep.spawning) { return; }
-    // Fatigue Check
-    if (creep.fatigue > 0) {
-        if (debug) { console.log('Creep[' + creep.name + '] Fatgiued ' + creep.fatigue); }
-        creep.say(global.sayTired);
-        return;
-    }
-
+    if (creep.isTired()) { return; }
     // Functional check!
     if (!creep.canDo(ATTACK)) {
         if (debug) { console.log('[' +creep.name+'] Creep damaged seeking repair:' + JSON.stringify(creep.pos)); }
@@ -150,17 +143,11 @@ module.exports.run = function (creep, debug = false) {
     if (creep.memory.idle >= 100) {
         // No targets.. head back to the room spawn
         var spawn = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (i) => i.structureType == STRUCTURE_SPAWN
+            filter: (i) => i.structureType === STRUCTURE_SPAWN && i.my
         });
 
-        if (spawn.recycleCreep(creep) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(spawn, {
-                visualizePathStyle: {
-                    stroke: global.colorRepair,
-                    opacity: global.pathOpacity
-                },
-                reusePath:10
-            });
+        if (spawn.recycleCreep(creep) === ERR_NOT_IN_RANGE) {
+            creep.travelTo(spawn);
             creep.say(global.sayWhat);
             return;
         }
@@ -170,30 +157,25 @@ module.exports.run = function (creep, debug = false) {
         filter: (i) => !(global.friends.indexOf(i.owner.username) > -1)
     });
     if (!target) {
-        var target = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
-            filter: (i) => !(global.friends.indexOf(i.owner.username) > -1) && i.structureType == STRUCTURE_TOWER
+        target = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
+            filter: (i) => !(global.friends.indexOf(i.owner.username) > -1) && i.structureType === STRUCTURE_TOWER
         });
     }
     if (!target) {
-        var target = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
-            filter: (i) => !(global.friends.indexOf(i.owner.username) > -1) && i.structureType == STRUCTURE_SPAWN
+        target = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
+            filter: (i) => !(global.friends.indexOf(i.owner.username) > -1) && i.structureType === STRUCTURE_SPAWN
         });
     }
     if (!target) {
-        var target = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
-            filter: (i) => !(global.friends.indexOf(i.owner.username) > -1) && i.structureType != STRUCTURE_CONTROLLER
+        target = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
+            filter: (i) => !(global.friends.indexOf(i.owner.username) > -1) && i.structureType !== STRUCTURE_CONTROLLER
         });
     }
-    // var target = false;
+    // var target = false; // uncomment to override hostiles and go to flags
     if (target) {
         creep.memory.idle = 0;
         if (!creep.pos.inRangeTo(target,1)) {
-            creep.moveTo(target, {
-                visualizePathStyle : {
-                    stroke: '#FF0000',
-                    opacity: global.pathOpacity
-                },reusePath:5
-            });
+            creep.travelTo(target);
             creep.say(global.sayMove);
         }
 
@@ -213,50 +195,7 @@ module.exports.run = function (creep, debug = false) {
         } else {
             // If we're more than 1 tile away attempt to move there
             if (!creep.pos.inRangeTo(flag,1)) {
-                creep.moveTo(flag, {
-                    visualizePathStyle : {
-                        stroke: global.colourFlag,
-                        opacity: global.pathOpacity
-                    },
-                    reusePath:20
-                });
-            }
-        }
-        var target = false;
-        if (target) {
-            creep.memory.idle = 0;
-            if (creep.attack(target) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target, {
-                        visualizePathStyle : {
-                            stroke: '#FF0000',
-                            opacity: global.pathOpacity
-                        },
-                        reusePath:5
-                    });
-                creep.say(global.sayMove);
-                return;
-            } else {
-                creep.say(global.sayAttack,true);
-                return;
-            }
-        } else {
-            var flag = Game.flags['attack'];
-            if (!flag) {
-                var flag = Game.flags['stage'];
-                if (!flag) {
-                    creep.memory.idle++;
-                    creep.say(creep.memory.idle);
-                    return;
-                } else {
-                    var result = creep.moveTo(flag, {
-                        visualizePathStyle : {
-                            stroke: global.colourFlag,
-                            opacity: global.pathOpacity
-                        },
-                        reusePath:20
-                    });
-                    return;
-                }
+                creep.travelTo(flag);
             }
         }
     }

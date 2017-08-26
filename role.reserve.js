@@ -14,7 +14,7 @@ module.exports.roster = {
     6: 2,
     7: 2,
     8: 2,
-}
+};
 /* Costs */
 module.exports.cost = {
     1 : 0,
@@ -25,7 +25,7 @@ module.exports.cost = {
     6 : 1300,
     7 : 1300,
     8 : 1300,
-}
+};
 /* Body Parts at each RCL */
 module.exports.body = {
     1 : [],
@@ -51,22 +51,22 @@ module.exports.body = {
         CLAIM,CLAIM,    // 2 CLAIM = 1200
         MOVE,MOVE,      // 2 MOVE = 100
     ],
-}
+};
 module.exports.enabled = function (room, debug = false) {
     // Turn off if room is discharging with supergraders
-    if (Game.rooms[room].memory.charging == false) { return false; }
+    if (Game.rooms[room].memory.charging === false) { return false; }
     // return false;
     // Get all reserve flags without an assigned creep
-    const flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['reserve']);
+    const flags = _.filter(Game.flags, (flag) => flag.color === global.flagColor['reserve']);
     // No flags, no spawns
-    if (flags.length == 0) { return false; }
+    if (flags.length === 0) { return false; }
     var spawn = false;
     // Loop through the flags
     for (var i in flags) {
         // Get the flag
         const _flag = flags[i];
         // Is there a creep with this flag in it's memory?
-        const creeps = _.filter(Game.creeps, (creep) => creep.memory.reserveRoom == _flag.pos.roomName && creep.memory.flagName == _flag.name && !creep.memory.dying);
+        const creeps = _.filter(Game.creeps, (creep) => creep.memory.reserveRoom === _flag.pos.roomName && creep.memory.flagName === _flag.name && !creep.memory.dying);
         const _room = Game.rooms[_flag.pos.roomName];
         if (_room) {
             // Do we need a creep?
@@ -88,7 +88,7 @@ module.exports.enabled = function (room, debug = false) {
             var spawn = true;
         }
 
-        if (spawn && creeps.length == 0) {
+        if (spawn && creeps.length === 0) {
             return true;
         }
 
@@ -103,14 +103,14 @@ module.exports.run = function (creep, debug = false) {
     // First, have we been assigned a flag?
     if (!creep.memory.flagName) {
         // Lets find a flag without a creep assigned
-        var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['reserve']);
+        var flags = _.filter(Game.flags, (flag) => flag.color === global.flagColor['reserve']);
         for (var i in flags) {
             var _flag = flags[i];
             var _room = Game.rooms[_flag.pos.roomName];
             if (_room) {
                 // ok we have presence, check for creeps
-                var creeps = _.filter(Game.creeps, (creep) => creep.memory.reserveRoom == _room.name && creep.memory.flagName == _flag.name && !creep.memory.dying)
-                if (creeps.length == 0) {
+                var creeps = _.filter(Game.creeps, (creep) => creep.memory.reserveRoom === _room.name && creep.memory.flagName === _flag.name && !creep.memory.dying)
+                if (creeps.length === 0) {
                     creep.memory.flagName = _flag.name;
                     creep.memory.reserveRoom = _flag.pos.roomName;
                     return;
@@ -123,21 +123,12 @@ module.exports.run = function (creep, debug = false) {
         }
     }
     // Are we spawning? if so, do nothing else
-    if (creep.spawning) { return; }
-    // Fatigue Check
-    if (creep.fatigue > 0) {
-        if (debug) { console.log('Creep[' + creep.name + '] Fatgiued ' + creep.fatigue); }
-        creep.say('Zzz');
-        return;
-    }
-    // Get ticks remaining
-    var ticks = creep.ticksToLive;
+    if (creep.isTired()) { return; }
     // If ticks is less than our expiry time, set creep to dying
-    if (ticks <= this.expiry && !creep.memory.dying) {
+    if (!creep.memory.dying && creep.ticksToLive <= this.expiry) {
         // Creep is dying, flag for a replacement
         creep.memory.dying = true;
     }
-
     // Functional check!
     if (!creep.canDo(CLAIM)) {
         if (debug) { console.log('[' +creep.name+'] Creep damaged seeking repair:' + JSON.stringify(creep.pos)); }
@@ -150,17 +141,11 @@ module.exports.run = function (creep, debug = false) {
         var flag = Game.flags[creep.memory.flagName];
         if (!flag) { return; }
         // If our POS is not the flags
-        if (creep.pos.roomName == flag.pos.roomName) {
+        if (creep.pos.roomName === flag.pos.roomName) {
             // We have arrived!
             creep.memory.arrived = true;
         } else {
-            var result = creep.moveTo(flag, {
-                visualizePathStyle : {
-                    stroke: global.colourFlag,
-                    opacity: global.pathOpacity
-                },
-                reusePath:40
-            });
+            var result = creep.travelTo(flag);
             return;
         }
     }
@@ -170,14 +155,9 @@ module.exports.run = function (creep, debug = false) {
         // Get the controller of the room we're meant to be in
         if (creep.room.controller) {
             // Okay, attempt to run reserve on the controller
-            if (creep.reserveController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+            if (creep.reserveController(creep.room.controller) === ERR_NOT_IN_RANGE) {
                 // Move to the controller instead
-                creep.moveTo(creep.room.controller, {
-                    visualizePathStyle : {
-                        stroke: global.colourReserve,
-                        opacity: global.pathOpacity
-                    }
-                });
+                creep.travelTo(creep.room.controller);
                 creep.roadCheck();
                 creep.say(global.sayMove);
             } else {
