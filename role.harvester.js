@@ -1,10 +1,10 @@
-/* Harvester drone */
+// Harvester Drone
 module.exports.role = 'harvester';
 
-/* sType */
+// Core Type
 module.exports.sType = 'normal';
 
-/* Spawn Roster */
+// Spawn count roster
 module.exports.roster = {
     1: 2,
     2: 2,
@@ -16,7 +16,7 @@ module.exports.roster = {
     8: 2,
 };
 
-/* Costs */
+// Human Readable costs (likely to be pruned)
 module.exports.cost = {
     1 : 300,
     2 : 400,
@@ -28,7 +28,7 @@ module.exports.cost = {
     8 : 1800,
 };
 
-/* Body parts */
+// Body Part array for each RCL
 module.exports.body = {
     1 : [
         WORK,
@@ -76,56 +76,39 @@ module.exports.body = {
     ],
 };
 
+// Multiplier for spawn use
 module.exports.multiplier = 2;
 
+// Enabled method
 module.exports.enabled = function (room, debug = false) {
     const _room = Game.rooms[room];
-    if (_room.controller) {
-        if (_room.memory.minersNeeded && _room.memory.minersNeeded > 0) {
-            var list = _.filter(Game.creeps, (creep) => creep.memory.role === this.role && creep.memory.roomName === room && !creep.memory.dying);
-            if (list.length < _room.memory.minersNeeded*this.multiplier) {
-                return true;
-            }
+    if (_room.controller && _room.memory.minersNeeded && _room.memory.minersNeeded > 0) {
+        var list = _.filter(Game.creeps, (creep) => creep.memory.role === this.role && creep.memory.roomName === room && !creep.memory.dying);
+        if (list.length < _room.memory.minersNeeded*this.multiplier) {
+            return true;
         }
     }
     return false;
 }
-/**
- * Harvester Role
- */
+
+// Main run method
 module.exports.run = function(creep) {
-    if (creep.spawning) { return; }
-    // If it's fatigued we should just return there's no need to carry on
-    if (creep.fatigue > 0) {
-        creep.say('Zzz');
-        return;
-    }
-
-    var ticks = creep.ticksToLive;
-    if (ticks < 100) {
-        creep.memory.dying = true;
-    }
-
+    if (creep.isTired()) { return; }
+    if (!creep.memory.dying && creep.ticksToLive < 100) { creep.memory.dying = true; }
     // If it's dying force it into delivery mode
     if (creep.memory.dying) {
-        creep.say(ticks);
-        if (_.sum(creep.carry) > (creep.carryCapacity/2) || ticks < 50) {
+        creep.say(creep.ticksToLive);
+        if (_.sum(creep.carry) > (creep.carryCapacity/2) || creep.ticksToLive < 50) {
             creep.memory.delivering = true;
         } else {
             creep.memory.delivering = false;
         }
     }
-
+    // Are we not in our home room for some stupid reason
     if (creep.room.name !== creep.memory.roomName) {
         delete creep.memory.energyPickup;
         let pos = new RoomPosition(25,25,creep.memory.roomName);
-        creep.moveTo(pos, {
-            visualizePathStyle: {
-                stroke: global.colourIdle,
-                opacity: global.pathOpacity
-            },
-            reusePath:5
-        });
+        creep.travelTo(pos);
         creep.say('SEEK');
         return;
     }
@@ -187,13 +170,7 @@ module.exports.run = function(creep) {
                         // If we're not in range
                         if (creep.transfer(target, resourceType) === ERR_NOT_IN_RANGE) {
                             // Move to it
-                            creep.moveTo(target, {
-                                visualizePathStyle: {
-                                    stroke: global.colourDropoff,
-                                    opacity: global.pathOpacity
-                                },
-                                reusePath: 5
-                            });
+                            creep.travelTo(target);
                              // Say because move
                             creep.say('>>');
                         } else {
@@ -208,28 +185,29 @@ module.exports.run = function(creep) {
             }
             // We didn't find a target yet, do we still have energy to use?
             if (creep.carry.energy > 0) {
+                var tower = false;
                 // First find towers with less than 400 energy
-                var tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
                     filter : (i) => i.structureType === STRUCTURE_TOWER && i.energy < 400
                 });
 
                 // If we didn't find any get them with less than 800
                 if (!tower) {
-                    var tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                    tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
                         filter : (i) =>  i.structureType === STRUCTURE_TOWER && i.energy < 800
                     });
                 }
 
                 // Okay all above 800, get any now
                 if (!tower) {
-                    var tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                    tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
                         filter : (i) => i.structureType === STRUCTURE_TOWER && i.energy < i.energyCapacity
                     });
                 }
 
                 // If towers are full, can we dump it into a lab?
                 if (!tower) {
-                    var tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                    tower = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
                         filter : (i) => i.structureType === STRUCTURE_LAB && i.energy < i.energyCapacity
                     });
                 }
@@ -238,13 +216,7 @@ module.exports.run = function(creep) {
                     // Attempt transfer, unless out of range
                     if(creep.transfer(tower, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
                         // Let's go to the tower
-                        creep.moveTo(tower, {
-                            visualizePathStyle: {
-                                stroke: global.colourTower,
-                                opacity: global.pathOpacity
-                            },
-                            reusePath: 5
-                        });
+                        creep.travelTo(tower);
                         // Say because move
                         creep.say('>>');
                     } else {
@@ -321,12 +293,7 @@ module.exports.run = function(creep) {
                 // Attempt to transfer them
                 if (creep.carry[resourceType] > 0) {
                     if (creep.transfer(target, resourceType) === ERR_NOT_IN_RANGE) {
-                        creep.moveTo(target, {
-                            visualizePathStyle: {
-                                stroke: global.colourDropoff,
-                                opacity: global.pathOpacity
-                            }
-                        });
+                        creep.travelTo(target);
                         // Say because move
                         creep.say('>>');
                         // if we failed, we don't need to keep trying
@@ -350,13 +317,7 @@ module.exports.run = function(creep) {
                     });
                     var spawn = spawns[0];
                     if (spawn) {
-                        creep.moveTo(spawn, {
-                            visualizePathStyle: {
-                                stroke: global.colourIdle,
-                                opacity: global.pathOpacity
-                            },
-                            reusePath:3
-                        });
+                        creep.travelTo(spawn);
                         creep.say(global.sayMove);
                     }
                 //}
