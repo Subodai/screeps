@@ -14,7 +14,7 @@ module.exports.roster = {
     6: 1,
     7: 1,
     8: 1,
-}
+};
 /* Costs */
 module.exports.cost = {
     1 : 0,
@@ -25,7 +25,7 @@ module.exports.cost = {
     6 : 1550,
     7 : 1550,
     8 : 1550,
-}
+};
 /* Body Parts at each RCL */
 module.exports.body = {
     1 : [],
@@ -64,12 +64,12 @@ module.exports.body = {
         CARRY,                // 1 CARRY = 50
         WORK                  // 1 WORK = 100
     ],
-}
+};
 
 
 module.exports.enabled = function (room, debug = false) {
     // Get all reserve flags without an assigned creep
-    var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['claim'] && !flag.memory.assignedCreep);
+    var flags = _.filter(Game.flags, (flag) => flag.color === global.flagColor['claim'] && !flag.memory.assignedCreep);
     // If we don't have any return a false
     return (flags.length > 0);
 }
@@ -81,7 +81,7 @@ module.exports.run = function (creep, debug = false) {
     // First, have we been assigned a flag?
     if (!creep.memory.flagName) {
         // Lets find a flag without a creep assigned
-        var flags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['claim'] && !flag.memory.assignedCreep);
+        var flags = _.filter(Game.flags, (flag) => flag.color === global.flagColor['claim'] && !flag.memory.assignedCreep);
         // If we found any
         if (flags.length > 0) {
             // Get the first one
@@ -94,17 +94,9 @@ module.exports.run = function (creep, debug = false) {
             return;
         }
     }
-    if (creep.spawning) { return; }
-    // Fatigue Check
-    if (creep.fatigue > 0) {
-        if (debug) { console.log('Creep[' + creep.name + '] Fatgiued ' + creep.fatigue); }
-        creep.say('Zzz');
-        return;
-    }
-    // Get ticks remaining
-    var ticks = creep.ticksToLive;
+    if (creep.isTired()) { return; }
     // If ticks is less than our expiry time, set creep to dying
-    if (ticks <= this.expiry && !creep.memory.dying) {
+    if (!creep.memory.dying && creep.ticksToLive <= this.expiry) {
         // Creep is dying, flag for a replacement
         creep.memory.dying = true;
         var flag = Game.flags[creep.memory.flagName];
@@ -116,16 +108,11 @@ module.exports.run = function (creep, debug = false) {
         var flag = Game.flags[creep.memory.flagName];
         if (!flag) { creep.memory.role = 'upgrader'; return; }
         // If our POS is not the flags
-        if (creep.pos.roomName == flag.pos.roomName) {
+        if (creep.pos.roomName === flag.pos.roomName) {
             // We have arrived!
             creep.memory.arrived = true;
         } else {
-            var result = creep.moveTo(flag, {
-                visualizePathStyle : {
-                    stroke: global.colourFlag,
-                    opacity: global.pathOpacity
-                }
-            });
+            var result = creep.travelTo(flag);
             return;
         }
     }
@@ -139,12 +126,7 @@ module.exports.run = function (creep, debug = false) {
             // Okay, attempt to run reserve on the controller
             if (creep.claimController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                 // Move to the controller instead
-                creep.moveTo(creep.room.controller, {
-                    visualizePathStyle : {
-                        stroke: global.colourClaim,
-                        opacity: global.pathOpacity
-                    }
-                });
+                creep.travelTo(creep.room.controller);
             } else {
                 creep.signController(creep.room.controller, 'Room Claimed by Subodai - [Ypsilon Pact]');
                 creep.say('MINE');
