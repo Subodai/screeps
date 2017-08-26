@@ -1,8 +1,10 @@
-/* Builder drone */
+// Builder Drone
 module.exports.role = 'builder';
-/* sType */
+
+// The core type
 module.exports.sType = 'normal';
-/* Spawn Roster */
+
+// The roster of required creeps
 module.exports.roster = {
     1: 2,
     2: 2,
@@ -12,8 +14,9 @@ module.exports.roster = {
     6: 1,
     7: 1,
     8: 1,
-}
-/* Costs */
+};
+
+// Human readable costs (remove soon)
 module.exports.cost = {
     1 : 300,
     2 : 550,
@@ -23,7 +26,9 @@ module.exports.cost = {
     6 : 800,
     7 : 800,
     8 : 800,
-}
+};
+
+// Body part array for each RCL
 module.exports.body = {
     1 :  [
         WORK,WORK,
@@ -65,41 +70,30 @@ module.exports.body = {
         CARRY,CARRY,
         MOVE,MOVE,MOVE,MOVE,MOVE,MOVE
     ],
-}
+};
 
-
+// Is this role enabled?
 module.exports.enabled = function (room, debug = false) {
     var mySites = _.filter(Game.constructionSites, (site) => site.my);
     return (mySites.length > 0);
 }
-/**
- * Builder Role
- */
+
+// Run the builder role
 module.exports.run = function(creep, debug = false) {
-    if (creep.spawning) { return; }
-    if (creep.fatigue > 0) {
-        creep.say('Zzz');
-        return;
-    }
-
+    if (creep.isTired()) { return; }
     // If we have only a few ticks to live, swap it to harvest mode so it seeks home
-    var ticks = creep.ticksToLive;
-    if (ticks < 100) {
-        creep.say('!!');
-        creep.memory.dying = true;
-    }
-
+    if (!creep.memory.dying && creep.ticksToLive < 100) { creep.memory.dying = true; }
     // Functional check!
     if (!creep.canDo(WORK)) {
         if (debug) { console.log('[' +creep.name+'] Creep damaged seeking repair:' + JSON.stringify(creep.pos)); }
         return;
     }
 
-    if(creep.memory.building && creep.carry.energy == 0) {
+    if(creep.memory.building && creep.carry.energy === 0) {
         creep.memory.building = false;
         creep.say('GET');
     }
-    if(!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
+    if(!creep.memory.building && creep.carry.energy === creep.carryCapacity) {
         delete creep.memory.energyPickup;
         creep.memory.building = true;
         creep.say('CREATE');
@@ -107,7 +101,7 @@ module.exports.run = function(creep, debug = false) {
 
 
     if (!creep.memory.building) {
-        if (creep.getNearbyEnergy(true) == ERR_FULL) {
+        if (creep.getNearbyEnergy(true) === ERR_FULL) {
             delete creep.memory.energyPickup;
             creep.memory.building = true;
             return;
@@ -121,21 +115,13 @@ module.exports.run = function(creep, debug = false) {
         // If that fails try all rooms
         if(site == null) {
             for (var _site in Game.constructionSites) {
-                var site = Game.getObjectById(_site);
-                if (site.my) {
-                    break;
-                }
+                site = Game.getObjectById(_site);
+                if (site.my) { break; }
             }
-            // console.log(JSON.stringify(site));
         }
         if (site) {
-            if(creep.build(site) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(site, {
-                    visualizePathStyle: {
-                        stroke: global.colourBuild,
-                        opacity: global.pathOpacity
-                    }
-                });
+            if(creep.build(site) === ERR_NOT_IN_RANGE) {
+                creep.travelTo(site);
                 creep.say('>>');
             } else {
                 creep.say('MAKE');
@@ -144,23 +130,17 @@ module.exports.run = function(creep, debug = false) {
             // creep.memory.role = 'janitor';
             // No targets.. head back to the room spawn
             var spawn = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (i) => i.structureType == STRUCTURE_SPAWN
+                filter: (i) => i.structureType === STRUCTURE_SPAWN
             });
             if (!spawn) {
                 var spawns = Game.rooms[creep.memory.roomName].find(FIND_STRUCTURES, {
-                    filter: (i) => i.structureType == STRUCTURE_SPAWN
+                    filter: (i) => i.structureType === STRUCTURE_SPAWN
                 });
                 var spawn = spawns[0];
             }
             if (spawn) {
-                if (spawn.recycleCreep(creep) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(spawn, {
-                        visualizePathStyle: {
-                            stroke: global.colourRepair,
-                            opacity: global.pathOpacity
-                        },
-                        reusePath:3
-                    });
+                if (spawn.recycleCreep(creep) === ERR_NOT_IN_RANGE) {
+                    creep.travelTo(spawn);
                     creep.say(global.sayWhat);
                 }
             }
