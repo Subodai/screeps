@@ -1,30 +1,37 @@
 
 // Change to true to enable debugging
 const DBG = false;
+
+/*
+ * Is a Creep Spawning or fatigued?
+ * In other words can it do anything this tick?
+ */
+Creep.prototype.isTired = function() {
+    return this.spawning || this.fatigue > 0;
+}
 /**
  * Find and collect nearby energy
  *
  * @param useStorage bool
  * @param emergency bool
- * @param options object
  */
-Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false, options = {}) {
+Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false) {
     // First, are we full?
-    if (_.sum(this.carry) == this.carryCapacity) {
+    if (_.sum(this.carry) === this.carryCapacity) {
         DBG && console.log('[' + this.name + '] Creep Full Cannot Get Nearby Energy');
         // Clear our pickup target
         delete this.memory.energyPickup;
         return ERR_FULL;
     }
     // Are we near a link with memory of receiver limit to only upgraders or supergraders, otherwise refillers become.. interesting
-    if (!this.memory.energyPickup && (this.memory.role == 'upgrader' || this.memory.role == 'supergrader')) {
+    if (!this.memory.energyPickup && (this.memory.role === 'upgrader' || this.memory.role === 'supergrader')) {
         DBG && console.log('[' + this.name + '] Checking for Links');
         // If we're in our own room, with our own controller, above level 5 (should have links)
         if (this.room.controller && this.room.controller.my && this.room.controller.level >= 5) {
             DBG && console.log('[' + this.name + '] Links available');
             // Lets find the nearest link with energy that has the right flag
             var links = this.room.find(FIND_STRUCTURES, {
-                filter: (i) => i.structureType == STRUCTURE_LINK && i.memory.linkType == 'receiver' && i.energy > 0 && i.pos.inRangeTo(this,7)
+                filter: (i) => i.structureType === STRUCTURE_LINK && i.memory.linkType === 'receiver' && i.energy > 0 && i.pos.inRangeTo(this,7)
             });
             if (links.length > 0) {
                 DBG && console.log('[' + this.name + '] Found a link, using it');
@@ -57,11 +64,11 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
         }
         // Get dropped resources in the room
         var resources = this.room.find(FIND_DROPPED_RESOURCES, {
-            filter: (i) => i.resourceType == RESOURCE_ENERGY && i.amount > (this.carryCapacity - _.sum(this.carry))/4
+            filter: (i) => i.resourceType === RESOURCE_ENERGY && i.amount > (this.carryCapacity - _.sum(this.carry))/4
         });
         // Get Containers in the room
         var containers = this.room.find(FIND_STRUCTURES, {
-            filter: (i) => i.structureType == STRUCTURE_CONTAINER && i.store[RESOURCE_ENERGY] > (this.carryCapacity - _.sum(this.carry))/4
+            filter: (i) => i.structureType === STRUCTURE_CONTAINER && i.store[RESOURCE_ENERGY] > (this.carryCapacity - _.sum(this.carry))/4
         });
         // False some things
         var resource = container = false;
@@ -69,37 +76,12 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
         // If we have resources
         if (resources.length > 0) {
             DBG && console.log('[' + this.name + '] Found ' + resources.length + ' resource piles');
-            // Sort the resources
-            resources.sort(function(a,b) {
-                const aPerMove = a.amount / thisCreep.pos.getRangeTo(a);
-                const bPerMove = b.amount / thisCreep.pos.getRangeTo(b);
-                if (aPerMove > bPerMove) {
-                    return -1;
-                } else if (bPerMove > aPerMove) {
-                    return 1;
-                }
-                return 0;
-                // return (a.amount / thisCreep.pos.getRangeTo(a)) - (b.amoumt / thisCreep.pos.getRangeTo(b));
-            });
-            // Now get the nearest one
-            var resource = resources[0];
+            resource = _.max(resources, (r) => { return r.amount / thisCreep.pos.getRangeTo(r); });
         }
         // if we have containers
         if (containers.length > 0) {
             DBG && console.log('[' + this.name + '] Found ' + containers.length + ' containers');
-            // Sort the containers
-            containers.sort(function(a,b) {
-                const aPerMove = a.store[RESOURCE_ENERGY] / thisCreep.pos.getRangeTo(a);
-                const bPerMove = b.store[RESOURCE_ENERGY] / thisCreep.pos.getRangeTo(b);
-                if (aPerMove > bPerMove) {
-                    return -1;
-                } else if (bPerMove > aPerMove) {
-                    return 1;
-                }
-                return 0;
-                // return thisCreep.pos.getRangeTo(a) - thisCreep.pos.getRangeTo(b);
-            });
-            var container = containers[0];
+            container = _.max(containers, (c) => { return c.store[RESOURCE_ENERGY] / thisCreep.pos.getRangeTo(c); })
         }
         // If we have both we need to pick the closest one
         if (resource && container) {
@@ -145,15 +127,6 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
         DBG && console.log('[' + this.name + '] Found Energy source in creeps memory ' + this.memory.energyPickup);
         // We do! let's grab it
         const target = Game.getObjectById(this.memory.energyPickup);
-        if (options == {}) {
-            var options = {
-                visualizePathStyle: {
-                    stroke: global.colourPickupRes,
-                    opacity: global.pathOpacity
-                },
-                reusePath:this.pos.getRangeTo(target) // Use the range to the object we're after as the reusePath opt
-            };
-        }
         var pickupSuccess = true;
         // Alright what is it?
         if (target instanceof Resource) { // Resource
@@ -169,7 +142,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
             if (this.pos.inRangeTo(target,1)) {
                 DBG && console.log('[' + this.name + '] Target should be in range, attempting pickup');
                 // First attempt to pickitup
-                if (this.pickup(target) == ERR_NOT_IN_RANGE) {
+                if (this.pickup(target) === ERR_NOT_IN_RANGE) {
                     DBG && console.log('[' + this.name + '] Pickup failed');
                     var pickupSuccess = false;
                 }
@@ -191,7 +164,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
             if (this.pos.inRangeTo(target,1)) {
                 DBG && console.log('[' + this.name + '] Target should be in range, attempting withdraw');
                 // Lets attempt to withdraw
-                if (this.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                if (this.withdraw(target, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
                     DBG && console.log('[' + this.name + '] Withdraw failed');
                     var pickupSuccess = false;
                 }
@@ -212,7 +185,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
             if (this.pos.inRangeTo(target,1)) {
                 DBG && console.log('[' + this.name + '] Target should be in range, attempting withdraw');
                 // Lets attempt to withdraw
-                if (this.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                if (this.withdraw(target, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
                     DBG && console.log('[' + this.name + '] Withdraw failed');
                     var pickupSuccess = false;
                 }
@@ -239,7 +212,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
             if (this.pos.inRangeTo(target,1)) {
                 DBG && console.log('[' + this.name + '] Target should be in range, attempting harvest');
                 // Alright lets try harvesting it
-                if (this.harvest(target) == ERR_NOT_IN_RANGE) {
+                if (this.harvest(target) === ERR_NOT_IN_RANGE) {
                     DBG && console.log('[' + this.name + '] Harvest failed');
                     var pickupSuccess = false;
                 }
@@ -257,7 +230,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
             DBG && console.log('[' + this.name + '] Successfully gathered resources');
             this.say(global.sayWithdraw);
             // Are we now full?
-            if (this.carry.energy == this.carryCapacity) {
+            if (this.carry.energy === this.carryCapacity) {
                 DBG && console.log('[' + this.name + '] Creep is now full clearing pickup memory');
                 // Alright we're full clear memory and return full
                 delete this.memory.energyPickup;
@@ -268,7 +241,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
         } else {
             DBG && console.log('[' + this.name + '] Moving closer to target');
             // We probably need to move
-            this.moveTo(target, options);
+            this.travelTo(target);
             // Say!
             this.say(global.sayMove);
             return OK;
@@ -276,7 +249,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
     }
 }
 
-Creep.prototype.getNearbyMinerals = function(storage = false, options = {}) {
+Creep.prototype.getNearbyMinerals = function(storage = false) {
     // First are we full?
     if (this.full()) {
         DBG && console.log('[' + this.name + '] Creep Full Cannot Get Nearby Minerals');
@@ -299,16 +272,6 @@ Creep.prototype.moveToAndPickupMinerals = function() {
     let target = Game.getObjectById(this.memory.mineralPickup);
     // if the target is invalid, or cannot be found let's clear it
     if (!target) { return this.invalidateMineralTarget(); }
-    // Set some options
-    if (options == {}) {
-        var options = {
-            visualizePathStyle: {
-                stroke: global.colourPickupMins,
-                opacity: global.pathOpacity
-            },
-            reusePath:this.pos.getRangeTo(target) // Use the range to the object we're after as the reusePath opt
-        };
-    }
     // Quick validation pass on the target
     if (target instanceof Resource) {
         // If it's going to disapwn before we get there, then there's no point in carrying on
@@ -319,16 +282,16 @@ Creep.prototype.moveToAndPickupMinerals = function() {
         if (!this.canPickup(target)) {
             this.say(global.sayMove);
             // We can't pick it up yet, let's move to it
-            this.moveTo(target, options);
+            this.travelTo(target);
         }
         // Can we pick it up after our move?
         if (this.canPickup(target)) {
             // Attempt to pick it up
             let pickupResult = this.pickup(target);
             // Check the result
-            if (pickupResult == ERR_NOT_IN_RANGE) {
+            if (pickupResult === ERR_NOT_IN_RANGE) {
                 // something went wrong
-            } else if (pickupResult == OK) {
+            } else if (pickupResult === OK) {
                 this.say(global.sayPickup);
                 // Invalidate and return full
                 return this.invalidateMineralTarget(true);
@@ -336,27 +299,27 @@ Creep.prototype.moveToAndPickupMinerals = function() {
         }
     } else if (target instanceof StructureContainer || target instanceof StructureStorage) {
         // Check there is still res in the container
-        if (_.sum(target.store) - target.store[RESOURCE_ENERGY] == 0) {
+        if (_.sum(target.store) - target.store[RESOURCE_ENERGY] === 0) {
             return this.invalidateMineralTarget();
         }
         // Can we pick it up yet?
         if (!this.canPickup(target)) {
             this.say(global.sayMove);
             // Can't pick it up yet, so lets move towards it
-            this.moveTo(target, options);
+            this.travelTo(target);
         }
         // Can we pick it up now?
         if (this.canPickup(target)) {
             // Loop through all the resources in the container
             for (let res in target.store) {
                 // If there is more than 0 of this mineral, let's pick it up
-                if (target.store[res] > 0 && res != RESOURCE_ENERGY) {
+                if (target.store[res] > 0 && res !== RESOURCE_ENERGY) {
                     // Attempt to pick it up
                     let pickupResult = this.withdraw(target, res);
                     // check the result
-                    if (pickupResult == ERR_NOT_IN_RANGE) {
+                    if (pickupResult === ERR_NOT_IN_RANGE) {
                         // something probbaly went wrong
-                    } else if (pickupResult == OK) {
+                    } else if (pickupResult === OK) {
                         this.say(global.sayWithdraw);
                         // Invalidate and return full
                         if (this.full()) {
@@ -406,7 +369,7 @@ Creep.prototype.findGroundMinerals = function() {
     DBG && console.log('[' + this.name + '] Creep has no mineral memory, finding stuff to pickup');
     // First check for nearby dropped resources
     var resources = this.room.find(FIND_DROPPED_RESOURCES, {
-        filter: (i) => i.resourceType != RESOURCE_ENERGY && i.amount > (this.pos.getRangeTo(i) / this.moveEfficiency())
+        filter: (i) => i.resourceType !== RESOURCE_ENERGY && i.amount > (this.pos.getRangeTo(i) / this.moveEfficiency())
     });
     // Did we find resources?
     if (resources.length > 0) {
@@ -427,7 +390,7 @@ Creep.prototype.findContainerMinerals = function() {
     DBG && console.log('[' + this.name + '] Creep searching for mineral containers');
     // Check for containers with anything other than energy in them
     var containers = this.room.find(FIND_STRUCTURES, {
-        filter: (i) => i.structureType == STRUCTURE_CONTAINER && (_.sum(i.store) - i.store[RESOURCE_ENERGY]) > 0
+        filter: (i) => i.structureType === STRUCTURE_CONTAINER && (_.sum(i.store) - i.store[RESOURCE_ENERGY]) > 0
     });
     // Any containers?
     if (containers.length > 0) {
@@ -444,19 +407,19 @@ Creep.prototype.findContainerMinerals = function() {
 Creep.prototype.deliverEnergy = function() {
     DBG && console.log('[' + this.name + '] Creep attempting to deliver energy');
     // First of all are we empty?
-    if (_.sum(creep.carry) == 0) {
+    if (_.sum(creep.carry) === 0) {
         delete this.memory.deliveryTarget;
         return ERR_NOT_ENOUGH_RESOURCES;
     }
 
-    if (creep.carry.energy == 0) {
+    if (creep.carry.energy === 0) {
 
     }
 }
 
 Creep.prototype.canWork = function() {
     // Has this creep already been flagged as a worker? and at full health (if it's been hit we should check it's parts again)
-    if (!this.memory.canWork && this.hits == this.hitsMax) {
+    if (!this.memory.canWork && this.hits === this.hitsMax) {
         // If we got hit, clear the memory
         if (this.hits != this.hitsMax) { delete this.memory.canWork; }
         // Use the activeBodyparts method.. sigh
@@ -470,14 +433,14 @@ Creep.prototype.canWork = function() {
         }
     }
     // Can this creep work?
-    return this.memory.canWork == 'yes';
+    return this.memory.canWork === 'yes';
 }
 
 Creep.prototype.findSpaceAtSource = function(source) {
     if (source.id == '5982fecbb097071b4adc1835') {
         // this.DBG = true;
     }
-    if (this.pos.getRangeTo(source) == 1) {
+    if (this.pos.getRangeTo(source) === 1) {
         this.DBG && console.log('We are already at the source');
         return true;
     }
@@ -488,9 +451,9 @@ Creep.prototype.findSpaceAtSource = function(source) {
         source.memory.lastSpaceCheck = 0;
     }
     // If we checked the space this tick and there's no space left, we don't need to check again we just need to decrement the spaces
-    if (source.memory.lastSpaceCheck == Game.time) {
+    if (source.memory.lastSpaceCheck === Game.time) {
         this.DBG && console.log('Last Check was this tick');
-        if (source.memory.spaces == 0) {
+        if (source.memory.spaces === 0) {
             this.DBG && console.log('No more spaces');
             return false
         } else {
@@ -525,7 +488,7 @@ Creep.prototype.findSpaceAtSource = function(source) {
     source.memory.lastSpaceCheck = Game.time;
     source.memory.spaces = spaces;
     // If it's 0 there's no space
-    if (source.memory.spaces == 0) {
+    if (source.memory.spaces === 0) {
         return false;
     } else {
         // If it's not 0, there is a space, lets take one off our count and return true
@@ -537,17 +500,17 @@ Creep.prototype.findSpaceAtSource = function(source) {
 
 Creep.prototype.checkEmptyAtPos = function(pos) {
     const terrain = Game.map.getTerrainAt(pos);
-    if (terrain == 'wall') {
+    if (terrain === 'wall') {
         this.DBG && console.log('wall found at ' + JSON.stringify(pos));
         return false;
     } else {
         let creeps = pos.lookFor(LOOK_CREEPS);
-        if (creeps.length == 0) {
+        if (creeps.length === 0) {
             this.DBG && console.log('Space found at ' + JSON.stringify(pos));
             return true;
         } else {
             // is this, the creep we're trying to find a space for
-            if (creeps[0] == this) {
+            if (creeps[0] === this) {
                 this.DBG && console.log('We are at ' + JSON.stringify(pos));
                 return true;
             } else {
@@ -567,7 +530,7 @@ Creep.prototype.roadCheck = function(work = false) {
     let obj = this.room.lookForAt(LOOK_STRUCTURES, this.pos);
     if (obj.length > 0) {
         for (let i in obj) {
-            if (obj[i].structureType == STRUCTURE_ROAD) {
+            if (obj[i].structureType === STRUCTURE_ROAD) {
                 this.DBG && console.log(this.name + ' Already road here');
                 road = obj[i];
                 break;
@@ -603,7 +566,7 @@ Creep.prototype.roadCheck = function(work = false) {
         let sites = this.room.lookForAt(LOOK_CONSTRUCTION_SITES, this.pos);
         if (sites.length > 0) {
             this.DBG && console.log(this.name + ' Found construction site');
-            if (sites[0].structureType == STRUCTURE_ROAD) {
+            if (sites[0].structureType === STRUCTURE_ROAD) {
                 site = sites[0];
             }
         }
@@ -627,9 +590,9 @@ Creep.prototype.roadCheck = function(work = false) {
     }
     this.DBG && console.log(this.name + ' No Road, Site, or Flag.. attempting to place one');
     this.DBG && console.log(JSON.stringify(this.pos));
-    if (!site && !flag && global.seedRemoteRoads == true) {
+    if (!site && !flag && global.seedRemoteRoads === true) {
         // How many construction flags do we have?
-        let roadFlags = _.filter(Game.flags, (flag) => flag.color == global.flagColor['buildsite'] && flag.secondaryColor == COLOR_WHITE);
+        let roadFlags = _.filter(Game.flags, (flag) => flag.color === global.flagColor['buildsite'] && flag.secondaryColor === COLOR_WHITE);
         // If we have 100 or more road flags, don't make any more!
         if (roadFlags.length >= 100) { this.DBG && console.log(this.name + 'Enough flags not dropping any more'); return; }
         this.DBG && console.log(this.name + 'Dropping a flag');
@@ -649,7 +612,7 @@ Creep.prototype.containerCheck = function() {
         let objects = this.pos.lookFor(LOOK_STRUCTURES);
         if (objects.length > 0) {
             for (let i in objects) {
-                if (objects[i].structureType == STRUCTURE_CONTAINER) {
+                if (objects[i].structureType === STRUCTURE_CONTAINER) {
                     container = objects[i];
                     break;
                 }
@@ -671,7 +634,7 @@ Creep.prototype.containerCheck = function() {
                 // loop
                 for (let i in sites) {
                     // is this site a container?
-                    if (sites[i].structureType == STRUCTURE_CONTAINER) {
+                    if (sites[i].structureType === STRUCTURE_CONTAINER) {
                         constructionSite = sites[i];
                         break;
                     }
@@ -692,7 +655,7 @@ Creep.prototype.containerCheck = function() {
 
 Creep.prototype.repairStructures = function (options = {}) {
     // First are we empty?
-    if (this.carry.energy == 0) {
+    if (this.carry.energy === 0) {
         DBG && console.log('[' + this.name + '] Empty Cannot Repair Structures');
         // Clear repair target
         delete this.memory.repairTarget;
@@ -720,7 +683,7 @@ Creep.prototype.repairStructures = function (options = {}) {
         DBG && console.log('[' + this.name + '] Has no repair target, looking for 1 hp ramparts and walls');
         // Check for walls or ramparts with 1 hit first
         var ts = this.room.find(FIND_STRUCTURES, {
-            filter: (i) => (i.structureType == STRUCTURE_RAMPART || i.structureType == STRUCTURE_WALL) && i.hits == 1 && i.room == this.room
+            filter: (i) => (i.structureType === STRUCTURE_RAMPART || i.structureType === STRUCTURE_WALL) && i.hits === 1 && i.room === this.room
         });
 
         if (ts.length > 0) {
@@ -738,7 +701,7 @@ Creep.prototype.repairStructures = function (options = {}) {
         DBG && console.log('[' + this.name + '] Has no repair target, looking for < 600hp ramparts and walls');
         if (ts.length == 0) {
             var ts = this.room.find(FIND_STRUCTURES, {
-                filter: (i) => (i.structureType == STRUCTURE_RAMPART || i.structureType == STRUCTURE_WALL) && i.hits <= 600 && i.room == this.room
+                filter: (i) => (i.structureType === STRUCTURE_RAMPART || i.structureType === STRUCTURE_WALL) && i.hits <= 600 && i.room === this.room
             });
             if (ts.length > 0) {
                 ts.sort(function(a,b) {
@@ -771,15 +734,6 @@ Creep.prototype.repairStructures = function (options = {}) {
     if (this.memory.repairTarget) {
         DBG && console.log('[' + this.name + '] Has a repair target, checking close enough to repair');
         let target = Game.getObjectById(this.memory.repairTarget);
-        if (options == {}) {
-            var options = {
-                visualizePathStyle: {
-                    stroke: global.colourRepair,
-                    opacity: global.pathOpacity
-                },
-                reusePath:this.pos.getRangeTo(target) // Use the range to the object we're after as the reusePath opt
-            };
-        }
         // Make sure target is still valid
         if (target.hits >= this.memory.targetMaxHP) {
             DBG && console.log('[' + this.name + '] Repair target at target XP deleting target from memory');
@@ -794,7 +748,7 @@ Creep.prototype.repairStructures = function (options = {}) {
                 DBG && console.log('[' + this.name + '] Repair Failed#');
             }
         } else {
-            this.moveTo(target,options);
+            this.travelTo(target);
             this.say(global.sayMove);
             return OK;
         }
@@ -802,17 +756,11 @@ Creep.prototype.repairStructures = function (options = {}) {
         // Nothing to repair?
         // No targets.. head back to the room spawn
         var spawn = this.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (i) => i.structureType == STRUCTURE_SPAWN
+            filter: (i) => i.structureType === STRUCTURE_SPAWN
         });
         if (spawn) {
-            if (spawn.recycleCreep(this) == ERR_NOT_IN_RANGE) {
-                this.moveTo(spawn, {
-                    visualizePathStyle: {
-                        stroke: global.colorRepair,
-                        opacity: global.pathOpacity
-                    },
-                    reusePath:3
-                });
+            if (spawn.recycleCreep(this) === ERR_NOT_IN_RANGE) {
+                this.travelTo(spawn);
                 this.say(global.sayWhat);
             }
         }
@@ -823,58 +771,40 @@ Creep.prototype.repairStructures = function (options = {}) {
 Creep.prototype.findDamagedStructures = function() {
     var ts = [];
     for (let distance in [3,5,10,20]) {
-        var ts = this.pos.findInRange(FIND_STRUCTURES, distance, {
-            filter: (i) => (i.structureType != STRUCTURE_RAMPART && i.structureType != STRUCTURE_WALL && i.structureType != STRUCTURE_ROAD) && i.hits < i.hitsMax && i.room == this.room
+        ts = this.pos.findInRange(FIND_STRUCTURES, distance, {
+            filter: (i) => (i.structureType !== STRUCTURE_RAMPART && i.structureType !== STRUCTURE_WALL && i.structureType !== STRUCTURE_ROAD) && i.hits < i.hitsMax && i.room === this.room
         });
         if (ts.length>0) {break;}
     }
     if (ts.length == 0) {
-        var ts = this.room.find(FIND_STRUCTURES, {
-            filter: (i) => (i.structureType != STRUCTURE_RAMPART && i.structureType != STRUCTURE_WALL && i.structureType != STRUCTURE_ROAD) && i.hits < i.hitsMax && i.room == this.room
+        ts = this.room.find(FIND_STRUCTURES, {
+            filter: (i) => (i.structureType !== STRUCTURE_RAMPART && i.structureType !== STRUCTURE_WALL && i.structureType !== STRUCTURE_ROAD) && i.hits < i.hitsMax && i.room === this.room
         });
     }
     if (ts.length > 0) {
-        ts.sort(function(a,b) {
-            let aH = a.hitsMax - a.hits;
-            let bH = b.hitsMax - b.hits;
-            if (aH > bH) {
-                return -1;
-            } else if (bH > aH) {
-                return 1;
-            }
-            return 0;
-        });
-        this.memory.targetMaxHP = ts[0].hitsMax;
-        this.memory.repairTarget = ts[0].id;
+        let target = _.min(ts, (t) => { return t.hitsMax - t.hits; })
+        this.memory.targetMaxHP = target.hitsMax;
+        this.memory.repairTarget = target.id;
     }
 }
 
 Creep.prototype.findDamagedRoads = function() {
     var ts = [];
     for (let distance in [3,5,10,20]) {
-        var ts = this.pos.findInRange(FIND_STRUCTURES, distance, {
-            filter: (i) => i.structureType == STRUCTURE_ROAD && i.hits < i.hitsMax && i.room == this.room
+        ts = this.pos.findInRange(FIND_STRUCTURES, distance, {
+            filter: (i) => i.structureType === STRUCTURE_ROAD && i.hits < i.hitsMax && i.room === this.room
         });
         if (ts.length>0){break;}
     }
     if (ts.length == 0) {
-        var ts = this.room.find(FIND_STRUCTURES, {
-            filter: (i) => i.structureType == STRUCTURE_ROAD && i.hits < i.hitsMax && i.room == this.room
+        ts = this.room.find(FIND_STRUCTURES, {
+            filter: (i) => i.structureType === STRUCTURE_ROAD && i.hits < i.hitsMax && i.room === this.room
         });
     }
     if (ts.length > 0) {
-        ts.sort(function(a,b) {
-            let aH = a.hitsMax - a.hits;
-            let bH = b.hitsMax - b.hits;
-            if (aH > bH) {
-                return -1;
-            } else if (bH > aH) {
-                return 1;
-            }
-            return 0;
-        });
-        this.memory.targetMaxHP = ts[0].hitsMax;
-        this.memory.repairTarget = ts[0].id;
+        let target = _.min(ts, (t) => { return t.hitsMax - t.hits; })
+        this.memory.targetMaxHP = target.hitsMax;
+        this.memory.repairTarget = target.id;
     }
 }
 
@@ -884,24 +814,24 @@ Creep.prototype.findDamagedDefences = function() {
     for (let multiplier in [0.25,0.5,0.75,1]) {
         // Loop through the distances
         for (let distance in [3,5,10,20]) {
-            var ts = this.pos.findInRange(FIND_STRUCTURES, distance, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*multiplier)) ||
-                                (i.structureType == STRUCTURE_WALL && i.hits < (global.wallMax*multiplier))) && i.room == this.room
+            ts = this.pos.findInRange(FIND_STRUCTURES, distance, {
+                filter: (i) => ((i.structureType === STRUCTURE_RAMPART && i.hits < (global.rampartMax*multiplier)) ||
+                                (i.structureType === STRUCTURE_WALL && i.hits < (global.wallMax*multiplier))) && i.room === this.room
             });
             if (ts.length>0){break;}
         }
         if (ts.length == 0) {
-            var ts = this.room.find(FIND_STRUCTURES, {
-                filter: (i) => ((i.structureType == STRUCTURE_RAMPART && i.hits < (global.rampartMax*multiplier)) ||
-                                (i.structureType == STRUCTURE_WALL && i.hits < (global.wallMax*multiplier))) && i.room == this.room
+            ts = this.room.find(FIND_STRUCTURES, {
+                filter: (i) => ((i.structureType === STRUCTURE_RAMPART && i.hits < (global.rampartMax*multiplier)) ||
+                                (i.structureType === STRUCTURE_WALL && i.hits < (global.wallMax*multiplier))) && i.room === this.room
             });
         }
         if (ts.length>0){
             ts.sort(function(a,b) {
-                if (a.structureType == STRUCTURE_WALL)    { var aHitsMax = global.wallMax*multiplier; }
-                if (a.structureType == STRUCTURE_RAMPART) { var aHitsMax = global.rampartMax*multiplier; }
-                if (b.structureType == STRUCTURE_WALL)    { var bHitsMax = global.wallMax*multiplier; }
-                if (b.structureType == STRUCTURE_RAMPART) { var bHitsMax = global.rampartMax*multiplier; }
+                if (a.structureType === STRUCTURE_WALL)    { var aHitsMax = global.wallMax*multiplier; }
+                if (a.structureType === STRUCTURE_RAMPART) { var aHitsMax = global.rampartMax*multiplier; }
+                if (b.structureType === STRUCTURE_WALL)    { var bHitsMax = global.wallMax*multiplier; }
+                if (b.structureType === STRUCTURE_RAMPART) { var bHitsMax = global.rampartMax*multiplier; }
                 let aH = aHitsMax - a.hits;
                 let bH = bHitsMax - b.hits;
                 if (aH > bH) {
@@ -911,10 +841,10 @@ Creep.prototype.findDamagedDefences = function() {
                 }
                 return 0;
             });
-            if (ts[0].structureType == STRUCTURE_WALL) {
+            if (ts[0].structureType === STRUCTURE_WALL) {
                 this.memory.targetMaxHP = global.wallMax*multiplier;
             }
-            if (ts[0].structureType == STRUCTURE_RAMPART) {
+            if (ts[0].structureType === STRUCTURE_RAMPART) {
                 this.memory.targetMaxHP = global.rampartMax*multiplier;
             }
             this.memory.repairTarget = ts[0].id;
@@ -922,6 +852,10 @@ Creep.prototype.findDamagedDefences = function() {
     }
 }
 
+/*
+ * Does a creep have any active BodyParts of type sent?
+ * @param BodyPart Creep.body.part
+ */
 Creep.prototype.canDo = function(BodyPart) {
     // If this creep needs a bodypart it doesn't have to function properly, it needs to go home to repair or self repair
     if (!this.getActiveBodyparts(BodyPart) > 0 || this.memory.repair) {
@@ -936,7 +870,7 @@ Creep.prototype.canDo = function(BodyPart) {
             if (this.memory.roomName) {
                 let pos = new RoomPosition(25,25,this.memory.roomName);
                 // Move the creep
-                this.moveTo(pos, { reusePath:10 });
+                this.travelTo(pos);
             }
         }
         // Are we at max health?
