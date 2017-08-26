@@ -12,7 +12,7 @@ module.exports.roster = {
     6: 2,
     7: 2,
     8: 2,
-}
+};
 /* Costs */
 module.exports.cost = {
     1 : 350,
@@ -23,7 +23,7 @@ module.exports.cost = {
     6 : 550,
     7 : 550,
     8 : 550,
-}
+};
 /* Body Parts at each RCL */
 module.exports.body = {
     1 : [ WORK,WORK,WORK,MOVE ],
@@ -34,41 +34,31 @@ module.exports.body = {
     6 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
     7 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
     8 : [ WORK,WORK,WORK,WORK,WORK,MOVE ],
-}
+};
 
 /**
  * Individual check for a room to check if this creep type should be enabled or not
  */
 module.exports.enabled = function (room, debug = false) {
     var _room = Game.rooms[room];
-    if (_room.controller) {
-        if (_room.memory.minersNeeded && _room.memory.minersNeeded > 0 && _room.controller.level > 1) {
-            // Now count the creeps
-            var list = _.filter(Game.creeps, (creep) => creep.memory.role == this.role && creep.memory.roomName == room && !creep.memory.dying);
-            if (list.length < _room.memory.minersNeeded) {
-                return true;
-            }
+    if (_room.controller && _room.controller.level > 1 && _room.memory.minersNeeded && _room.memory.minersNeeded > 0) {
+        // Now count the creeps
+        var list = _.filter(Game.creeps, (creep) => creep.memory.role === this.role && creep.memory.roomName === room && !creep.memory.dying);
+        if (list.length < _room.memory.minersNeeded) {
+            return true;
         }
     }
-
     return false;
 }
 
 // Set a time for this creep to 'expire' at
 module.exports.expiry = 75;
+
 /* Run method */
 module.exports.run = function (creep, debug = false) {
-    if (creep.spawning) { return; }
-    // Fatigue Check
-    if (creep.fatigue > 0) {
-        if (debug) { console.log('Creep[' + creep.name + '] Fatgiued ' + creep.fatigue); }
-        creep.say('Zzz');
-        return;
-    }
-
+    if (creep.isTired()) { return; }
     // Okay, health check
-    var ticks = creep.ticksToLive;
-    if (ticks <= 150 && !creep.memory.dying) {
+       if (!creep.memory.dying && creep.ticksToLive <= 150) {
         if (debug) { console.log('Creep[' + creep.name + '] Miner Dying Making sure we spawn a new one'); }
         // set dying to true and set the sourceId to null in room memory
         creep.memory.dying = true;
@@ -79,11 +69,11 @@ module.exports.run = function (creep, debug = false) {
     // Alright if it's dying, output the timer
     if (creep.memory.dying) {
         if (debug) { console.log('Creep[' + creep.name + '] Miner Dying, ticking down'); }
-        creep.say(ticks);
-        // If it's less than 10 ticks, drop what we have
-        if (ticks < 10) {
+        creep.say(creep.ticksToLive);
+        // If it's less than 10 creep.ticksToLive, drop what we have
+        if (creep.ticksToLive < 10) {
             if (debug) { console.log('Creep[' + creep.name + '] Miner about to die'); }
-            creep.say('!!' + ticks + '!!');
+            creep.say('!!' + creep.ticksToLive + '!!');
         }
     }
 
@@ -98,7 +88,7 @@ module.exports.run = function (creep, debug = false) {
         // Can't loop through sources to just to an i = loop to get them
         for (var i=0;i<=sources.length-1;i++) {
             var source = sources[i];
-            if (assigned[source.id] == null) {
+            if (assigned[source.id] === null) {
                 sourceId = source.id;
                 creep.room.memory.assignedSources[sourceId] = creep.id;
                 creep.memory.assignedSource = sourceId;
@@ -107,14 +97,14 @@ module.exports.run = function (creep, debug = false) {
             }
         }
         // Do we have a sourceId?
-        if (sourceId == false) {
+        if (sourceId === false) {
             if (debug) { console.log('Creep[' + creep.name + '] Miner cannot find source!!'); }
             // Game.notify(Game.time + ' Miner Creep unable to assign a source');
         }
     }
 
     // Are we full?
-    if (creep.energy == creep.carryCapacity) {
+    if (creep.energy === creep.carryCapacity) {
         if (debug) { console.log('Creep[' + creep.name + '] Miner full, dropping!'); }
         creep.memory.dropping = true;
     } else {
@@ -155,16 +145,10 @@ module.exports.run = function (creep, debug = false) {
         var source = Game.getObjectById(creep.memory.assignedSource);
         if (source) {
             // Okay we have a source, lets trying harvesting it!
-            if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+            if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
                 if (debug) { console.log('Creep[' + creep.name + '] Miner not in range, moving into range'); }
                 // We're not at the thing! Lets go there!
-                creep.moveTo(source, {
-                    visualizePathStyle: {
-                        stroke: global.colourMine,
-                        opacity: global.pathOpacity
-                    },
-                    reusePath:5
-                });
+                creep.travelTo(source);
                 // Moving make a say
                 creep.say('>>')
             } else {
@@ -215,11 +199,11 @@ module.exports.setup = function (debug = false) {
             for (var creepName in Game.creeps) {
                 // Define the creep
                 var creep = Game.creeps[creepName];
-                if (!creep.memory.role == 'miner' || creep.memory.dying) {
+                if (!creep.memory.role === 'miner' || creep.memory.dying) {
                     continue;
                 }
                 // If this creep has the assigned Source, we found it
-                if (creep.memory.assignedSource == sourceId) {
+                if (creep.memory.assignedSource === sourceId) {
                     found = true;
                     creepId = creep.id;
                     break;
