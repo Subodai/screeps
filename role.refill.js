@@ -73,7 +73,7 @@ module.exports.enabled = function (room, debug = false) {
  * Harvester Role
  */
 module.exports.run = function(creep) {
-    if (creep.spawning || creep.fatigue > 0) { return; }
+    if (creep.isTired()) { return; }
     var ticks = creep.ticksToLive;
     if (ticks < 100 && !creep.memory.dying) {
         creep.QueueReplacement();
@@ -135,7 +135,7 @@ module.exports.run = function(creep) {
                     // If we found a lin
                     if (links.length > 0) {
                         creep.room.storage.memory.linkId = links[0].id;
-                        target = links[0].id
+                        target = links[0].id;
                         if (target) {
                             Game.getObjectById(links[0].id).memory.linkType = 'storage';
                         }
