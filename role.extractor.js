@@ -187,7 +187,6 @@ module.exports.run = function (creep, debug = false) {
             switch (result) {
                 case ERR_TIRED:
                     creep.say('q(-_-)p');
-                    return;
                     break;
                 case ERR_NOT_IN_RANGE:
                     if (debug) { console.log('Creep[' + creep.name + '] Extractor not in range, moving into range'); }
@@ -195,7 +194,6 @@ module.exports.run = function (creep, debug = false) {
                     creep.travelTo(extractor);
                     // Moving make a say
                     creep.say('>>');
-                    return;
                     break;
                 case OK:
                     creep.say('d(^-^)b');

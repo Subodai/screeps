@@ -413,7 +413,7 @@ Creep.prototype.deliverEnergy = function() {
     }
 
     if (creep.carry.energy === 0) {
-
+        return ERR_NOT_ENOUGH_RESOURCES;
     }
 }
 
