@@ -5,7 +5,7 @@ global.roles = [
     'harvester',    // Sources and containers always, fill spawns until 4, then only storage
     'upgrader',     // Sources until 4, storage after
     'builder',      // Sources until 4, storage after
-    'janitor',      // Sources until 4, storage after
+    // 'janitor',      // Sources until 4, storage after
     'extractor',
     'mharvester',
     'supergrader',  // Storage always
@@ -30,9 +30,9 @@ global.settings = {
     emptyContainers: false,
 }
 
-global.rampartMax = 10000;
-global.wallMax = 100000;
-global.towerRepair = false;
+global.rampartMax = 100000;
+global.wallMax = 300000;
+global.towerRepair = true;
 
 global.resourceList = [
     // Minerals
