@@ -34,8 +34,12 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
                 filter: (i) => i.structureType === STRUCTURE_LINK && i.memory.linkType === 'receiver' && i.energy > 0 && i.pos.inRangeTo(this,7)
             });
             if (links.length > 0) {
-                DBG && console.log('[' + this.name + '] Found a link, using it');
-                this.memory.energyPickup = links[0].id;
+                // Temporary creep object
+                let thisCreep = this;
+                // get the nearest one
+                let link = _.min(links, function(l) { return thisCreep.pos.getRangeTo(l); });
+                // Set it to memory
+                this.memory.energyPickup = link.id;
             }
         }
     }
