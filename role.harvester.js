@@ -241,7 +241,7 @@ module.exports.run = function(creep) {
                         var target = storage;
                     }
                 } else if (creep.room.memory.prioritise === 'storage') {
-                    if (_.sum(stroage.store) < stroage.storeCapacity) {
+                    if (_.sum(storage.store) < storage.storeCapacity) {
                         var target = storage;
                     } else {
                         var target = terminal;
