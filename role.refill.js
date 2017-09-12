@@ -239,9 +239,63 @@ module.exports.run = function(creep) {
 
         // Fallback for no targets to fill
         if (!target) {
-            // If we don't have a target, put it back into the room storage
-            // this should syphon terminal energy into storage as a backup
-            var target = creep.room.storage;
+            // Okay time for some fancy maths
+            var terminal = creep.room.terminal;
+            var storage = creep.room.storage;
+
+            // If we have both storage and terminal
+            if (storage && terminal) {
+                if (creep.room.memory.prioritise) {
+                    if (creep.room.memory.prioritise === 'terminal') {
+                        if (_.sum(terminal.store) < terminal.storeCapacity) {
+                            var target = terminal;
+                        } else {
+                            var target = storage;
+                        }
+                    } else if (creep.room.memory.prioritise === 'storage') {
+                        if (_.sum(storage.store) < storage.storeCapacity) {
+                            var target = storage;
+                        } else {
+                            var target = terminal;
+                        }
+                    } else {
+                        if (creep.carry.energy > 0) {
+                            var target = storage;
+                        } else {
+                            var target = terminal;
+                        }
+                    }
+                } else {
+                    // Do we have energy?
+                    if (creep.carry.energy > 0) {
+                        // Lets just assume these exist and get the percentage filled
+                        // We need to know the relative filled of each of these, so [filled / (capacity/100)] should give us the percentage?
+                        var terminalP = (_.sum(terminal.store) / (terminal.storeCapacity / 100));
+                        var storageP  = (_.sum(storage.store)  / (storage.storeCapacity  / 100));
+                        // If the fill percentage is less or equal
+                        if (terminalP <= storageP) {
+                            var target = terminal;
+                        }
+                        // if it's the other way around use storage
+                        if (storageP < terminalP) {
+                            var target = storage;
+                        }
+                    } else {
+                        // Prioritise the terminal for non-energy
+                        var target = terminal;
+                        // If we don't have one
+                        if (!target || _.sum(terminal.store) === terminal.storeCapacity ) {
+                            // try storage
+                            var target = storage;
+                        }
+                    }
+                }
+
+            } else if (storage) { // Room storage?
+                var target = storage;
+            } else {
+                // We've no targets... now what?
+            }
         }
 
         // Did we find a target?

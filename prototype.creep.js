@@ -46,14 +46,15 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
 
     // Storage override
     if (!this.memory.energyPickup) {
-        if (useStorage && this.room.terminal) {
+        // Only pull from Terminal if we aren't prioritising it
+        if (useStorage && this.room.terminal && (!this.room.memory.prioritise || this.room.memory.prioritise !== 'terminal')) {
             if (this.room.terminal.store[RESOURCE_ENERGY] > (this.carryCapacity - _.sum(this.carry))/4) {
                 this.memory.energyPickup = this.room.terminal.id;
             }
         }
 
         if (!this.memory.energyPickup) {
-            if (useStorage && this.room.storage) {
+            if (useStorage && this.room.storage (!this.room.memory.prioritise || this.room.memory.prioritise !== 'storage')) {
                 if (this.room.storage.store[RESOURCE_ENERGY] > (this.carryCapacity - _.sum(this.carry))/4) {
                     this.memory.energyPickup = this.room.storage.id;
                 }
