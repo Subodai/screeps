@@ -54,7 +54,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
         }
 
         if (!this.memory.energyPickup) {
-            if (useStorage && this.room.storage (!this.room.memory.prioritise || this.room.memory.prioritise !== 'storage')) {
+            if (useStorage && this.room.storage && (!this.room.memory.prioritise || this.room.memory.prioritise !== 'storage')) {
                 if (this.room.storage.store[RESOURCE_ENERGY] > (this.carryCapacity - _.sum(this.carry))/4) {
                     this.memory.energyPickup = this.room.storage.id;
                 }
