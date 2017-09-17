@@ -186,3 +186,10 @@ global.InitRespawn = function (MeanIt = false) {
         console.log('You clearly did not mean that, ignoring you');
     }
 }
+
+
+global.initDrain = function() {
+    for (let room in Game.rooms) {
+        Game.rooms[room].drain();
+    }
+}

@@ -215,3 +215,12 @@ Room.prototype.hostiles = function() {
     }
     return this.memory.hostiles;
 }
+
+/*
+ * Initiate Storage Drain of a room into GCL
+ */
+Room.prototype.drain = function() {
+    console.log('[ADMIN] Initiating drain in ' . this.name);
+    this.memory.charging = false;
+    this.memory.links = true;
+}
