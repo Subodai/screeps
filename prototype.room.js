@@ -220,7 +220,7 @@ Room.prototype.hostiles = function() {
  * Initiate Storage Drain of a room into GCL
  */
 Room.prototype.drain = function() {
-    console.log('[ADMIN] Initiating drain in ' . this.name);
+    console.log('[ADMIN] Initiating drain in ' + this.name);
     this.memory.charging = false;
     this.memory.links = true;
 }
