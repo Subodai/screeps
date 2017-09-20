@@ -1,7 +1,52 @@
-
 // Change to true to enable debugging
 const DBG = false;
 
+// Give creeps a role
+Object.defineProperty(Creep.prototype, "role", {
+    get: function() {
+        if(!Memory.creeps[this.name].role)
+            Memory.creeps[this.name].role = 'Unknown';
+        return Memory.creeps[this.name].role;
+    },
+    set: function(v) {
+        return _.set(Memory, 'creeps.' + this.name + '.role', v);
+    },
+    configurable: true,
+    enumerable: false
+});
+
+// Give creeps a state
+Object.defineProperty(Creep.prototype, "state", {
+    get: function() {
+        if(!Memory.creeps[this.name].state)
+            Memory.creeps[this.name].state = STATE_SPAWNING;
+        return Memory.creeps[this.name].state;
+    },
+    set: function(v) {
+        return _.set(Memory, 'creeps.' + this.name + '.state', v);
+    },
+    configurable: true,
+    enumerable: false
+});
+
+// SpawnRouting
+Creep.prototype.spawnRoutine = function(role) {
+    // Have we finished spawning?
+    if (!this.spawning) {
+        // Make sure we move to moving state
+        this.state = STATE_MOVING;
+        return;
+    }
+    // Do we need to initialise?
+    if (!this.memory.init) {
+        // Initiate based on the role
+        switch(role) {
+            case 'energyMiner':
+                // Setup Energy Miner
+                break;
+        }
+    }
+}
 /*
  * Is a Creep Spawning or fatigued?
  * In other words can it do anything this tick?
