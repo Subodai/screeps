@@ -1,6 +1,7 @@
 if(Game.cpu.bucket < 500) { throw new Error('Super Low Bucket, Recovery Mode Activated'); }
 // DEFAULT
 // Main imports these should be cached
+require('game.constants'); // Game consts
 require('global.stuff');   // Settings and stuff
 require('global.colours'); // Colours various variables
 require('global.speech');  // Colours various variables
