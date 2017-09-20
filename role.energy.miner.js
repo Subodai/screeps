@@ -35,13 +35,16 @@ module.exports.enabled = function (room, debug=false) {
 // Run it
 module.exports.run = function (creep, debug=false) {
     // If Creep has no state, set to spawning
-    if (!creep.memory.state) { creep.memory.state = STATE_SPAWNING; }
+    if (!creep.state) { creep.state = STATE_SPAWNING; }
     // Switch based on state
-    switch(creep.memory.state) {
+    switch(creep.state) {
         // Spawning
         case STATE_SPAWNING:
             // Run the spawnRoutine
             creep.spawnRoutine(this.role);
-            break;
+        case STATE_MOVING:
+            // Move to target
+        case STATE_HARVESTING:
+            // Harvest target source
     }
 }
