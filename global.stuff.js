@@ -202,9 +202,7 @@ global.haulerSetup = function () {
         let remoteRooms = [];
         for (let room in Game.rooms) {
             let _room = Game.rooms[room];
-            console.log(JSON.stringify(_room));
             if (_room != null) {
-                console.log(JSON.stringify(_room));
                 if (!_room.controller || (_room.controller && !_room.controller.my)) {
                     // If there are no hostiles, send the haulers!
                     if (_room.hostiles() <= 0) {
@@ -216,7 +214,22 @@ global.haulerSetup = function () {
         let remoteRoom = _.max(remoteRooms, function(c) { return Game.rooms[c].collectableEnergy(); });
         Memory.remoteRoom = remoteRoom;
     } else {
-        console.log(Memory.remoteRoom + ':' + target.collectableEnergy());
+        console.log('[MEMORY] Hauler Target Set to: ' + Memory.remoteRoom + ':' + target.collectableEnergy());
+    }
+    // Now reset haulers with this remoteRoom
+    // TODO Move this to seperate function
+    // TODO Make Hauler's perform this check?
+    let creeps = _.filter(Game.creeps, c => c.memory.role === 'hauler');
+    for(let i in creeps) {
+        let c = creeps[i];
+        if (_.sum(c.carry) < c.carryCapacity && c.carryCapacity > 0) {
+            if (c.memory.remoteRoom !== Memory.remoteRoom) {
+                console.log('[MEMORY] Clearing hauler [' + c.name + '] target because room empty');
+                c.memory.remoteRoom = Memory.remoteRoom;
+                delete c.memory.arrived;
+                delete c.memory.energyPickup;
+            }
+        }
     }
     // Get a list of our rooms
     let myRooms = [];
