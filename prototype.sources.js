@@ -22,6 +22,20 @@ Object.defineProperty(Source.prototype, "memory", {
     enumerable: false
 });
 
+// Add an miner
+Object.defineProperty(Source.prototype, "miner", {
+    get: function() {
+        if (!Memory.rooms[this.room.name].sources[this.id].miner)
+            Memory.rooms[this.room.name].sources[this.id].miner = null;
+        return Memory.rooms[this.room.name].sources[this.id].miner;
+    },
+    set: function(v) {
+        return _.set(Memory, 'sources.' + this.room.name + '.sources.' + this.id + '.miner', v);
+    },
+    configurable: true,
+    enumerable: false
+});
+
 // Call this periodically to garbage collect source memory
 // (I find once every 10k ticks is fine)
 global.GCSourceMemory = function() {
