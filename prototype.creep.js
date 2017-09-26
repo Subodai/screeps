@@ -43,10 +43,42 @@ Creep.prototype.spawnRoutine = function(role) {
         switch(role) {
             case 'energyMiner':
                 // Setup Energy Miner
+                this.initMinerSource();
                 break;
         }
     }
 }
+
+// Initiate a miner in a room
+Creep.prototype.initMinerSource = function() {
+    // Do we have an assigned source?
+    if (!this.memory.assignedSource) {
+        // TODO: Run room miner setup
+        // Assume we have run room setup at this point
+        DBG && console.log('Creep [' + this.name + '] Miner without source, assigning now');
+        var sourceId = false;
+        let sources  = this.room.find(FIND_SOURCES);
+        // Loop through the sources
+        for (let i in sources) {
+            let source = sources[i];
+            if (source.miner === null) {
+                // This is the source we want
+                sourceId = source.id;
+                // Set the source's miner to this creep's id
+                source.miner = creep.id;
+                // Update the creeps memory
+                this.memory.assignedSource = sourceId;
+                // Make sure we stop NOW
+                break;
+            }
+        }
+        // Do we have a sourceId
+        if (sourceId === false) {
+            DBG && console.log('Creep [' + this.name + '] Miner cannot find source!!');
+        }
+    }
+}
+
 /*
  * Is a Creep Spawning or fatigued?
  * In other words can it do anything this tick?
