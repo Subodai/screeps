@@ -42,9 +42,13 @@ module.exports.run = function (creep, debug=false) {
         case STATE_SPAWNING:
             // Run the spawnRoutine
             creep.spawnRoutine(this.role);
+        // Moving
         case STATE_MOVING:
             // Move to target
+            creep.moveRoutine(STATE_MINING_ENERGY);
+        // Mining energy
         case STATE_MINING_ENERGY:
             // Mining a source
+            creep.energyMiningRoutine();
     }
 }

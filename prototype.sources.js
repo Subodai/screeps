@@ -40,8 +40,8 @@ Object.defineProperty(Source.prototype, "miner", {
 // (I find once every 10k ticks is fine)
 global.GCSourceMemory = function() {
    for (var id in Memory.sources )
-            if(!Game.sources[this.room.name][id]) {
-                console.log("Garbage collecting source " + id + ', ' + JSON.stringify(Memory.sources[id]));
-                delete Memory.sources[id];
-            }
+        if(!Game.sources[this.room.name][id]) {
+            console.log("Garbage collecting source " + id + ', ' + JSON.stringify(Memory.sources[id]));
+            delete Memory.sources[id];
+        }
 }
