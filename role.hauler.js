@@ -1,23 +1,19 @@
 var DBG = false;
-
 // Remote Hauler Drone
 module.exports.role = 'hauler';
-
 // Core Type
 module.exports.sType = 'remote';
-
 // Roster (max number we want per room)
 module.exports.roster = {
-    1: 1,
-    2: 1,
-    3: 1,
+    1: 0,
+    2: 0,
+    3: 0,
     4: 1,
     5: 1,
-    6: 1,
-    7: 1,
+    6: 2,
+    7: 2,
     8: 1,
 };
-
 // Costs (human readability mostly, likely to nuke this soon)
 module.exports.cost = {
     1 : 300,
@@ -212,7 +208,7 @@ module.exports.run = function(creep, debug = false) {
                             break;
                         } else {
                             creep.say(global.sayDrop);
-                            delete creep.memory.roomName;
+                            delete creep.memory.roomName; // Temporarily make haulers just deliver to their own room Curious as to what it'l do
                         }
                     }
                 }
@@ -228,9 +224,7 @@ module.exports.run = function(creep, debug = false) {
             }
         }
     }
-
     if (moved) { creep.say(global.sayMove); }
-
     // If we moved and we have energy we should run a repair/build/seed on any road we're standing on
     if (moved && creep.carry.energy > 0) {
         // Turn off roadCheck for haulers, they should be optimised enough without this I think (might be worth checking how swamps affect this)

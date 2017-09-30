@@ -77,10 +77,13 @@ module.exports.enabled = function (room, debug = false) {
     // Define the room we're in
     var _room = Game.rooms[room];
     // Search for all targets that are walls or ramparts below their global max, or anything else with less hits than max
+    // const targets = _room.find(FIND_STRUCTURES, {
+    //     filter: (i) => (i.structureType === STRUCTURE_RAMPART && i.hits <= global.rampartMax) ||
+    //                   (i.structureType === STRUCTURE_WALL && i.hits <= global.wallMax) ||
+    //                   ((i.structureType !== STRUCTURE_WALL && i.structureType != STRUCTURE_RAMPART) && i.hits < i.hitsMax)
+    // });
     const targets = _room.find(FIND_STRUCTURES, {
-        filter: (i) => (i.structureType === STRUCTURE_RAMPART && i.hits <= global.rampartMax) ||
-                       (i.structureType === STRUCTURE_WALL && i.hits <= global.wallMax) ||
-                       ((i.structureType !== STRUCTURE_WALL && i.structureType != STRUCTURE_RAMPART) && i.hits < i.hitsMax)
+        filter: (i) => (i.structureType === STRUCTURE_ROAD && i.hits < i.hitsMax)
     });
     // Do we have any?
     if (targets.length > 0) {
@@ -156,8 +159,8 @@ module.exports.run = function(creep) {
     // Are we sapping?
     if(creep.memory.sapping) {
         delete creep.memory.energyPickup;
-        let result = creep.repairStructures();
-        switch (creep.repairStructures()) {
+        let result = creep.repairStructures(true,false,false);
+        switch (creep.repairStructures(true,false,false)) {
             case ERR_FULL: // We have completed this fill
                 delete creep.memory.repairTarget;
                 delete creep.memory.targetmaxHP;

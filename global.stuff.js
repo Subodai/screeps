@@ -5,7 +5,7 @@ global.roles = [
     'harvester',    // Sources and containers always, fill spawns until 4, then only storage
     'upgrader',     // Sources until 4, storage after
     'builder',      // Sources until 4, storage after
-    // 'janitor',      // Sources until 4, storage after
+    'janitor',      // Sources until 4, storage after
     'extractor',
     'mharvester',
     'supergrader',  // Storage always
@@ -15,24 +15,11 @@ global.roles = [
     'hauler',
 ];
 
-global.settings = {
-    upgrader  : true,
-    miner     : true,
-    extractor : false,
-    harvester : true,
-    builder   : true,
-    mover     : false,
-    scout     : false,
-    reserve   : false,
-    guard     : true,
-    supergrader : true,
-
-    emptyContainers: false,
-}
-
 global.rampartMax = 100000;
-global.wallMax = 300000;
+global.wallMax = 600000;
 global.towerRepair = true;
+global.linkLimit = 800000;
+global.chargeLimit = 800000;
 
 global.resourceList = [
     // Minerals
@@ -187,9 +174,6 @@ global.InitRespawn = function (MeanIt = false) {
     }
 }
 
-/*
- * Setup Hauler Setup
- */
 global.haulerSetup = function () {
     console.log('Running Hauler Target setup');
     var Before = Game.cpu.getUsed();
@@ -231,6 +215,20 @@ global.haulerSetup = function () {
             }
         }
     }
+    // Now reset haulers with this remoteRoom
+    let creeps = _.filter(Game.creeps, c => c.memory.role === 'hauler');
+    for(let i in creeps) {
+        let c = creeps[i];
+        if (_.sum(c.carry) < c.carryCapacity && c.carryCapacity > 0) {
+            if (c.memory.remoteRoom !== Memory.remoteRoom) {
+                console.log('[MEMORY] Clearing hauler [' + c.name + '] target because room empty');
+                c.memory.remoteRoom = Memory.remoteRoom;
+                delete c.memory.arrived;
+                delete c.memory.energyPickup;
+            }
+        }
+    }
+
     // Get a list of our rooms
     let myRooms = [];
     for (let room in Game.rooms) {
@@ -251,9 +249,6 @@ global.haulerSetup = function () {
     console.log('Hauler Target setup used ' + After + ' CPU');
 }
 
-/*
- * Initiate all room draining!
- */
 global.initDrain = function() {
     for (let room in Game.rooms) {
         Game.rooms[room].drain();

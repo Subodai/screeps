@@ -38,6 +38,18 @@ module.exports.run = function (debug = false) {
                     if (sourceLinks.length > 0) {
                         let fromLink = sourceLinks[0];
                         fromLink.transferEnergy(link,fromLink.energy);
+                        // reset nearby upgraders and supergraders pickup target so they don't wander off forever
+                        // Get our creeps
+                        let workers = _room.find(FIND_CREEPS, {
+                            filter: (c) => (c.memory.role === 'upgrader' || c.memory.role === 'supergrader') && c.memory.energyPickup != link.id
+                        });
+                        if (workers.length > 0) {
+                            // loop through them
+                            for (let i in workers) {
+                                // delete their energyPickup target
+                                delete workers[i].memory.energyPickup;
+                            }
+                        }
                     }
                     const cost = Game.cpu.getUsed() - a;
                     this.colour(link,cost);

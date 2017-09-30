@@ -79,7 +79,14 @@ module.exports.enabled = function (room, debug = false) {
     // Find the mineral site in the room
     var mineral = theRoom.find(FIND_MINERALS);
     // does it have minerals?
-    if (theRoom.controller && theRoom.controller.level >= 6 && mineral[0].mineralAmount > 0) { return true; }
+    if (theRoom.controller && theRoom.controller.level >= 6 && mineral[0].mineralAmount > 0) {
+        let extractors = theRoom.find(FIND_STRUCTURES, {
+            filter: (s) => {
+                return (s.structureType === STRUCTURE_EXTRACTOR)
+            }
+        });
+        if (extractors.length > 0) { return true; }
+    }
     // This should be disabled
     return false;
 }
