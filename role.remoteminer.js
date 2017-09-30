@@ -1,19 +1,17 @@
 // Remote Miner
 module.exports.role = 'remoteminer';
-
 // Core Type
 module.exports.sType = 'specialist';
-
 // Creep Count per RCL
 module.exports.roster = {
     1: 0,
     2: 0,
     3: 2,
     4: 2,
-    5: 2,
-    6: 2,
-    7: 2,
-    8: 2,
+    5: 3,
+    6: 3,
+    7: 3,
+    8: 3,
 };
 
 // Human readable costs (not used)

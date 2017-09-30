@@ -59,13 +59,13 @@ module.exports.run = function (tower, debug = false) {
                 filter: (i) => i.structureType === STRUCTURE_CONTAINER && i.hits < i.hitsMax
             });
 
-            // Did we get one?
-            if (!target) {
-                // Nope okay, lets try a road
-                target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (i) => i.structureType === STRUCTURE_ROAD && i.hits < i.hitsMax
-                });
-            }
+            // Did we get one? // Lets not do roads just now
+            // if (!target) {
+            //     // Nope okay, lets try a road
+            //     target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+            //         filter: (i) => i.structureType === STRUCTURE_ROAD && i.hits < i.hitsMax
+            //     });
+            // }
 
             // So did we find a target?
             if (target) {
@@ -76,26 +76,26 @@ module.exports.run = function (tower, debug = false) {
 
         // Alright, no hostiles.. lets see what energy we have
         // If we're idling with 800 energy, lets make sure all ramparts have been repaired at least once
-        if (tower.energy >= 800) {
-            var rampart = false;
+        if (tower.energy >= 600) {
+            var targets = [];
             // Get the closest rampart with only 300 hit left
-            rampart = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+            targets = tower.room.find(FIND_STRUCTURES, {
                 filter: (i) => (i.structureType === STRUCTURE_RAMPART || i.structureType == STRUCTURE_WALL) && i.hits <= 300
             });
 
             // No single hit ramparts, okay, any with less than global.rampartMax/4 hits?
-            if (!rampart) {
+            if (targets.length === 0) {
                 // First lets find the closest rampart
-                rampart = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (i) => (i.structureType === STRUCTURE_RAMPART || i.structureType == STRUCTURE_WALL) && i.hits < (global.rampartMax/4)
+                targets = tower.room.find(FIND_STRUCTURES, {
+                    filter: (i) => (i.structureType === STRUCTURE_RAMPART && i.hits < global.rampartMax/4) || (i.structureType == STRUCTURE_WALL && i.hits < global.wallMax/4)
                 });
             }
 
             // Still none? okay find any with less than global.rampartMax
-            if (!rampart) {
+            if (targets.length === 0) {
                 // First lets find the closest rampart
-                rampart = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (i) => (i.structureType === STRUCTURE_RAMPART || i.structureType == STRUCTURE_WALL) && i.hits < global.rampartMax
+                targets = tower.room.find(FIND_STRUCTURES, {
+                    filter: (i) => (i.structureType === STRUCTURE_RAMPART && i.hits < global.rampartMax) || (i.structureType == STRUCTURE_WALL && i.hits < global.wallMax)
                 });
             }
 
@@ -108,9 +108,10 @@ module.exports.run = function (tower, debug = false) {
             // }
 
             // Did we find one?
-            if (rampart) {
+            if (targets) {
+                let target = _.min(targets, (t) => { return t.hits; });
                 // Repair it
-                tower.repair(rampart);
+                tower.repair(target);
                 // STAHP
                 return;
             }
@@ -120,7 +121,7 @@ module.exports.run = function (tower, debug = false) {
             var targets = {};
             // Nope okay, lets try a road
             targets = tower.room.find(FIND_STRUCTURES, {
-                filter: (i) => i.structureType === STRUCTURE_ROAD && i.hits < i.hitsMax/2
+                filter: (i) => i.structureType === STRUCTURE_ROAD && i.hits < i.hitsMax/4
             });
 
             // So did we find a target?

@@ -37,35 +37,30 @@ module.exports.body = {
         ],
     5 : [
         WORK,WORK,WORK,WORK,WORK,
-        WORK,WORK,WORK,WORK,WORK,   // 1000
-        CARRY,CARRY,CARRY,CARRY,    //  200
-        CARRY,CARRY,CARRY,CARRY,    //  200
-        MOVE,MOVE,MOVE,MOVE,        //  200
-        MOVE,MOVE,MOVE,MOVE         //  200
+        WORK,WORK,WORK,WORK,WORK,
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
     6 : [
         WORK,WORK,WORK,WORK,WORK,
-        WORK,WORK,WORK,WORK,WORK,   // 1000
-        CARRY,CARRY,CARRY,CARRY,    //  200
-        CARRY,CARRY,CARRY,CARRY,    //  200
-        MOVE,MOVE,MOVE,MOVE,        //  200
-        MOVE,MOVE,MOVE,MOVE         //  200
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
     7 : [
         WORK,WORK,WORK,WORK,WORK,
-        WORK,WORK,WORK,WORK,WORK,   // 1000
-        CARRY,CARRY,CARRY,CARRY,    //  200
-        CARRY,CARRY,CARRY,CARRY,    //  200
-        MOVE,MOVE,MOVE,MOVE,        //  200
-        MOVE,MOVE,MOVE,MOVE         //  200
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
     8 : [
         WORK,WORK,WORK,WORK,WORK,
-        WORK,WORK,WORK,WORK,WORK,   // 1000
-        CARRY,CARRY,CARRY,CARRY,    //  200
-        CARRY,CARRY,CARRY,CARRY,    //  200
-        MOVE,MOVE,MOVE,MOVE,        //  200
-        MOVE,MOVE,MOVE,MOVE         //  200
+        WORK,WORK,WORK,WORK,WORK,
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
 };
 

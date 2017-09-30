@@ -1,21 +1,30 @@
 /* Upgrader drone */
 module.exports.role = 'upgrader';
-
 /* sType */
 module.exports.sType = 'normal';
-
 /* Spawn Roster */
 module.exports.roster = {
     1: 4,
-    2: 4,
-    3: 4,
-    4: 3,
+    2: 8,
+    3: 8,
+    4: 6,
     5: 3,
-    6: 3,
-    7: 3,
-    8: 3,
+    6: 2,
+    7: 2,
+    8: 1,
 };
 
+/* Spawn Roster */
+module.exports.rosterlinks = {
+    1: 4,
+    2: 8,
+    3: 8,
+    4: 6,
+    5: 3,
+    6: 6,
+    7: 6,
+    8: 6,
+};
 /* Costs */
 module.exports.cost = {
     1 : 300,

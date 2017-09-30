@@ -31,7 +31,7 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
             DBG && console.log('[' + this.name + '] Links available');
             // Lets find the nearest link with energy that has the right flag
             var links = this.room.find(FIND_STRUCTURES, {
-                filter: (i) => i.structureType === STRUCTURE_LINK && i.memory.linkType === 'receiver' && i.energy > 0 && i.pos.inRangeTo(this,7)
+                filter: (i) => i.structureType === STRUCTURE_LINK && i.memory.linkType === 'receiver' && i.energy > 0
             });
             if (links.length > 0) {
                 // Temporary creep object
@@ -52,7 +52,6 @@ Creep.prototype.getNearbyEnergy = function(useStorage = false, emergency = false
                 this.memory.energyPickup = this.room.terminal.id;
             }
         }
-
         if (!this.memory.energyPickup) {
             if (useStorage && this.room.storage && (!this.room.memory.prioritise || this.room.memory.prioritise !== 'storage')) {
                 if (this.room.storage.store[RESOURCE_ENERGY] > (this.carryCapacity - _.sum(this.carry))/4) {
@@ -418,7 +417,7 @@ Creep.prototype.deliverEnergy = function() {
     }
 
     if (creep.carry.energy === 0) {
-        return ERR_NOT_ENOUGH_RESOURCES;
+
     }
 }
 
@@ -658,7 +657,7 @@ Creep.prototype.containerCheck = function() {
     }
 }
 
-Creep.prototype.repairStructures = function (options = {}) {
+Creep.prototype.repairStructures = function (roads = false, defences = false, structures = false) {
     // First are we empty?
     if (this.carry.energy === 0) {
         DBG && console.log('[' + this.name + '] Empty Cannot Repair Structures');
@@ -684,7 +683,7 @@ Creep.prototype.repairStructures = function (options = {}) {
 
     }
     // Do we have a repairTarget in memory?
-    if (!this.memory.repairTarget) {
+    if (!this.memory.repairTarget && defences) {
         DBG && console.log('[' + this.name + '] Has no repair target, looking for 1 hp ramparts and walls');
         // Check for walls or ramparts with 1 hit first
         var ts = this.room.find(FIND_STRUCTURES, {
@@ -702,7 +701,7 @@ Creep.prototype.repairStructures = function (options = {}) {
     }
 
     // Next juice up walls and ramparts to 600
-    if (!this.memory.repairTarget) {
+    if (!this.memory.repairTarget && defences) {
         DBG && console.log('[' + this.name + '] Has no repair target, looking for < 600hp ramparts and walls');
         if (ts.length == 0) {
             var ts = this.room.find(FIND_STRUCTURES, {
@@ -719,19 +718,19 @@ Creep.prototype.repairStructures = function (options = {}) {
     }
 
     // Next find damaged structures that aren't walls, ramparts or roads
-    if (!this.memory.repairTarget) {
+    if (!this.memory.repairTarget && structures) {
         DBG && console.log('[' + this.name + '] Has no repair target, looking for damaged structures');
         this.findDamagedStructures();
     }
 
     // Next find Damaged Roads
-    if (!this.memory.repairTarget) {
+    if (!this.memory.repairTarget && roads) {
         DBG && console.log('[' + this.name + '] Has no repair target, looking for damaged roads');
         this.findDamagedRoads();
     }
 
     // Next find Damaged defence items (wall, rampart)
-    if (!this.memory.repairTarget) {
+    if (!this.memory.repairTarget && defences) {
         DBG && console.log('[' + this.name + '] Has no repair target, looking for damaged defences');
         this.findDamagedDefences();
     }

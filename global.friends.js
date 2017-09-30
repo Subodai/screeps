@@ -9,7 +9,7 @@ global.friends = [
 'ncsupheo', 'NobodysNightmare', 'omnomwombat', 'Parthon', 'Plemenit',
 'poppahorse', 'Rengare', 'Subodai', 'Tantalas', 'Tijnoz',
 'Totalschaden', 'Vlahn', 'W4rl0ck', 'weaves', 'Xaq',
-'Yilmas', 'Zeekner', 'Zyzyzyryxy', 'samogot', 'Riza',
+'Yilmas', 'Zeekner', 'Zyzyzyryxy', 'samogot',
 ];
 
 global.prime = [

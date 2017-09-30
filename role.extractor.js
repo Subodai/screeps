@@ -85,7 +85,14 @@ module.exports.enabled = function (room, debug = false) {
     // Find the mineral site in the room
     var mineral = theRoom.find(FIND_MINERALS);
     // does it have minerals?
-    if (theRoom.controller && theRoom.controller.level >= 6 && mineral[0].mineralAmount > 0) { return true; }
+    if (theRoom.controller && theRoom.controller.level >= 6 && mineral[0].mineralAmount > 0) {
+        let extractors = theRoom.find(FIND_STRUCTURES, {
+            filter: (s) => {
+                return (s.structureType === STRUCTURE_EXTRACTOR)
+            }
+        });
+        if (extractors.length > 0) { return true; }
+    }
     // This should be disabled
     return false;
 }
@@ -187,6 +194,7 @@ module.exports.run = function (creep, debug = false) {
             switch (result) {
                 case ERR_TIRED:
                     creep.say('q(-_-)p');
+                    return;
                     break;
                 case ERR_NOT_IN_RANGE:
                     if (debug) { console.log('Creep[' + creep.name + '] Extractor not in range, moving into range'); }
@@ -194,6 +202,7 @@ module.exports.run = function (creep, debug = false) {
                     creep.travelTo(extractor);
                     // Moving make a say
                     creep.say('>>');
+                    return;
                     break;
                 case OK:
                     creep.say('d(^-^)b');

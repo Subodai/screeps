@@ -37,15 +37,15 @@ module.exports.run = function(debug = false) {
                 theRoom.memory.links = false;
             } else {
                 // Turn off room charging if we're above 800k
-                if (storage.store[RESOURCE_ENERGY] >= 800000 && theRoom.memory.charging === true) {
+                if (storage.store[RESOURCE_ENERGY] >= global.chargeLimit && theRoom.memory.charging === true) {
                     theRoom.memory.charging = false;
                 }
                 // If the room is below 10000 turn charging back on
-                if (storage.store[RESOURCE_ENERGY] <= 10000 && theRoom.memory.charging === false) {
+                if (storage.store[RESOURCE_ENERGY] <= 100000 && theRoom.memory.charging === false) {
                     theRoom.memory.charging = true;
                 }
                 // Turn on links when above 400k and they're off
-                if (storage.store[RESOURCE_ENERGY] >= 400000 && theRoom.memory.links === false) {
+                if (storage.store[RESOURCE_ENERGY] >= global.linkLimit && theRoom.memory.links === false) {
                     theRoom.memory.links = true;
                 }
                 // Turn off links when below 100k and they're on
@@ -53,7 +53,6 @@ module.exports.run = function(debug = false) {
                     theRoom.memory.links = false;
                 }
             }
-
         } else {
             theRoom.init();
             // Handle remote room
@@ -134,7 +133,7 @@ module.exports.setupRoomRoles = function (debug = false) {
         // Get the room object, because we'll need it later
         var _room = Game.rooms[room];
         // Make sure we initialise the room memory
-        if (!_room.memory.roles) { console.log('creating room role object'); _room.memory.roles = {}; }
+        if (!_room.memory.roles) { console.log('[COUNTER] Creating room role object [' + room + ']'); _room.memory.roles = {}; }
         // Loop through the roles we have
         for (var i in global.roles) {
             // Get the role name

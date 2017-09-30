@@ -152,6 +152,9 @@ module.exports.run = function (creep, debug = false) {
 
     // Have we arrived?
     if (creep.memory.arrived) {
+        if (creep.memory.reserveRoom != creep.room.name) {
+            delete creep.memory.arrived;
+        }
         // Get the controller of the room we're meant to be in
         if (creep.room.controller) {
             // Okay, attempt to run reserve on the controller
