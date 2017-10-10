@@ -40,8 +40,8 @@ module.exports.run = function (debug = false) {
                         fromLink.transferEnergy(link,fromLink.energy);
                         // reset nearby upgraders and supergraders pickup target so they don't wander off forever
                         // Get our creeps
-                        let workers = _room.find(FIND_CREEPS, {
-                            filter: (c) => (c.memory.role === 'upgrader' || c.memory.role === 'supergrader') && c.memory.energyPickup != link.id
+                        let workers = _room.find(FIND_MY_CREEPS, {
+                            filter: (c) => c.memory && (c.memory.role === 'upgrader' || c.memory.role === 'supergrader') && (!(Game.getObjectById(c.memory.energyPickup) instanceof StructureLink))
                         });
                         if (workers.length > 0) {
                             // loop through them
@@ -59,8 +59,28 @@ module.exports.run = function (debug = false) {
     }
 }
 module.exports.colour = function (tower, cost) {
-    tower.room.visual.text(tower.energy + ' : ' + cost.toFixed(2), tower.pos, {
-        color:'#ffffff',
+
+    let percent = (tower.energy / tower.energyCapacity)*100;
+
+    let r = Math.round(255 - ((255/100)*(percent/100)*100));
+        let g = Math.round((255/100)*(percent/100)*100);
+        let b = 0;
+        let _color = "#" + hex(r) + hex(g) + hex(b);
+        // _room.visual.circle(item.pos, {
+        //     fill: _color,
+        //     radius:0.35,
+        //     opacity:0.05,
+        //     stroke:_color
+        // }).text(percent.toFixed(2) + "%", item.pos, {
+        //     color:_color,
+        //     font:0.5,
+        //     align:"left",
+        //     stroke:"rgba(0,0,0,0.5)",
+        //     opacity:0.6,
+        // });
+
+    tower.room.visual.text(tower.energy, tower.pos, {
+        color:_color,
         font:0.5,
         align:'center',
         stroke:'rgba(0,0,0,0.5)',

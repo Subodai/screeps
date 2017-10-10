@@ -33,6 +33,7 @@ var screepsplus = require('screepsplus');
 const q = require('prototype.queue');
 global.Queue = new q.Queue();
 
+global.feedEnabled = false;
 // const profiler = require('screeps-profiler');
 // profiler.enable();
 /**
@@ -44,6 +45,11 @@ module.exports.loop = function () {
     // Only need these once every 10 ticks
     if (Game.time % 10 == 0) {
         cleaner.run(debug);
+        if (feedEnabled) {
+            counter.runRoomFeed();
+        } else {
+            counter.clearRoomFeed();
+        }
     }
     // Run the source setups once every 50 ticks
     if (Game.time % 50 == 0) {

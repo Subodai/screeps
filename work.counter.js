@@ -149,3 +149,29 @@ module.exports.setupRoomRoles = function (debug = false) {
         }
     }
 }
+
+
+module.exports.runRoomFeed = function () {
+    console.log('[EMPIRE] Feeding:' + setupFeedRoom());
+    let terminal = Game.rooms[Memory.feedRoom].terminal;
+    if (_.sum(terminal.store) >= terminal.storeCapacity) {
+        console.log('[EMPIRE] Feed Room Terminal Full');
+        return;
+    }
+    for (let room in Game.rooms) {
+        if (Game.rooms[room].terminal && Game.rooms[room].memory.charging === true) {
+            Game.rooms[room].feedEnergy();
+        }
+    }
+}
+
+module.exports.clearRoomFeed = function () {
+    if (Memory.feedRoom) {
+        delete Memory.feedRoom;
+        for (let room in Game.rooms) {
+            if (Game.rooms[room].terminal) {
+                Game.rooms[room].memory.prioritise = 'none';
+            }
+        }
+    }
+}
