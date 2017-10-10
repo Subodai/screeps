@@ -49,34 +49,34 @@ module.exports.loop = function () {
     if (Game.time % 50 == 0) {
         var miner = require('role.miner');
         var extractor = require('role.extractor');
-        if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) { console.log('Stopping At 45 To relax CPU use'); console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}'); return; }
+        pause(52);
         miner.setup();
-        if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) { console.log('Stopping At 47 To relax CPU use'); console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}'); return; }
+        pause(54);
         extractor.setup();
     }
     // Only need these once every 5 ticks
     if (Game.time % 5 == 0) {
         // Setup rooms before we run the spawner
-        if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) { console.log('Stopping At 55 To relax CPU use'); console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}'); return; }
+        pause(60);
         counter.setupRoomRoles(debug);
         console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '}' + counter.run(debug) + ' {' + Game.cpu.getUsed().toFixed(3) + '}');
         let Before = Game.cpu.getUsed();
-        if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) { console.log('Stopping At 59 To relax CPU use'); console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}'); return; }
+        pause(64);
         if (global.Queue.process()) { console.log('Queue spawned a creep'); } else { console.log('Running old spawner'); spawner.run(debug); }
         let After = Game.cpu.getUsed() - Before;
         console.log('Spawners used:' + After + ' CPU');
-        if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) { console.log('Stopping At 62 To relax CPU use'); console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}'); return; }
+        pause(68);
         global.haulerSetup();
-        if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) { console.log('Stopping At 64 To relax CPU use'); console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}'); return; }
+        pause(70);
     }
-    if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) { console.log('Stopping At 66 To relax CPU use'); console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}'); return; }
+    pause(72);
     movement.run(debug);
-    if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) { console.log('Stopping At 68 To relax CPU use'); console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}'); return; }
+    pause(74);
     towers.run(debug);
-    if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) { console.log('Stopping At 70 To relax CPU use'); console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}'); return; }
+    pause(76);
     screepsplus.collect_stats();
     Memory.stats.cpu.used = Game.cpu.getUsed();
-    if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) { console.log('Stopping At 73 To relax CPU use'); console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}'); return; }
+    pause(79);
     console.log(Game.time + ':CPU:{' + Game.cpu.tickLimit + '} ' + '{' +  Game.cpu.bucket + '} {' + Game.cpu.getUsed().toFixed(3) + '}');
 //}); // End of profiler wrapper
 }

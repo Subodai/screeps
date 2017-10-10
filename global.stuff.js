@@ -255,3 +255,11 @@ global.initDrain = function() {
     }
     return 'Drain Initiated';
 }
+
+global.pause = function(lineNo = 0) {
+    if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) {
+        console.log('Stopping At ' + lineNo + ' To relax CPU use');
+        console.log(Game.time + ':CPU:[' + Game.cpu.tickLimit + '] ' + '[' +  Game.cpu.bucket + '] [' + Game.cpu.getUsed().toFixed(3) + ']');
+        return;
+    }
+}
