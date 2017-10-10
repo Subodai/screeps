@@ -77,7 +77,7 @@ Room.prototype.processBuildFlags = function () {
         }
     }
 
-    return OK;
+    return this;
 }
 
 /**
@@ -88,6 +88,7 @@ Room.prototype.clearSites = function () {
     for (let s in sites) {
         sites[s].remove();
     }
+    return this;
 }
 
 Room.prototype.clearFlags = function () {
@@ -95,6 +96,7 @@ Room.prototype.clearFlags = function () {
     for (let i in flags) {
         flags[i].remove();
     }
+    return this;
 }
 
 Room.prototype.clearAllFlags = function () {
@@ -102,6 +104,7 @@ Room.prototype.clearAllFlags = function () {
     for (let i in flags) {
         flags[i].remove();
     }
+    return this;
 }
 
 /**
@@ -114,6 +117,7 @@ Room.prototype.clearWalls = function () {
     for (let w in walls) {
         walls[w].destroy();
     }
+    return this;
 }
 
 
@@ -131,6 +135,7 @@ Room.prototype.disableNotifications = function () {
     }
     console.log('[' + this.name + '] Damage Notifications Disabled');
     this.memory.notifications = false;
+    return this;
 }
 
 /**
@@ -143,6 +148,7 @@ Room.prototype.enableNotifications = function () {
     }
     console.log('[' + this.name + '] Damage Notifications Enabled');
     this.memory.notifications = true;
+    return this;
 }
 
 /*
@@ -154,6 +160,7 @@ Room.prototype.toggleWar = function () {
     } else {
         this.memory.war = false;
     }
+    return this;
 }
 
 /*
@@ -176,6 +183,7 @@ Room.prototype.init = function () {
         if (!this.memory.assignedExtractors) { this.memory.assignedExtractors = {}; }
         return 'Successfully initiated room';
     }
+    return this;
 }
 
 /*
@@ -223,4 +231,5 @@ Room.prototype.drain = function() {
     console.log('[ADMIN] Initiating drain in ' + this.name);
     this.memory.charging = false;
     this.memory.links = true;
+    return this;
 }
