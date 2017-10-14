@@ -22,7 +22,7 @@ module.exports.enabled = function (room, debug=false) {
     // If the controller is above level 1 and required miners
     if (room.controller && room.controller.level > 1 && room.memory.minersNeeded && room.memory.minersNeeded > 0) {
         // Get a list of creeps with this role in this room
-        let list = _.filter(Game.creeps, c => c.memory.role === this.role && c.memory.roomName === room.name && !c.memory.dying);
+        let list = _.filter(Game.creeps, (c) => c.memory.role === this.role && c.memory.roomName === room.name && !c.memory.dying);
         // If the list is less than what we need
         if (list.length < room.memory.minersNeeded) {
             // Return true

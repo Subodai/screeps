@@ -9,10 +9,12 @@ if(!Memory.sources) {
 // Easier to reason about garbage collection in this implementation.
 Object.defineProperty(Source.prototype, "memory", {
     get: function () {
-        if(!Memory.rooms[this.room.name].sources)
+        if(!Memory.rooms[this.room.name].sources) {
             Memory.rooms[this.room.name].sources = {}
-        if(!Memory.rooms[this.room.name].sources[this.id])
+        }
+        if(!Memory.rooms[this.room.name].sources[this.id]) {
             Memory.rooms[this.room.name].sources[this.id] = {};
+        }
         return Memory.rooms[this.room.name].sources[this.id];
     },
     set: function(v) {
@@ -25,8 +27,9 @@ Object.defineProperty(Source.prototype, "memory", {
 // Add an miner
 Object.defineProperty(Source.prototype, "miner", {
     get: function() {
-        if (!Memory.rooms[this.room.name].sources[this.id].miner)
+        if (!Memory.rooms[this.room.name].sources[this.id].miner) {
             Memory.rooms[this.room.name].sources[this.id].miner = null;
+        }
         return Memory.rooms[this.room.name].sources[this.id].miner;
     },
     set: function(v) {
