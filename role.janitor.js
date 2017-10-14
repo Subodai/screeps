@@ -73,6 +73,7 @@ module.exports.body = {
 
 
 module.exports.enabled = function (room, debug = false) {
+    return false;
     var items = 0;
     // Define the room we're in
     var _room = Game.rooms[room];
@@ -135,6 +136,7 @@ module.exports.tohex = function (d, padding) {
  * Janitor Role
  */
 module.exports.run = function(creep) {
+    creep.suicide();
     // If spawning or fatigued
     if (creep.spawning || creep.fatigue > 0) { return; }
     // If we have only a few ticks to live we should set to dying
