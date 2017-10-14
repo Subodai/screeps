@@ -25,5 +25,5 @@ StructureSpawn.prototype.makeCreep = function(role, body, level, home) {
 
 // Name generator
 StructureSpawn.prototype.generateCreepName = function(role, roomName) {
-    return roomName + ':' + role  + '-' + Game.time();
+    return roomName + ':' + role  + '-' + Game.time;
 }
