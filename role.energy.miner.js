@@ -87,7 +87,7 @@ module.exports.setup = function (debug = false) {
             for (var creepName in Game.creeps) {
                 // Define the creep
                 var creep = Game.creeps[creepName];
-                if (!creep.memory.role === 'energy.miner' || creep.memory.dying) {
+                if (!creep.memory.role === this.role || creep.memory.dying) {
                     continue;
                 }
                 // If this creep has the assigned Source, we found it

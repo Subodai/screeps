@@ -29,7 +29,7 @@ module.exports.run = function(debug = false) {
                 var minMiners = 1;
             }
             var list   = _.filter(Game.creeps, (i) => i.pos.roomName === room && !i.memory.dying && i.memory.role !== 'hauler' && i.memory.role !== 'guard');
-            var miners = _.filter(Game.creeps, (i) => i.pos.roomName === room && !i.memory.dying && (i.memory.role === 'miner' || i.memory.role === 'linkminer'));
+            var miners = _.filter(Game.creeps, (i) => i.pos.roomName === room && !i.memory.dying && (i.memory.role === 'energyMiner' || i.memory.role === 'linkminer'));
             var hostiles = theRoom.find(FIND_HOSTILE_CREEPS, { filter: (i) => !(global.friends.indexOf(i.owner.username) > -1) });
 
             var storage = theRoom.storage;
