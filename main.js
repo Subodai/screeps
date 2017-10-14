@@ -53,7 +53,7 @@ module.exports.loop = function () {
     }
     // Run the source setups once every 50 ticks
     if (Game.time % 50 == 0) {
-        var miner = require('role.energy.miner');
+        var miner = require('role.energyMiner');
         var extractor = require('role.extractor');
         pause(52);
         miner.setup();

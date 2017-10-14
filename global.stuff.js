@@ -1,6 +1,6 @@
 global.roles = [
     'guard',
-    'miner',
+    'energyMiner',
     'refill',       // Always pulls from storage
     'harvester',    // Sources and containers always, fill spawns until 4, then only storage
     'upgrader',     // Sources until 4, storage after
