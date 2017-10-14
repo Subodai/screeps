@@ -52,3 +52,60 @@ module.exports.run = function (creep, debug=false) {
             creep.energyMiningRoutine();
     }
 }
+
+/**
+ * Run this script to setup rooms ready for assigned miners
+ */
+module.exports.setup = function (debug = false) {
+    // Loop through the game rooms we have
+    for (var name in Game.rooms) {
+        if (debug) { console.log('Setting up room ' + name); }
+        var theRoom = Game.rooms[name];
+        // Clear Assigned Sources
+        delete theRoom.memory.assignedSources;
+        // Get all the sources available
+        var sources = theRoom.find(FIND_SOURCES);
+        // Make sure we set the minersNeeded of the room
+        theRoom.memory.minersNeeded = sources.length;
+        // Make an array / object thing
+        var array = {};
+        // Loop through sources
+        for (var i=0; i<=sources.length-1; i++) {
+            if (debug) { console.log(sources[i].id); }
+            // Set it to null
+            array[sources[i].id] = null;
+        }
+        // Loop through the sources again
+        for (var i=0; i<=sources.length-1; i++) {
+            // Get the source so we can use it's id
+            var source = sources[i];
+            // Make found false by default
+            var found = false;
+            var creepId = null;
+            var sourceId = source.id;
+            // Loop through the miners
+            for (var creepName in Game.creeps) {
+                // Define the creep
+                var creep = Game.creeps[creepName];
+                if (!creep.memory.role === 'energy.miner' || creep.memory.dying) {
+                    continue;
+                }
+                // If this creep has the assigned Source, we found it
+                if (creep.memory.assignedSource === sourceId) {
+                    found = true;
+                    creepId = creep.id;
+                    break;
+                }
+            }
+            // we found it
+            if (found) {
+                if (debug) { console.log(sourceId + ' set to ' + creepId); }
+                array[sourceId] = creepId;
+            }
+        }
+
+        // Set the room's assigned Sources to be the object
+        theRoom.memory.assignedSources = array;
+    }
+    return '++Energy Miner Setup Complete++';
+}
