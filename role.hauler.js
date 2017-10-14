@@ -10,8 +10,8 @@ module.exports.roster = {
     3: 0,
     4: 1,
     5: 1,
-    6: 2,
-    7: 2,
+    6: 1,
+    7: 1,
     8: 1,
 };
 // Costs (human readability mostly, likely to nuke this soon)
@@ -71,17 +71,23 @@ module.exports.body = {
         // WORK,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         CARRY,CARRY,CARRY,CARRY,CARRY,
-        MOVE,
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,CARRY,
         MOVE,MOVE,MOVE,MOVE,MOVE,
         MOVE,MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     8 : [
         // WORK,
         CARRY,CARRY,CARRY,CARRY,CARRY,
         CARRY,CARRY,CARRY,CARRY,CARRY,
-        MOVE,
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,CARRY,
         MOVE,MOVE,MOVE,MOVE,MOVE,
         MOVE,MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,MOVE
     ],
 };
 
@@ -208,7 +214,8 @@ module.exports.run = function(creep, debug = false) {
                             break;
                         } else {
                             creep.say(global.sayDrop);
-                            delete creep.memory.roomName; // Temporarily make haulers just deliver to their own room Curious as to what it'l do
+                            // Reset Target
+                            delete creep.memory.roomName; // Comment out to Temporarily make haulers just deliver to their own room Curious as to what it'l do
                         }
                     }
                 }
