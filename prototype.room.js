@@ -233,3 +233,54 @@ Room.prototype.drain = function() {
     this.memory.links = true;
     return this;
 }
+
+/*
+ * Feed Energy Routine
+ */
+Room.prototype.feedEnergy = function() {
+    // If we don't have a feedRoom, just return
+    if (!Memory.feedRoom) { console.log('[EMPIRE]['+this.name+'] No feedRoom Set'); return; }
+    // Do we have a terminal?
+    if (!this.terminal) { console.log('[EMPIRE]['+this.name+'] No Terminal'); return; }
+    // Is the terminal on cooldown
+    if (this.terminal.cooldown > 0) { console.log('[EMPIRE]['+this.name+'] Terminal on cooldown' + JSON.stringify(this.terminal)) ;return; }
+    // Is this the feedroom?
+    if (this.name === Memory.feedRoom) { console.log('[EMPIRE]['+this.name+'] This is the feedroom');
+        // Make sure we're feeding the storage, not the terminal
+        if (this.memory.prioritise !== 'none') {
+            this.memory.prioritise = 'none';
+        }
+        return;
+    }
+    // Do we have memory of the target (save processing)
+    if (!this.memory.feedTarget || this.memory.feedTarget.room !== Memory.feedRoom){
+        console.log('[EMPIRE]['+this.name+'] Needs a Target');
+        // Run some setup
+        this.setupFeedTarget();
+    }
+    // Does the terminal have enough energy?
+    if (this.terminal.store[RESOURCE_ENERGY] < this.memory.feedTarget.chunk) {
+        this.memory.prioritise = 'terminal';
+        console.log('[EMPIRE]['+this.name+'] Charging Terminal');return;
+    }
+    // Get the multiplier
+    let multiplier = this.terminal.store[RESOURCE_ENERGY] / this.memory.feedTarget.chunk;
+    // now get the total we want to send
+    let total = multiplier.toFixed()*1000;
+    // Alright, send it
+    this.terminal.send(RESOURCE_ENERGY, total, this.memory.feedTarget.room, 'Feeding [' + this.memory.feedTarget.room + ']');
+    console.log('[EMPIRE]['+this.name+'] Feeding Target');
+}
+
+/*
+ * Setup a room's feed target
+ */
+Room.prototype.setupFeedTarget = function() {
+    let cost = Game.market.calcTransactionCost(1000, this.name, Memory.feedRoom);
+    let chunk = cost + 1000;
+    let feedTarget = {};
+    feedTarget.room = Memory.feedRoom;
+    feedTarget.chunk = chunk;
+    this.memory.feedTarget = feedTarget;
+    console.log('[EMPIRE]['+this.name+'] Feed Target Set: ' + JSON.stringify(this.memory.feedTarget));
+}
