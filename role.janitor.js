@@ -73,6 +73,7 @@ module.exports.body = {
 
 
 module.exports.enabled = function (room, debug = false) {
+    return false;
     var items = 0;
     // Define the room we're in
     var _room = Game.rooms[room];
@@ -109,7 +110,7 @@ module.exports.visuals = function (items, room, debug = false) {
         var r = Math.round(255 - ((255/100)*(percent/100)*100));
         var g = Math.round((255/100)*(percent/100)*100);
         var b = 0;
-        var _color = "#" + this.tohex(r) + this.tohex(g) + this.tohex(b);
+        var _color = "#" + hex(r) + hex(g) + hex(b);
         _room.visual.circle(item.pos, {
             fill: _color,
             radius:0.35,
@@ -125,16 +126,11 @@ module.exports.visuals = function (items, room, debug = false) {
     }
 }
 
-module.exports.tohex = function (d, padding) {
-    var hex = Number(d).toString(16);
-    padding = typeof (padding) === "undefined" || padding === null ? padding = 2 : padding;
-    while (hex.length < padding) { hex = "0" + hex; }
-    return hex;
-}
 /**
  * Janitor Role
  */
 module.exports.run = function(creep) {
+    creep.suicide();
     // If spawning or fatigued
     if (creep.spawning || creep.fatigue > 0) { return; }
     // If we have only a few ticks to live we should set to dying

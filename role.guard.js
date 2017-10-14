@@ -58,15 +58,15 @@ module.exports.body = {
         MOVE,
     ],
     7 : [
-        TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,
-        MOVE,MOVE,MOVE,
-        ATTACK,ATTACK,
+        TOUGH,TOUGH,
+        MOVE,MOVE,MOVE,MOVE,
+        ATTACK,ATTACK,ATTACK,
         MOVE,
     ],
     8 : [
-        TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,
-        MOVE,MOVE,MOVE,
-        ATTACK,ATTACK,
+        TOUGH,TOUGH,
+        MOVE,MOVE,MOVE,MOVE,
+        ATTACK,ATTACK,ATTACK,
         MOVE,
     ],
     /*

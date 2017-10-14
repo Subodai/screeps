@@ -1,6 +1,135 @@
-
 // Change to true to enable debugging
 const DBG = false;
+
+// Give creeps a role
+Object.defineProperty(Creep.prototype, "role", {
+    get: function() {
+        if(!Memory.creeps[this.name].role)
+            Memory.creeps[this.name].role = 'Unknown';
+        return Memory.creeps[this.name].role;
+    },
+    set: function(v) {
+        return _.set(Memory, 'creeps.' + this.name + '.role', v);
+    },
+    configurable: true,
+    enumerable: false
+});
+
+// Give creeps a state
+Object.defineProperty(Creep.prototype, "state", {
+    get: function() {
+        if(!Memory.creeps[this.name].state)
+            Memory.creeps[this.name].state = STATE_SPAWNING;
+        return Memory.creeps[this.name].state;
+    },
+    set: function(v) {
+        return _.set(Memory, 'creeps.' + this.name + '.state', v);
+    },
+    configurable: true,
+    enumerable: false
+});
+
+// SpawnRouting
+Creep.prototype.spawnRoutine = function(role) {
+    // Do we need to initialise?
+    if (!this.memory.init) {
+        // Initiate based on the role
+        switch(role) {
+            case 'energyMiner':
+                // Setup Energy Miner
+                this.assignSource();
+                break;
+        }
+    }
+    // Have we finished spawning?
+    if (!this.spawning) {
+        // Make sure we move to moving state
+        this.state = STATE_MOVING;
+        return;
+    }
+}
+
+// Initiate a miner in a room
+Creep.prototype.assignSource = function() {
+    // Do we have an assigned source?
+    if (!this.memory.assignedSource) {
+        // TODO: Run room miner setup
+        // Assume we have run room setup at this point
+        DBG && console.log('Creep [' + this.name + '] Miner without source, assigning now');
+        var sourceId = false;
+        let sources  = this.room.find(FIND_SOURCES);
+        // Loop through the sources
+        for (let i in sources) {
+            let source = sources[i];
+            if (source.miner === null) {
+                // This is the source we want
+                sourceId = source.id;
+                // Set the source's miner to this creep's id
+                source.miner = creep.id;
+                // Update the creeps memory
+                this.memory.assignedSource = sourceId;
+                // Set our init to true
+                this.memory.init = true;
+                // Set our targetPos
+                this.memory.targetPos = source.pos;
+                // Make sure we stop NOW
+                break;
+            }
+        }
+        // Do we have a sourceId
+        if (sourceId === false) {
+            DBG && console.log('Creep [' + this.name + '] Miner cannot find source!!');
+        }
+    }
+}
+
+// Move route
+Creep.prototype.moveRoutine = function(finishedState) {
+    // If we're tired just stop
+    if (this.isTired()) { return; }
+    // Make a new pos
+    let pos = new RoomPosition(this.memory.targetPos.x, this.memory.targetPos.y, this.memory.targetPos.roomName);
+    // Have we got there yet?
+    if (this.pos.getRangeTo(pos) <= 1) {
+        this.state = finishedState;
+        return;
+    }
+    // Travel to the target
+    this.travelTo(pos);
+}
+
+// Mining routine
+Creep.prototype.energyMiningRoutine = function() {
+    // If we don't have an assigned source, something went wrong
+    if (!this.memory.assignedSource) { this.resetState(); }
+    // Get the source
+    let source = Game.getObjectById(this.memory.assignedSource);
+    // TODO Add a fallback to try nearby sources not just the one we have in memory, and re-assign?
+    if (!source) {
+        DBG && console.log('[' + this.name + '] Miner has invalid source!!');
+        creep.say('WTF?');
+        Game.notify(Game.time + ' Miner Creep has invalid source');
+        delete this.memory.assignedSource;
+    }
+    // If source has energy
+    if (source.energy <= 0) {
+        return // Do nothing, don't waste CPU
+    }
+    // Harvest it
+    if (this.harvest(source) !== OK) {
+        console.log('[' + this.name + '] Unable to mine source [' + source.id + ']');
+    } else {
+        this.say('d(^-^)b');
+    }
+}
+
+// Reset Creep state to spawning so we can reboot it
+Creep.prototype.resetState = function() {
+    // Delete init state
+    delete this.memory.init;
+    // Set state to spawning
+    this.state = STATE_SPAWNING;
+}
 
 /*
  * Is a Creep Spawning or fatigued?

@@ -5,7 +5,7 @@ global.roles = [
     'harvester',    // Sources and containers always, fill spawns until 4, then only storage
     'upgrader',     // Sources until 4, storage after
     'builder',      // Sources until 4, storage after
-    'janitor',      // Sources until 4, storage after
+    // 'janitor',      // Sources until 4, storage after
     'extractor',
     'mharvester',
     'supergrader',  // Storage always
@@ -16,10 +16,10 @@ global.roles = [
 ];
 
 global.rampartMax = 100000;
-global.wallMax = 600000;
+global.wallMax = 700000;
 global.towerRepair = true;
-global.linkLimit = 800000;
-global.chargeLimit = 800000;
+global.linkLimit = 900000;
+global.chargeLimit = 900000;
 
 global.resourceList = [
     // Minerals
@@ -234,9 +234,40 @@ global.haulerSetup = function () {
     console.log('Hauler Target setup used ' + After + ' CPU');
 }
 
-global.initDrain = function() {
+global.initDrain = function () {
     for (let room in Game.rooms) {
         Game.rooms[room].drain();
     }
     return 'Drain Initiated';
+}
+
+global.pause = function (lineNo = 0) {
+    if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) {
+        console.log('Stopping At ' + lineNo + ' To relax CPU use');
+        console.log(Game.time + ':CPU:[' + Game.cpu.tickLimit + '] ' + '[' +  Game.cpu.bucket + '] [' + Game.cpu.getUsed().toFixed(3) + ']');
+        return;
+    }
+}
+
+global.hex = function (d, padding) {
+    var hex = Number(d).toString(16);
+    padding = typeof (padding) === "undefined" || padding === null ? padding = 2 : padding;
+    while (hex.length < padding) { hex = "0" + hex; }
+    return hex;
+}
+
+global.setupFeedRoom = function () {
+    if (Memory.feedRoom) {
+        let energy = Game.rooms[Memory.feedRoom].storage.store[RESOURCE_ENERGY];
+        if (energy >= global.chargeLimit) {
+            delete Memory.feedRoom;
+        }
+    }
+    if (!Memory.feedRoom) {
+        let myRooms = _.filter(Game.rooms, (room) => room.controller && room.controller.my);
+        console.log(JSON.stringify(myRooms));
+        let room = _.min(myRooms, function(room) { if(!room || !room.storage) { return 10000000; } else { return room.storage.store[RESOURCE_ENERGY]; } });
+        Memory.feedRoom = feedRoom = room.name;
+    }
+    return Memory.feedRoom;
 }

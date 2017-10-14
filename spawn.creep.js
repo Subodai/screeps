@@ -42,21 +42,28 @@ module.exports.run = function(spawn, role, debug = false) {
     if (debug) {
         console.log(role + ':' + list.length);
     }
+
     var roster = _role.roster;
 
-     // If links are on
+    // If links are on
     if (_room.memory.links) {
         // If this role has a links based body
         if (_role.rosterlinks) {
             var roster = _role.rosterlinks;
         }
     }
+
     if (_room.energyAvailable >= global.getPartsCost(body[_level]) && list.length < roster[_level] && !spawned) {
-        var creepName = _spawn.createCreep(body[_level], undefined, {
-            role : _role.role,
-            level : _level,
-            sType : _role.sType,
-            roomName : _room.name
+        // Make a new name
+        let creepName = _spawn.generateCreepName(_role.role, _room.name);
+        // did we spawn?
+        let success = _spawn.spawnCreep(body[_level], creepName, {
+            memory: {
+                role : _role.role,
+                level : _level,
+                sType : _role.sType,
+                roomName : _room.name
+            }
         });
         console.log('Spawning new level ' + _level + ' ' + role + ' : ' + creepName + ' in room '+ _room.name + ' [' + (list.length+1) + '/' + roster[_level] + ']');
         spawned = true;

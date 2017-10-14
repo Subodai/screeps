@@ -60,12 +60,12 @@ module.exports.run = function (tower, debug = false) {
             });
 
             // Did we get one? // Lets not do roads just now
-            // if (!target) {
-            //     // Nope okay, lets try a road
-            //     target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-            //         filter: (i) => i.structureType === STRUCTURE_ROAD && i.hits < i.hitsMax
-            //     });
-            // }
+            if (!target) {
+                // Nope okay, lets try a road
+                target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+                    filter: (i) => i.structureType === STRUCTURE_ROAD && i.hits < i.hitsMax
+                });
+            }
 
             // So did we find a target?
             if (target) {
@@ -155,7 +155,7 @@ module.exports.visuals = function (items, room, debug = false) {
         let r = Math.round(255 - ((255/100)*(percent/100)*100));
         let g = Math.round((255/100)*(percent/100)*100);
         let b = 0;
-        let _color = '#' + this.tohex(r) + this.tohex(g) + this.tohex(b);
+        let _color = '#' + hex(r) + hex(g) + hex(b);
         _room.visual.circle(item.pos, {
             fill: _color,
             radius:0.35,
@@ -169,13 +169,4 @@ module.exports.visuals = function (items, room, debug = false) {
             opacity:0.6,
         });
     }
-}
-
-module.exports.tohex = function (d, padding) {
-    var hex = Number(d).toString(16);
-    padding = typeof (padding) === "undefined" || padding === null ? padding = 2 : padding;
-    while (hex.length < padding) {
-        hex = "0" + hex;
-    }
-    return hex;
 }

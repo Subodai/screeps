@@ -9,12 +9,13 @@ module.exports.roster = {
     1: 0,
     2: 0,
     3: 0,
-    4: 2,
-    5: 2,
-    6: 2,
+    4: 1,
+    5: 1,
+    6: 1,
     7: 2,
     8: 2,
 };
+
 /* Costs */
 module.exports.cost = {
     1 : 0,
