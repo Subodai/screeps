@@ -106,11 +106,15 @@ Creep.prototype.energyMiningRoutine = function() {
     let source = Game.getObjectById(this.memory.assignedSource);
     // TODO Add a fallback to try nearby sources not just the one we have in memory, and re-assign?
     if (source) {
-        // Harvest it
-        if (this.harvest(source) !== OK) {
-            console.log('[' + this.name + '] Unable to mine source [' + source.id + ']');
+        if (source.energy > 0) {
+            // Harvest it
+            if (this.harvest(source) !== OK) {
+                console.log('[' + this.name + '] Unable to mine source [' + source.id + ']');
+            } else {
+                this.say('d(^-^)b');
+            }
         } else {
-            this.say('d(^-^)b');
+            // Do nothing
         }
     } else {
         DBG && console.log('[' + this.name + '] Miner has invalid source!!');
