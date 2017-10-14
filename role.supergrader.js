@@ -11,9 +11,9 @@ module.exports.roster = {
     3: 0,
     4: 8,
     5: 8,
-    6: 8,
-    7: 8,
-    8: 8,
+    6: 4,
+    7: 4,
+    8: 1,
 };
 /* Costs */
 module.exports.cost = {
@@ -46,20 +46,23 @@ module.exports.body = {
         WORK,WORK,WORK,WORK,WORK,
         WORK,WORK,WORK,WORK,WORK,
         CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,
         MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
     7 : [
         WORK,WORK,WORK,WORK,WORK,
         WORK,WORK,WORK,WORK,WORK,
         WORK,WORK,WORK,WORK,WORK,
-        WORK,WORK,WORK,WORK,WORK,
         CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,
         MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
     8 : [
         WORK,WORK,WORK,WORK,WORK,
         WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
         CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,
         MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
 };
