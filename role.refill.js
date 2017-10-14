@@ -49,12 +49,20 @@ module.exports.body = {
     7 : [
         CARRY,CARRY,CARRY,CARRY,CARRY,
         CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,MOVE,
         MOVE,MOVE,MOVE,MOVE,MOVE,
         MOVE,MOVE,MOVE,MOVE,MOVE
     ],
     8 : [
         CARRY,CARRY,CARRY,CARRY,CARRY,
         CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,
+        MOVE,MOVE,MOVE,MOVE,MOVE,
         MOVE,MOVE,MOVE,MOVE,MOVE,
         MOVE,MOVE,MOVE,MOVE,MOVE
     ],
@@ -75,7 +83,7 @@ module.exports.enabled = function (room, debug = false) {
 module.exports.run = function(creep) {
     if (creep.isTired()) { return; }
     var ticks = creep.ticksToLive;
-    if (ticks < 100 && !creep.memory.dying) {
+    if (ticks < 150 && !creep.memory.dying) {
         creep.QueueReplacement();
         creep.memory.dying = true;
     }
