@@ -60,12 +60,12 @@ module.exports.run = function (tower, debug = false) {
             });
 
             // Did we get one? // Lets not do roads just now
-            // if (!target) {
-            //     // Nope okay, lets try a road
-            //     target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-            //         filter: (i) => i.structureType === STRUCTURE_ROAD && i.hits < i.hitsMax
-            //     });
-            // }
+            if (!target) {
+                // Nope okay, lets try a road
+                target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+                    filter: (i) => i.structureType === STRUCTURE_ROAD && i.hits < i.hitsMax
+                });
+            }
 
             // So did we find a target?
             if (target) {
