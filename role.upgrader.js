@@ -21,10 +21,11 @@ module.exports.rosterlinks = {
     3: 8,
     4: 6,
     5: 3,
-    6: 6,
-    7: 6,
-    8: 6,
+    6: 1,
+    7: 4,
+    8: 1,
 };
+
 /* Costs */
 module.exports.cost = {
     1 : 300,
@@ -94,11 +95,7 @@ module.exports.body = {
         MOVE,MOVE,MOVE,MOVE,
     ],
     8 : [
-        WORK,WORK,WORK,
-        WORK,WORK,WORK,
-        CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,
-        MOVE,MOVE,MOVE,MOVE,
+        WORK,CARRY,MOVE,MOVE,
     ],
 };
 
@@ -133,23 +130,31 @@ module.exports.bodylinks = {
     6 : [
         WORK,WORK,WORK,WORK,WORK,
         WORK,WORK,WORK,WORK,WORK,
-        CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,
+        WORK,WORK,WORK,WORK,WORK,
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
     7 : [
         WORK,WORK,WORK,WORK,WORK,
         WORK,WORK,WORK,WORK,WORK,
-        CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        WORK,WORK,WORK,WORK,WORK,
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
     8 : [
         WORK,WORK,WORK,WORK,WORK,
         WORK,WORK,WORK,WORK,WORK,
-        CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,
+        WORK,WORK,WORK,WORK,WORK,
+        CARRY,CARRY,CARRY,CARRY,CARRY,
+        CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,
     ],
 };
-
 module.exports.enabled = function (room, debug = false) {
     var _room = Game.rooms[room];
     // Turn off normal upgraders while supergraders are on
