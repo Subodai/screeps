@@ -24,7 +24,6 @@
 // 3. Number of structures differs at controller level (CONTROLLER_STRUCTURES, no arrays)
 //
 
-
 // Determines the number of containers that are adjacent to sources.
 // NOTE: THIS MUST MATCH CALCULATIONS IN role.harvester2.determine_destination()!!!
 function count_source_containers(room) {
@@ -265,6 +264,7 @@ function summarize_rooms() {
     }
 
     let retval = {};
+    let minerals = {};
 
     for (let r in Game.rooms) {
         let _room = Game.rooms[r];
@@ -278,12 +278,31 @@ function summarize_rooms() {
         } else {
             let summary = summarize_room_internal(Game.rooms[r]);
             retval[r] = summary;
+            if (_room.terminal) {
+                for (let r in _room.terminal.store) {
+                    if (!minerals[r]) {
+                        minerals[r] = _room.terminal.store[r];
+                    } else {
+                        minerals[r] += _room.terminal.store[r];
+                    }
+                }
+            }
+            if (_room.storage) {
+                for (let r in _room.storage.store) {
+                    if (!minerals[r]) {
+                        minerals[r] = _room.storage.store[r];
+                    } else {
+                        minerals[r] += _room.storage.store[r];
+                    }
+                }
+            }
         }
 
     }
 
     global.summarized_room_timestamp = now;
     global.summarized_rooms = retval;
+    global.summarized_minerals = minerals;
 
     // console.log('All rooms: ' + JSON.stringify(retval));
     return retval;

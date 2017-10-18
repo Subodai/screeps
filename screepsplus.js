@@ -65,7 +65,7 @@ function collect_stats() {
         Memory.stats.queue = Memory.queue;
         Memory.stats.queue.length = Memory.queue.creeps.length;
     }
-
+    Memory.stats.empireMinerals = global.summarized_minerals;
     // Add callback functions which we can call to add additional
     // statistics to here, and have a way to register them.
     // 1. Merge in the current repair ratchets into the room summary
