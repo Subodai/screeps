@@ -258,11 +258,33 @@ global.hex = function (d, padding) {
 
 global.setupFeedRoom = function () {
     if (Memory.feedRoom) {
-        let energy = Game.rooms[Memory.feedRoom].storage.store[RESOURCE_ENERGY];
-        if (energy >= global.chargeLimit) {
+        let room = Game.rooms[Memory.feedRoom];
+        let total = room.storage.store[Memory.feedResource] + room.terminal.store[Memory.feedResource];
+        if (total >= Memory.feedTarget) {
             delete Memory.feedRoom;
+            delete Memory.feedResource;
+            delete Memory.feedTarget;
+            Memory.enableFeed = false;
+            $msg = '[FEED] Target Reached. Turning off feed'
+            console.log($msg);
+            Game.notify($msg);
+        } else {
+            return;
         }
     }
+    // Get the feedlist from memory
+    let list = Memory.feedList;
+    // Time to check the feed list
+    if (list.length > 0) {
+        Memory.feedRoom = list[0].feedRoom;
+        Memory.feedResource = list[0].feedResource;
+        Memory.feedTarget = list[0].feedTarget;
+        Memory.enableFeed = true;
+        $msg = '[FEED] Room:' + list[0].feedRoom + ' Resource:' + list[0].feedResource + ' Target:' + list[0].feedTarget;
+        console.log($msg);
+        Game.notify($msg);
+    }
+
     if (!Memory.feedRoom) {
         let myRooms = _.filter(Game.rooms, (room) => room.controller && room.controller.my);
         console.log(JSON.stringify(myRooms));
@@ -271,3 +293,5 @@ global.setupFeedRoom = function () {
     }
     return Memory.feedRoom;
 }
+
+global.A
