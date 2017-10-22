@@ -79,8 +79,8 @@ module.exports.enabled = function (room, debug = false) {
     var _room = Game.rooms[room];
     // Search for all targets that are walls or ramparts below their global max, or anything else with less hits than max
     // const targets = _room.find(FIND_STRUCTURES, {
-    //     filter: (i) => (i.structureType === STRUCTURE_RAMPART && i.hits <= global.rampartMax) ||
-    //                   (i.structureType === STRUCTURE_WALL && i.hits <= global.wallMax) ||
+    //     filter: (i) => (i.structureType === STRUCTURE_RAMPART && i.hits <= RAMPART_MAX) ||
+    //                   (i.structureType === STRUCTURE_WALL && i.hits <= WALL_MAX) ||
     //                   ((i.structureType !== STRUCTURE_WALL && i.structureType != STRUCTURE_RAMPART) && i.hits < i.hitsMax)
     // });
     const targets = _room.find(FIND_STRUCTURES, {
@@ -100,9 +100,9 @@ module.exports.visuals = function (items, room, debug = false) {
         var item = items[i];
         var percent = 100;
         if(item.structureType === STRUCTURE_RAMPART) {
-            percent = (item.hits/global.rampartMax)*100;
+            percent = (item.hits/RAMPART_MAX)*100;
         } else if (item.structureType == STRUCTURE_WALL) {
-            percent = (item.hits/global.wallMax)*100;
+            percent = (item.hits/WALL_MAX)*100;
         } else {
             percent = (item.hits/item.hitsMax)*100;
         }

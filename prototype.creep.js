@@ -4,8 +4,9 @@ const DBG = false;
 // Give creeps a role
 Object.defineProperty(Creep.prototype, "role", {
     get: function() {
-        if(!Memory.creeps[this.name].role)
+        if(!Memory.creeps[this.name].role) {
             Memory.creeps[this.name].role = 'Unknown';
+        }
         return Memory.creeps[this.name].role;
     },
     set: function(v) {
@@ -18,8 +19,9 @@ Object.defineProperty(Creep.prototype, "role", {
 // Give creeps a state
 Object.defineProperty(Creep.prototype, "state", {
     get: function() {
-        if(!Memory.creeps[this.name].state)
+        if(!Memory.creeps[this.name].state) {
             Memory.creeps[this.name].state = STATE_SPAWNING;
+        }
         return Memory.creeps[this.name].state;
     },
     set: function(v) {
@@ -57,29 +59,39 @@ Creep.prototype.assignSource = function() {
         // Assume we have run room setup at this point
         DBG && console.log('Creep [' + this.name + '] Miner without source, assigning now');
         var sourceId = false;
-        let sources  = this.room.find(FIND_SOURCES);
-        // Loop through the sources
-        for (let i in sources) {
-            let source = sources[i];
-            if (source.miner === null) {
-                // This is the source we want
-                sourceId = source.id;
-                // Set the source's miner to this creep's id
-                source.miner = creep.id;
-                // Update the creeps memory
-                this.memory.assignedSource = sourceId;
-                // Set our init to true
-                this.memory.init = true;
-                // Set our targetPos
-                this.memory.targetPos = source.pos;
-                // Make sure we stop NOW
-                break;
+        // Get sources with null or this miner
+        let sources  = this.room.find(FIND_SOURCES, {
+            filter: function(s) {
+                return (s.miner === null || s.miner === this.id);
             }
+        });
+        let thisCreep = this;
+        let source = _.min(sources, function(s) { return thisCreep.pos.getRangeTo(s); });
+        if (source.miner === null || source.miner === this.id) {
+            // This is the source we want
+            sourceId = source.id;
+            // Set the source's miner to this creep's id
+            source.miner = creep.id;
+            // Update the creeps memory
+            this.memory.assignedSource = sourceId;
+            // Set our init to true
+            this.memory.init = true;
+            // Set our targetPos
+            this.memory.targetPos = source.pos;
+            // Make sure we stop NOW
+            break;
         }
+
         // Do we have a sourceId
         if (sourceId === false) {
             DBG && console.log('Creep [' + this.name + '] Miner cannot find source!!');
         }
+    }
+    // Make the source from memory object
+    let source = Game.getObjectById(this.memory.assignedSource);
+    // If this cannot be found, or is not an instance of a source
+    if (!source || !(source instanceof Source)) {
+        this.resetState();
     }
 }
 
@@ -109,7 +121,7 @@ Creep.prototype.energyMiningRoutine = function() {
         DBG && console.log('[' + this.name + '] Miner has invalid source!!');
         creep.say('WTF?');
         Game.notify(Game.time + ' Miner Creep has invalid source');
-        delete this.memory.assignedSource;
+        this.resetState();
     }
     // If source has energy
     if (source.energy <= 0) {
@@ -126,7 +138,9 @@ Creep.prototype.energyMiningRoutine = function() {
 // Reset Creep state to spawning so we can reboot it
 Creep.prototype.resetState = function() {
     // Delete init state
+    delete this.memory.assignedSource;
     delete this.memory.init;
+    delete this.memory.targetPos;
     // Set state to spawning
     this.state = STATE_SPAWNING;
 }
@@ -723,7 +737,7 @@ Creep.prototype.roadCheck = function(work = false) {
     }
     this.DBG && console.log(this.name + ' No Road, Site, or Flag.. attempting to place one');
     this.DBG && console.log(JSON.stringify(this.pos));
-    if (!site && !flag && global.seedRemoteRoads === true) {
+    if (!site && !flag && SEED_ROADS === true) {
         // How many construction flags do we have?
         let roadFlags = _.filter(Game.flags, (flag) => flag.color === global.flagColor['buildsite'] && flag.secondaryColor === COLOR_WHITE);
         // If we have 100 or more road flags, don't make any more!
@@ -948,23 +962,23 @@ Creep.prototype.findDamagedDefences = function() {
         // Loop through the distances
         for (let distance in [3,5,10,20]) {
             ts = this.pos.findInRange(FIND_STRUCTURES, distance, {
-                filter: (i) => ((i.structureType === STRUCTURE_RAMPART && i.hits < (global.rampartMax*multiplier)) ||
-                                (i.structureType === STRUCTURE_WALL && i.hits < (global.wallMax*multiplier))) && i.room === this.room
+                filter: (i) => ((i.structureType === STRUCTURE_RAMPART && i.hits < (RAMPART_MAX*multiplier)) ||
+                                (i.structureType === STRUCTURE_WALL && i.hits < (WALL_MAX*multiplier))) && i.room === this.room
             });
             if (ts.length>0){break;}
         }
         if (ts.length == 0) {
             ts = this.room.find(FIND_STRUCTURES, {
-                filter: (i) => ((i.structureType === STRUCTURE_RAMPART && i.hits < (global.rampartMax*multiplier)) ||
-                                (i.structureType === STRUCTURE_WALL && i.hits < (global.wallMax*multiplier))) && i.room === this.room
+                filter: (i) => ((i.structureType === STRUCTURE_RAMPART && i.hits < (RAMPART_MAX*multiplier)) ||
+                                (i.structureType === STRUCTURE_WALL && i.hits < (WALL_MAX*multiplier))) && i.room === this.room
             });
         }
         if (ts.length>0){
             ts.sort(function(a,b) {
-                if (a.structureType === STRUCTURE_WALL)    { var aHitsMax = global.wallMax*multiplier; }
-                if (a.structureType === STRUCTURE_RAMPART) { var aHitsMax = global.rampartMax*multiplier; }
-                if (b.structureType === STRUCTURE_WALL)    { var bHitsMax = global.wallMax*multiplier; }
-                if (b.structureType === STRUCTURE_RAMPART) { var bHitsMax = global.rampartMax*multiplier; }
+                if (a.structureType === STRUCTURE_WALL)    { var aHitsMax = WALL_MAX*multiplier; }
+                if (a.structureType === STRUCTURE_RAMPART) { var aHitsMax = RAMPART_MAX*multiplier; }
+                if (b.structureType === STRUCTURE_WALL)    { var bHitsMax = WALL_MAX*multiplier; }
+                if (b.structureType === STRUCTURE_RAMPART) { var bHitsMax = RAMPART_MAX*multiplier; }
                 let aH = aHitsMax - a.hits;
                 let bH = bHitsMax - b.hits;
                 if (aH > bH) {
@@ -975,10 +989,10 @@ Creep.prototype.findDamagedDefences = function() {
                 return 0;
             });
             if (ts[0].structureType === STRUCTURE_WALL) {
-                this.memory.targetMaxHP = global.wallMax*multiplier;
+                this.memory.targetMaxHP = WALL_MAX*multiplier;
             }
             if (ts[0].structureType === STRUCTURE_RAMPART) {
-                this.memory.targetMaxHP = global.rampartMax*multiplier;
+                this.memory.targetMaxHP = RAMPART_MAX*multiplier;
             }
             this.memory.repairTarget = ts[0].id;
         }

@@ -7,12 +7,12 @@ module.exports.run = function(debug = false) {
         console.log('Running Creep Movement ');
     }
     // Loop through all the roles
-    for (var i in global.roles) {
-        if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) {
-            console.log('Skipping '+ global.roles[i] + ' To relax CPU use');
+    for (var i in ROLES) {
+        if (Game.cpu.bucket < CPU_MINIMUM && Game.cpu.getUsed() > Game.cpu.limit - 2) {
+            console.log('Skipping '+ ROLES[i] + ' To relax CPU use');
         } else {
             // Get the role name from our global array by index
-            var role = global.roles[i];
+            var role = ROLES[i];
             // Som Debug
             if (debug) { console.log('Running ' + role + ' Creep Movement'); }
             // Grab the correct role file

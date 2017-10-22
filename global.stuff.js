@@ -1,48 +1,4 @@
-global.roles = [
-    'guard',
-    'energyMiner',
-    'refill',       // Always pulls from storage
-    'harvester',    // Sources and containers always, fill spawns until 4, then only storage
-    'upgrader',     // Sources until 4, storage after
-    'builder',      // Sources until 4, storage after
-    // 'janitor',      // Sources until 4, storage after
-    'extractor',
-    'mharvester',
-    'supergrader',  // Storage always
-    'scout',
-    'reserve',
-    'remoteminer',
-    'hauler',
-];
 
-global.rampartMax = 100000;
-global.wallMax = 700000;
-global.towerRepair = true;
-global.linkLimit = 900000;
-global.chargeLimit = 900000;
-
-global.resourceList = [
-    // Minerals
-    RESOURCE_CATALYST,
-    RESOURCE_HYDROGEN,
-    RESOURCE_LEMERGIUM,
-    RESOURCE_UTRIUM,
-    RESOURCE_KEANIUM,
-    RESOURCE_OXYGEN,
-
-    // Compounds (from invaders)
-    RESOURCE_UTRIUM_HYDRIDE,
-    RESOURCE_KEANIUM_OXIDE,
-    RESOURCE_ZYNTHIUM_HYDRIDE,
-    RESOURCE_GHODIUM_OXIDE,
-
-    // Energy!
-    RESOURCE_ENERGY
-];
-
-global.seedRemoteRoads = true;
-
-global.cpuDesired = 5000;
 
 global.getPartsCost = function(parts) {
     var bodyCost = 0
@@ -242,7 +198,7 @@ global.initDrain = function () {
 }
 
 global.pause = function (lineNo = 0) {
-    if (Game.cpu.bucket < global.cpuDesired && Game.cpu.getUsed() > Game.cpu.limit - 2) {
+    if (Game.cpu.bucket < CPU_MINIMUM && Game.cpu.getUsed() > Game.cpu.limit - 2) {
         console.log('Stopping At ' + lineNo + ' To relax CPU use');
         console.log(Game.time + ':CPU:[' + Game.cpu.tickLimit + '] ' + '[' +  Game.cpu.bucket + '] [' + Game.cpu.getUsed().toFixed(3) + ']');
         return;

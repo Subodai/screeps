@@ -10,7 +10,7 @@ module.exports.run = function(debug = false) {
         }
     }
     for(var room in Memory.rooms) {
-        if (!Game.rooms[room]) {
+        if (!Game.rooms[room] && !Memory.rooms[room].avoid) {
             delete Memory.rooms[room];
             console.log('[MEMORY] cleared [' + name + ']');
         }

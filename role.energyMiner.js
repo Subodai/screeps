@@ -42,14 +42,22 @@ module.exports.run = function (creep, debug=false) {
         case STATE_SPAWNING:
             // Run the spawnRoutine
             creep.spawnRoutine(this.role);
+            break;
         // Moving
         case STATE_MOVING:
             // Move to target
             creep.moveRoutine(STATE_MINING_ENERGY);
+            break;
         // Mining energy
         case STATE_MINING_ENERGY:
             // Mining a source
             creep.energyMiningRoutine();
+            break;
+        default:
+            console.log('[CREEP][' + creep.name + '][' + creep.memory.role + '] in an invalid state');
+            delete this.memory.init;
+            creep.state = STATE_SPAWNING;
+            break;
     }
 }
 

@@ -34,7 +34,7 @@ module.exports.run = function (tower, debug = false) {
         return;
     }
 
-    if (global.towerRepair === true) {
+    if (TOWER_REPAIR === true) {
         // Always ensure that 1 hit ramparts get a quick zap
         if (tower.energy >= 100) {
             var rampart = false;
@@ -83,19 +83,19 @@ module.exports.run = function (tower, debug = false) {
                 filter: (i) => (i.structureType === STRUCTURE_RAMPART || i.structureType == STRUCTURE_WALL) && i.hits <= 300
             });
 
-            // No single hit ramparts, okay, any with less than global.rampartMax/4 hits?
+            // No single hit ramparts, okay, any with less than RAMPART_MAX/4 hits?
             if (targets.length === 0) {
                 // First lets find the closest rampart
                 targets = tower.room.find(FIND_STRUCTURES, {
-                    filter: (i) => (i.structureType === STRUCTURE_RAMPART && i.hits < global.rampartMax/4) || (i.structureType == STRUCTURE_WALL && i.hits < global.wallMax/4)
+                    filter: (i) => (i.structureType === STRUCTURE_RAMPART && i.hits < RAMPART_MAX/4) || (i.structureType == STRUCTURE_WALL && i.hits < WALL_MAX/4)
                 });
             }
 
-            // Still none? okay find any with less than global.rampartMax
+            // Still none? okay find any with less than RAMPART_MAX
             if (targets.length === 0) {
                 // First lets find the closest rampart
                 targets = tower.room.find(FIND_STRUCTURES, {
-                    filter: (i) => (i.structureType === STRUCTURE_RAMPART && i.hits < global.rampartMax) || (i.structureType == STRUCTURE_WALL && i.hits < global.wallMax)
+                    filter: (i) => (i.structureType === STRUCTURE_RAMPART && i.hits < RAMPART_MAX) || (i.structureType == STRUCTURE_WALL && i.hits < WALL_MAX)
                 });
             }
 
@@ -145,9 +145,9 @@ module.exports.visuals = function (items, room, debug = false) {
         let item = items[i];
         var percent = 0;
         if(item.structureType == STRUCTURE_RAMPART) {
-            percent = (item.hits/global.rampartMax)*100;
+            percent = (item.hits/RAMPART_MAX)*100;
         } else if (item.structureType == STRUCTURE_WALL) {
-            percent = (item.hits/global.wallMax)*100;
+            percent = (item.hits/WALL_MAX)*100;
         } else {
             percent = (item.hits/item.hitsMax)*100;
         }

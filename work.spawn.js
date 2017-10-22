@@ -17,9 +17,9 @@ module.exports.run = function(debug = false) {
         var _room  = _spawn.room;
         var _spawned = false;
         // Now lets loop through the roles
-        for (var i in global.roles) {
+        for (var i in ROLES) {
             if (_spawned) { break; }
-            var role = global.roles[i];
+            var role = ROLES[i];
             var _role = require('role.' + role);
             // Is this role enabled in this room?
             if (!_room.memory.roles[role]) {

@@ -37,7 +37,7 @@ module.exports.run = function(debug = false) {
                 theRoom.memory.links = false;
             } else {
                 // Turn off room charging if we're above 800k
-                if (storage.store[RESOURCE_ENERGY] >= global.chargeLimit && theRoom.memory.charging === true) {
+                if (storage.store[RESOURCE_ENERGY] >= CHARGE_LIMIT && theRoom.memory.charging === true) {
                     theRoom.memory.charging = false;
                 }
                 // If the room is below 10000 turn charging back on
@@ -45,7 +45,7 @@ module.exports.run = function(debug = false) {
                     theRoom.memory.charging = true;
                 }
                 // Turn on links when above 400k and they're off
-                if (storage.store[RESOURCE_ENERGY] >= global.linkLimit && theRoom.memory.links === false) {
+                if (storage.store[RESOURCE_ENERGY] >= LINK_LIMIT && theRoom.memory.links === false) {
                     theRoom.memory.links = true;
                 }
                 // Turn off links when below 100k and they're on
@@ -135,9 +135,9 @@ module.exports.setupRoomRoles = function (debug = false) {
         // Make sure we initialise the room memory
         if (!_room.memory.roles) { console.log('[COUNTER] Creating room role object [' + room + ']'); _room.memory.roles = {}; }
         // Loop through the roles we have
-        for (var i in global.roles) {
+        for (var i in ROLES) {
             // Get the role name
-            var role = global.roles[i];
+            var role = ROLES[i];
             // Get it's role file
             var _role = require('role.' + role);
             // Run the code to check if this role should be enabled
