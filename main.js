@@ -1,32 +1,18 @@
 if(Game.cpu.bucket < 500) { throw new Error('Super Low Bucket, Recovery Mode Activated'); }
 // DEFAULT
 // Main imports these should be cached
-require('game.constants'); // Game consts
-require('global.stuff');   // Settings and stuff
-require('global.colours'); // Colours various variables
-require('global.speech');  // Colours various variables
-require('global.friends'); // The global friend list
+// Global things
+require('require.globals');
 var Traveler = require('Traveler');
-
-// Get the prototypes
-var protoypes = [
-    require('prototype.roomposition'),
-    require('prototype.structures'),
-    require('prototype.sources'),
-    require('prototype.room'),
-    require('prototype.creep'),
-    require('prototype.spawn'),
-];
+// Prototypes
+require('require.prototypes');
 // var i = protoypes.length;
 // while(i--) {
 //     protoypes[i]();
 // }
+// Workers and roles
+require('require.roles');
 
-var spawner     = require('work.spawn');
-var movement    = require('work.movement');
-var cleaner     = require('work.cleaner');
-var towers      = require('work.towers');
-var counter     = require('work.counter');
 var screepsplus = require('screepsplus');
 
 // Load the new Queue

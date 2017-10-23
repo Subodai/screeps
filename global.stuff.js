@@ -249,5 +249,3 @@ global.setupFeedRoom = function () {
     }
     return Memory.feedRoom;
 }
-
-global.A

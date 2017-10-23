@@ -55,3 +55,22 @@ RoomPosition.prototype.seedFlags = function() {
         newPos.createFlag(null,COLOR_WHITE,COLOR_WHITE);
     }
 }
+
+/**
+ * Check a POS for space, if it's a wall or another creep
+ * will return false. Otherwise will return true.
+ */
+RoomPosition.prototype.EmptyOfOtherCreeps = function(Creep) {
+    // Get the current terrain at this pos
+    let terrain = Game.map.getTerrainAt(this);
+    // If the terrain is a wall return false, there's no space
+    if (terrain === 'wall') { return false; }
+    // Get any creeps here
+    let creeps = this.lookFor(LOOK_CREEPS);
+    // If there are no creeps, there should be a space
+    if (creeps.length === 0) { return true; }
+    // Is this the creep we're trying to find space for?
+    if (creeps[0] === Creep) { return true; }
+    // Nothing has matched, assume false
+    return false;
+}

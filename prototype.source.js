@@ -39,6 +39,32 @@ Object.defineProperty(Source.prototype, "miner", {
     enumerable: false
 });
 
+Source.prototype.SpaceForCreep = function(Creep) {
+    let n = new RoomPosition(this.pos.x, this.pos.y-1, this.pos.roomName);
+    if (n.EmptyOfOtherCreeps(Creep)) { return true; }
+
+    let ne = new RoomPosition(this.pos.x+1, this.pos.y-1, this.pos.roomName);
+    if (ne.EmptyOfOtherCreeps(Creep)) { return true; }
+
+    let e  = new RoomPosition(this.pos.x+1, this.pos.y, this.pos.roomName);
+    if (e.EmptyOfOtherCreeps(Creep)) { return true; }
+    
+    let se = new RoomPosition(this.pos.x+1, this.pos.y+1, this.pos.roomName);
+    if (se.EmptyOfOtherCreeps(Creep)) { return true; }
+    
+    let s  = new RoomPosition(this.pos.x,   this.pos.y+1, this.pos.roomName);
+    if (s.EmptyOfOtherCreeps(Creep)) { return true; }
+    
+    let sw = new RoomPosition(this.pos.x-1, this.pos.y+1, this.pos.roomName);
+    if (sw.EmptyOfOtherCreeps(Creep)) { return true; }
+    
+    let w  = new RoomPosition(this.pos.x-1, this.pos.y, this.pos.roomName);
+    if (w.EmptyOfOtherCreeps(Creep)) { return true; }
+    
+    let nw = new RoomPosition(this.pos.x-1, this.pos.y-1, this.pos.roomName);
+    if (nw.EmptyOfOtherCreeps(Creep)) { return true; }
+}
+
 // Call this periodically to garbage collect source memory
 // (I find once every 10k ticks is fine)
 global.GCSourceMemory = function() {
