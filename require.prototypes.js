@@ -7,3 +7,8 @@ var protoypes = [
     require('prototype.creep'),
     require('prototype.spawn'),
 ];
+
+// var i = protoypes.length;
+// while(i--) {
+//     protoypes[i]();
+// }

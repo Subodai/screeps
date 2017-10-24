@@ -1,24 +1,13 @@
 if(Game.cpu.bucket < 500) { throw new Error('Super Low Bucket, Recovery Mode Activated'); }
 // DEFAULT
 // Main imports these should be cached
-// Global things
-require('require.globals');
-var Traveler = require('Traveler');
-// Prototypes
-require('require.prototypes');
-// var i = protoypes.length;
-// while(i--) {
-//     protoypes[i]();
-// }
-// Workers and roles
-require('require.roles');
-
-var screepsplus = require('screepsplus');
-
-// Load the new Queue
-const q = require('prototype.queue');
-global.Queue = new q.Queue();
-
+require('require.globals');                 // Global things
+var Traveler = require('Traveler');         // Traveler
+require('require.prototypes');              // Prototypes
+require('require.roles');                   // Workers and roles
+const q = require('prototype.queue');       // Load the new Queue
+global.Queue = new q.Queue();               // Make the Queue (@TODO Make like Traveler)
+var screepsplus = require('screepsplus');   // Screepsplus
 global.feedEnabled = false;
 // const profiler = require('screeps-profiler');
 // profiler.enable();
