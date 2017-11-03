@@ -92,7 +92,7 @@ module.exports.run = function (creep, debug = false) {
         for (let i in flags) {
             let _flag = flags[i];
             // ok we have presence, check for creeps
-            let creeps = _.filter(Game.creeps, (c) => c.memory.reserveRoom === _room.name && c.memory.flagName === _flag.name && !c.memory.dying);
+            let creeps = _.filter(Game.creeps, (c) => c.memory.reserveRoom === _flag.pos.roomName && c.memory.flagName === _flag.name && !c.memory.dying);
             if (creeps.length === 0) {
                 creep.memory.flagName = _flag.name;
                 creep.memory.reserveRoom = _flag.pos.roomName;
@@ -101,7 +101,7 @@ module.exports.run = function (creep, debug = false) {
         }
     }
     if (!creep.memory.flagName) {
-        console.log('[CREEP][RESERVE][' + creep.name + '] Unable to assign room?');
+        console.log('[CREEP][RESERVE][' + creep.name + '][' + creep.room.name + '] Unable to assign room?');
     }
     // Are we spawning? if so, do nothing else
     if (creep.isTired()) { return; }
