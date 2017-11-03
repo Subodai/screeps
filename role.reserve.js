@@ -69,6 +69,8 @@ module.exports.enabled = function (room, debug = false) {
     for (let i in flags) {
         // Get the flag
         let _flag = flags[i];
+        // If it's further than 2 rooms away don't bother
+        if (Game.map.getRoomLinearDistance(room, _flag.pos.roomName) > 2) { return false; }
         // Is there a creep with this flag in it's memory?
         let creeps = _.filter(Game.creeps, (c) => c.memory.reserveRoom === _flag.pos.roomName && c.memory.flagName === _flag.name && !c.memory.dying);
         // If there's a creep assigned to this, just return false
