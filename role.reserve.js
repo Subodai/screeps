@@ -53,46 +53,28 @@ module.exports.body = {
         MOVE,MOVE,      // 2 MOVE = 100
     ],
 };
+/**
+ * Is this enabled
+ */
 module.exports.enabled = function (room, debug = false) {
     // Turn off if room is discharging with supergraders
     if (Game.rooms[room].memory.charging === false) { return false; }
     // return false;
     // Get all reserve flags without an assigned creep
-    const flags = _.filter(Game.flags, (flag) => flag.color === global.flagColor['reserve']);
+    let flags = _.filter(Game.flags, (flag) => flag.color === global.flagColor['reserve']);
     // No flags, no spawns
     if (flags.length === 0) { return false; }
     var spawn = false;
     // Loop through the flags
-    for (var i in flags) {
+    for (let i in flags) {
         // Get the flag
-        const _flag = flags[i];
+        let _flag = flags[i];
         // Is there a creep with this flag in it's memory?
-        const creeps = _.filter(Game.creeps, (creep) => creep.memory.reserveRoom === _flag.pos.roomName && creep.memory.flagName === _flag.name && !creep.memory.dying);
-        const _room = Game.rooms[_flag.pos.roomName];
-        if (_room) {
-            // Do we need a creep?
-            // Does it have a reservation
-            if (_room.controller.reservation) {
-                if (_room.controller.ticksToEnd) {
-                    if (_room.controller.ticksToEnd < this.expiry*3) {
-                       var spawn = true;
-                    } else {
-                        var spawn = false;
-                    }
-                } else {
-                    var spawn = true;
-                }
-            } else {
-                var spawn = true;
-            }
-        } else {
-            var spawn = true;
-        }
-
-        if (spawn && creeps.length === 0) {
-            return true;
-        }
-
+        let creeps = _.filter(Game.creeps, (c) => c.memory.reserveRoom === _flag.pos.roomName && c.memory.flagName === _flag.name && !c.memory.dying);
+        // If there's a creep assigned to this, just return false
+        if (creeps.length > 0) { return false; }
+        // No creep, spawn one
+        return true;
     }
     return false;
 }
@@ -105,23 +87,19 @@ module.exports.run = function (creep, debug = false) {
     if (!creep.memory.flagName) {
         // Lets find a flag without a creep assigned
         var flags = _.filter(Game.flags, (flag) => flag.color === global.flagColor['reserve']);
-        for (var i in flags) {
-            var _flag = flags[i];
-            var _room = Game.rooms[_flag.pos.roomName];
-            if (_room) {
-                // ok we have presence, check for creeps
-                var creeps = _.filter(Game.creeps, (creep) => creep.memory.reserveRoom === _room.name && creep.memory.flagName === _flag.name && !creep.memory.dying)
-                if (creeps.length === 0) {
-                    creep.memory.flagName = _flag.name;
-                    creep.memory.reserveRoom = _flag.pos.roomName;
-                    return;
-                }
-            } else {
+        for (let i in flags) {
+            let _flag = flags[i];
+            // ok we have presence, check for creeps
+            let creeps = _.filter(Game.creeps, (c) => c.memory.reserveRoom === _room.name && c.memory.flagName === _flag.name && !c.memory.dying);
+            if (creeps.length === 0) {
                 creep.memory.flagName = _flag.name;
                 creep.memory.reserveRoom = _flag.pos.roomName;
                 return;
             }
         }
+    }
+    if (!creep.memory.flagName) {
+        console.log('[CREEP][RESERVE][' + creep.name + '] Unable to assign room?');
     }
     // Are we spawning? if so, do nothing else
     if (creep.isTired()) { return; }
