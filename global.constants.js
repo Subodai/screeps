@@ -36,3 +36,12 @@ global.SEED_ROADS = true;
 
 // Operations based constants
 global.CPU_MINIMUM = 5000;
+
+global.RUN_MOVEMENT_EVERY = 1;
+global.RUN_TOWERS_EVERY = 1;
+global.RUN_STATS_EVERY = 1;
+global.RUN_SPAWNERS_EVERY = 5;
+global.RUN_HAULERS_EVERY = 10;
+global.RUN_FEED_EVERY = 10;
+global.RUN_MEMORY_CLEAN_EVERY = 10
+global.RUN_SOURCE_SETUP_EVERY = 50;

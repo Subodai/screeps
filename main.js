@@ -1,17 +1,51 @@
 'use strict';
 // Requires
 require('require');
-console.log('[LOADED] Bootstrapping Screeps AI');
+console.log('[LOADED] Bootstrapping Subodai Screeps AI');
 // DEFAULT
-var runAI = function() {
+var runAI = function(debug = false) {
     if (Game.cpu.bucket < 2 * Game.cpu.tickLimit) {
         console.log('Skipping tick ' + Game.time + ' due to lack of CPU');
         throw new Error('Bucket Drained');
         return;
     }
-
+        
     try {
+        // First try the memory cleaner
+        if (Game.time % RUN_MEMORY_CLEAN_EVERY == 0) {
+            cleaner.run(debug);
+        }
 
+        // Source Setup
+        if (Game.time % RUN_SOURCE_SETUP_EVERY == 0) {
+            // @TODO Can these be made more resilient in their own runners
+            miner.setup();
+            extractor.setup();
+        }
+
+        // Roles and spawners
+        if (Game.time % RUN_SPAWNERS_EVERY == 0) {
+            counter.setupRoomRoles(debug);
+            let Before = Game.cpu.getUsed();
+            if (Queue.process()) { 
+                console.log('Queue spawned a creep'); 
+            } else {
+                console.log('Running old spawner');
+                spawner.run(debug);
+            }
+            let After = Game.cpu.getused() - Before;
+            console.log('Spawners used:' + After + ' CPU');
+        }
+
+        // Last try the room feeder
+        if (Game.time % RUN_FEED_EVERY == 0) {
+            global.feedEnabled = Memory.feedEnabled;
+            if (feedEnabled) {
+                counter.runRoomFeed();
+            } else {
+                counter.clearRoomFeed();
+            }
+        }        
     } catch (e) {
         console.log('Exception', e);
         Game.notify('Exception', e);
