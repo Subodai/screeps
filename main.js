@@ -11,20 +11,21 @@ var runAI = function(debug = false) {
     }
         
     try {
+        let tick = Game.time;
         // First try the memory cleaner
-        if (Game.time % RUN_MEMORY_CLEAN_EVERY == 0) {
+        if (tick % RUN_MEMORY_CLEAN_EVERY == 0) {
             cleaner.run(debug);
         }
 
         // Source Setup
-        if (Game.time % RUN_SOURCE_SETUP_EVERY == 0) {
+        if (tick % RUN_SOURCE_SETUP_EVERY == 0) {
             // @TODO Can these be made more resilient in their own runners
             miner.setup();
             extractor.setup();
         }
 
         // Roles and spawners
-        if (Game.time % RUN_SPAWNERS_EVERY == 0) {
+        if (tick % RUN_SPAWNERS_EVERY == 0) {
             counter.setupRoomRoles(debug);
             let Before = Game.cpu.getUsed();
             if (Queue.process()) { 
@@ -37,8 +38,21 @@ var runAI = function(debug = false) {
             console.log('Spawners used:' + After + ' CPU');
         }
 
+        if (tick % RUN_HAULERS_EVERY == 0) { _HaulerSetup(); }
+
+        if (tick % RUN_MOVEMENT_EVERY == 0) { movement.run(debug); }
+
+        if (tick % RUN_TOWERS_EVERY == 0) { towers.run(debug); }
+
+        //@TODO Add Links task
+
+        if (tick % RUN_STATS_EVERY == 0) {
+            screepsplus.collect_stats();
+            Memory.stats.cpu.used = Game.cpu.getUsed();
+        }
+
         // Last try the room feeder
-        if (Game.time % RUN_FEED_EVERY == 0) {
+        if (tick % RUN_FEED_EVERY == 0) {
             global.feedEnabled = Memory.feedEnabled;
             if (feedEnabled) {
                 counter.runRoomFeed();
