@@ -68,7 +68,7 @@ function collect_stats() {
     }
     Memory.stats.empireMinerals = global.summarized_minerals;
 
-    if (Game.time % 100 == 0) {
+    if (Game.time % 2 == 0) {
         Memory.stats.economy = economy.get_economy();
     }
     // Add callback functions which we can call to add additional

@@ -13,7 +13,7 @@ function get_economy() {
     // Start by looping through a list
     let resources = [
         RESOURCE_ENERGY,
-        RESOURCE_POWER,
+        // RESOURCE_POWER,
         RESOURCE_HYDROGEN,
         RESOURCE_OXYGEN,
         RESOURCE_UTRIUM,
@@ -23,7 +23,6 @@ function get_economy() {
         RESOURCE_CATALYST,
         RESOURCE_GHODIUM,
     ];
-
     // Loop through our resources
     for (let i in resources) {
         let resource = resources[i];
@@ -59,7 +58,6 @@ function get_economy() {
     var save = {
         stats, last_run, cpu,
     }
-
     // When done store the tick
     global.economy = save;
     return global.economy;
