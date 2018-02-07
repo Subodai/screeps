@@ -21,6 +21,7 @@
 
 "use strict";
 const resources = require('resources');
+const economy = require('economy');
 const cb = require('callback');
 
 global.stats_callbacks = new cb.Callback();
@@ -66,6 +67,10 @@ function collect_stats() {
         Memory.stats.queue.length = Memory.queue.creeps.length;
     }
     Memory.stats.empireMinerals = global.summarized_minerals;
+
+    if (Game.time % 100 == 0) {
+        Memory.stats.economy = economy.get_economy();
+    }
     // Add callback functions which we can call to add additional
     // statistics to here, and have a way to register them.
     // 1. Merge in the current repair ratchets into the room summary
